@@ -5,4 +5,4 @@ def create_commection(db_file):
 
 
 
-create_commection('.\Languages')
+create_commection('.\Languages.db')
