@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <form action="post" method = "post"> 
+        <form action="{{ request.path }}" method = "post"> 
             <label for = "name">Name</label><br>
             <input type = "text" name = "name" placeholder = "Name" /><br>
             <label for = "part">Part</label><br>
