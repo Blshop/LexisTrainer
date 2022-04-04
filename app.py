@@ -34,12 +34,13 @@ class Translation(db.Model):
         self.russian_id = russian_id
 
 class LearningRus(db.Model):
-    russian_word = db.Column('russian_word', db.Integer, primary_key=True)
+    id = db.Column('id', db.Integer, primary_key=True)
+    russian_word = db.Column('russian_word', db.String(100))
     correct_count = db.Column('correct_count', db.Integer)
 
-    def __init__(self, russian_word, correct_count=0):
-        self.word = russian_word
-        self.part = correct_count
+    def __init__(self, russian_word, correct_count):
+        self.russian_word = russian_word
+        self.correct_count = correct_count
 
 
 
@@ -53,8 +54,12 @@ def add_word():
     if request.method == 'POST':
         translations = request.form['translation'].split('/')
         ru_word = Russian(request.form['name'], request.form['part'])
+        print (ru_word.word != LearningRus.query.filter_by(russian_word=ru_word.word).first())
         if ru_word.word != LearningRus.query.filter_by(russian_word=ru_word.word).first():
-            db.session.add(LearningRus(request.form['name']))
+            print(request.form['name'])
+            new_word = LearningRus('dfgdf',0)
+            print(new_word.russian_word)
+            db.session.add(new_word)
         db.session.add(ru_word)
         for item in translations:
             eng_word = English(item, request.form['part'])  
@@ -68,7 +73,9 @@ def add_word():
     return render_template("AddWords.html")
 
 
-
+@app.route("/view")
+def view():
+    return render_template("viewWords.html", words = LearningRus.query.all())
 
 if __name__ == '__main__':
     db.create_all()
