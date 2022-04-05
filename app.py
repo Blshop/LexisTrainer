@@ -71,6 +71,9 @@ class RepeatEng(db.Model):
         self.answer = answer
 
 
+def learning(words):
+    return render_template("learn.html", words=words)
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -82,9 +85,8 @@ def add_word():
         translations = request.form['translation'].split('/')
         if Russian.query.filter_by(word=request.form['word'],part=request.form['part']).first() is None:
             ru_word = Russian(request.form['word'], request.form['part'])
-            if LearningRus.query.filter_by(word=ru_word.word).first() is None:
-                new_word = LearningRus(ru_word.word,0)
-                db.session.add(new_word)
+            new_word = LearningRus(request.form['word'],0)
+            db.session.add(new_word)
             db.session.add(ru_word)
             for item in translations:
                 if English.query.filter_by(word=item, part=request.form['part']).first() is None:  
@@ -106,6 +108,11 @@ def add_word():
 @app.route("/view")
 def view():
     return render_template("viewWords.html", words = LearningRus.query.all())
+
+@app.route("/learn")
+def learn():
+    words = LearningRus.query.filter(LearningRus.answer<100).all()
+    learning(words)
 
 if __name__ == '__main__':
     db.create_all()
