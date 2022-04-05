@@ -35,13 +35,40 @@ class Translation(db.Model):
 
 class LearningRus(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
-    russian_word = db.Column('russian_word', db.String(100))
-    correct_count = db.Column('correct_count', db.Integer)
+    word = db.Column('word', db.String(100))
+    answer = db.Column('answer', db.Integer)
 
-    def __init__(self, russian_word, correct_count):
-        self.russian_word = russian_word
-        self.correct_count = correct_count
+    def __init__(self, word, answer):
+        self.word = word
+        self.answer = answer
 
+class LearningEng(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True)
+    word = db.Column('word', db.String(100))
+    answer = db.Column('answer', db.Integer)
+
+    def __init__(self, word, answer):
+        self.word = word
+        self.answer = answer
+
+
+class RepeatRus(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True)
+    word = db.Column('word', db.String(100))
+    answer = db.Column('answer', db.Integer)
+
+    def __init__(self, word, answer):
+        self.word = word
+        self.answer = answer
+
+class RepeatEng(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True)
+    word = db.Column('word', db.String(100))
+    answer = db.Column('answer', db.Integer)
+
+    def __init__(self, word, answer):
+        self.word = word
+        self.answer = answer
 
 
 @app.route("/")
@@ -53,23 +80,26 @@ def index():
 def add_word():
     if request.method == 'POST':
         translations = request.form['translation'].split('/')
-        ru_word = Russian(request.form['name'], request.form['part'])
-        print (ru_word.word != LearningRus.query.filter_by(russian_word=ru_word.word).first())
-        if ru_word.word != LearningRus.query.filter_by(russian_word=ru_word.word).first():
-            print(request.form['name'])
-            new_word = LearningRus('dfgdf',0)
-            print(new_word.russian_word)
-            db.session.add(new_word)
-        db.session.add(ru_word)
-        for item in translations:
-            eng_word = English(item, request.form['part'])  
-            db.session.add(eng_word)
-            db.session.flush()
-            translation = Translation(eng_word.id, ru_word.id)
-            db.session.add(translation)
-        db.session.commit()
-        # flash('Record was successfully added')
-        return redirect(url_for('index'))
+        if Russian.query.filter_by(word=request.form['word'],part=request.form['part']).first() is None:
+            ru_word = Russian(request.form['word'], request.form['part'])
+            if LearningRus.query.filter_by(word=ru_word.word).first() is None:
+                new_word = LearningRus(ru_word.word,0)
+                db.session.add(new_word)
+            db.session.add(ru_word)
+            for item in translations:
+                if English.query.filter_by(word=item, part=request.form['part']).first() is None:  
+                    eng_word = English(item, request.form['part'])
+                    db.session.add(eng_word)
+                    db.session.flush()
+                    translation = Translation(eng_word.id, ru_word.id)
+                    db.session.add(translation)
+                else:
+                    eng_word = English.query.filter_by(word=item, part=request.form['part']).first()
+                    translation = Translation(eng_word.id, ru_word.id)
+                    db.session.add(translation)
+            db.session.commit()
+            # flash('Record was successfully added')
+            return redirect(url_for('index'))
     return render_template("AddWords.html")
 
 
