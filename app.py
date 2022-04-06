@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 
 
 
@@ -9,7 +8,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Languages.db'
 
 
 db = SQLAlchemy(app)
-ma = Marshmallow(app)
 
 class English(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
@@ -73,10 +71,12 @@ class RepeatEng(db.Model):
         self.word = word
         self.answer = answer
 
-class RusLearnSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = LearningRus
-        load_instance = True
+def serialize(words):
+    word_dict = {}
+    for word in words:
+        word_dict[word.word] = word.answer
+    return word_dict
+
 
 @app.route("/")
 def index():
@@ -115,10 +115,10 @@ def view():
 
 @app.route("/learn")
 def learn():
-    words = LearningRus.query.filter(LearningRus.answer<100).first()
-    word_schema = RusLearnSchema()
-    words = word_schema.dump(words).data
-    return render_template("learn.html", jsonify({"word":words}))
+    words = LearningRus.query.filter(LearningRus.answer<100).all()
+    print(serialize(words))
+    return render_template("learn.html", words=serialize(words))
+
 
 if __name__ == '__main__':
     db.create_all()

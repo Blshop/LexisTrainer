@@ -1,4 +1,5 @@
-var points = JSON.parse('{{ words|safe }}');
+// var points = words;
 
-// document.getElementById('1').innerHTML = points["word"];
-console.log('hello world')
+// for (const [key, value] of Object.entries(points)) {
+//     console.log(key, value);
+//   }
