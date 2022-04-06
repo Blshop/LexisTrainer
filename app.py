@@ -1,6 +1,7 @@
-from email.policy import default
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
+
 
 
 app = Flask(__name__)
@@ -8,6 +9,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Languages.db'
 
 
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
+
 class English(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
     word = db.Column('word', db.String(100))
@@ -70,9 +73,10 @@ class RepeatEng(db.Model):
         self.word = word
         self.answer = answer
 
-
-def learning(words):
-    return render_template("learn.html", words=words)
+class RusLearnSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = LearningRus
+        load_instance = True
 
 @app.route("/")
 def index():
@@ -111,8 +115,10 @@ def view():
 
 @app.route("/learn")
 def learn():
-    words = LearningRus.query.filter(LearningRus.answer<100).all()
-    learning(words)
+    words = LearningRus.query.filter(LearningRus.answer<100).first()
+    word_schema = RusLearnSchema()
+    words = word_schema.dump(words).data
+    return render_template("learn.html", jsonify({"word":words}))
 
 if __name__ == '__main__':
     db.create_all()
