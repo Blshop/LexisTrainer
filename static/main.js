@@ -1,5 +1,3 @@
-// var points = words;
-
-// for (const [key, value] of Object.entries(points)) {
-//     console.log(key, value);
-//   }
+// let list_data = {{ words | tojson }};
+// const list = document.getElementById("1");
+// list.innerHTML = list_data[1][0]

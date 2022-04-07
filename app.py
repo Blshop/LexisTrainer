@@ -1,3 +1,4 @@
+from gettext import translation
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
@@ -73,8 +74,10 @@ class RepeatEng(db.Model):
 
 def serialize(words):
     word_dict = {}
+    n = 1
     for word in words:
-        word_dict[word.word] = word.answer
+        word_dict[n] = [word.word,word.part]
+        n+=1
     return word_dict
 
 
@@ -115,7 +118,8 @@ def view():
 
 @app.route("/learn")
 def learn():
-    words = LearningRus.query.filter(LearningRus.answer<100).all()
+    # words = LearningRus.query.filter(LearningRus.answer<100).all()
+    words = db.session.query(Russian.word,Russian.part,Translation.russian_id).join(Translation)
     print(serialize(words))
     return render_template("learn.html", words=serialize(words))
 

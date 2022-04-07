@@ -8,10 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-   <script type="text/javascript">
-      let list_data = {{ words | tojson }}
-      console.log(list_data)
-   </script>
+
     <table>
         <thead>
            <tr>
@@ -26,5 +23,17 @@
               </tr>
         </tbody>
      </table>
+     <button id="3"></button>
+     <script type="text/javascript">
+      let list_data = {{ words | tojson }}
+      console.log(list_data)
+      const list = document.getElementById("1");
+      document.getElementById("2").innerHTML = list_data[1][1]
+      list.innerHTML = list_data[1][0]
+      document.getElementById("3").addEventListener("click", addvalue);
+      function addvalue(){
+         document.getElementById("2").innerHTML = '20'
+      }
+   </script>
 </body>
 </html>
