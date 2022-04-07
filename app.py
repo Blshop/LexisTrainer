@@ -31,13 +31,13 @@ class Translation(db.Model):
     
     english_id = db.Column('english_id', db.Integer, db.ForeignKey('english.id'), primary_key=True)
     russian_id = db.Column('russian_id', db.Integer, db.ForeignKey('russian.id'), primary_key=True)
+    
     def __init__(self, english_id, russian_id):
         self.english_id = english_id
         self.russian_id = russian_id
 
 class LearningRus(db.Model):
-    id = db.Column('id', db.Integer, primary_key=True)
-    word = db.Column('word', db.String(100))
+    rus_id = db.Column('rus_id', db.Integer, db.ForeignKey('russian.id'), primary_key=True)
     answer = db.Column('answer', db.Integer)
 
     def __init__(self, word, answer):
