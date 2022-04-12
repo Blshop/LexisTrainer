@@ -141,7 +141,9 @@ def learn():
 @app.route("/finish", methods=['GET', 'POST'])
 def finish():
     data = json.loads(request.form.get('data'))
-    print(data)
+    for key,value in data.items():
+        db.session.query(LearningRus).filter(Russian.word==value[0], Russian.part==value[1], Russian.id==LearningRus.rus_id).update(dict(answer=value[2]),synchronize_session='fetch')
+    db.session.commit()
     return jsonify('everything is good')
 
 if __name__ == '__main__':

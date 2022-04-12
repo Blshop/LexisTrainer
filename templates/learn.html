@@ -66,13 +66,20 @@
          }
       }
       function minusvalue(){
-         if (parseInt(document.getElementById("3").innerHTML) > 0){
+         if (word_number==max_words){
+         }
+         else{if (parseInt(document.getElementById("3").innerHTML) > 0){
             document.getElementById("3").innerHTML = parseInt(document.getElementById("3").innerHTML) - 10
          }
+         next_word()}
+         
       }
       function addvalue(){
-         document.getElementById("3").innerHTML = parseInt(document.getElementById("3").innerHTML) + 10
-         next_word()
+         if (word_number==max_words){
+         }
+         else{document.getElementById("3").innerHTML = parseInt(document.getElementById("3").innerHTML) + 10
+         next_word()}
+         
 
       }
    </script>
