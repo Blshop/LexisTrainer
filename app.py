@@ -83,7 +83,7 @@ def serialize(words):
     word_dict = {}
     n = 1
     for word in words:
-        word_dict[n] = [word.word, word.part, word.answer]
+        word_dict[n] = [word.word, word.part, word.answer, word.russian_id]
         n += 1
     return word_dict
 
@@ -142,7 +142,7 @@ def learn():
 def finish():
     data = json.loads(request.form.get('data'))
     for key,value in data.items():
-        db.session.query(LearningRus).filter(Russian.word==value[0], Russian.part==value[1], Russian.id==LearningRus.rus_id).update(dict(answer=value[2]),synchronize_session='fetch')
+        db.session.query(LearningRus).filter(LearningRus.rus_id==value[3]).update(dict(answer=value[2]))
     db.session.commit()
     return jsonify('everything is good')
 

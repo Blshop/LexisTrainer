@@ -16,6 +16,7 @@
               <th id="1">russian_word</th>
               <th id="2">part</th>
               <th id="3">correct_count</th>
+              <th id="4">russian_id</th>
            </tr>
         </thead>
         <tbody>
@@ -25,10 +26,10 @@
               </tr>
         </tbody>
      </table>
-     <button id="4" style="height: 30px; width: 200px;">correct</button><br>
-     <button id="5" style="height: 30px; width: 200px; margin-top: 40px ;">wrong</button><br>
+     <button id="5" style="height: 30px; width: 200px;">correct</button><br>
+     <button id="6" style="height: 30px; width: 200px; margin-top: 40px ;">wrong</button><br>
 
-     <button id="6" style="height: 30px; width: 200px; margin-top: 140px ;">finish</button>
+     <button id="7" style="height: 30px; width: 200px; margin-top: 140px ;">finish</button>
      <script type="text/javascript">
       let list_data = {{ words | tojson }}
       console.log(list_data)
@@ -37,9 +38,10 @@
       document.getElementById("1").innerHTML = list_data[word_number][0]
       document.getElementById("2").innerHTML = list_data[word_number][1]
       document.getElementById("3").innerHTML = list_data[word_number][2]
-      document.getElementById("4").addEventListener("click", addvalue);
-      document.getElementById("5").addEventListener("click", minusvalue);
-      document.getElementById("6").addEventListener("click", finish);
+      document.getElementById("4").innerHTML = list_data[word_number][3]
+      document.getElementById("5").addEventListener("click", addvalue);
+      document.getElementById("6").addEventListener("click", minusvalue);
+      document.getElementById("7").addEventListener("click", finish);
 
       function finish(){
          $(document).ready(function () {
@@ -63,22 +65,24 @@
             document.getElementById("1").innerHTML = list_data[word_number][0]
             document.getElementById("2").innerHTML = list_data[word_number][1]
             document.getElementById("3").innerHTML = list_data[word_number][2]
+            document.getElementById("4").innerHTML = list_data[word_number][3]
          }
       }
       function minusvalue(){
+         if (list_data[word_number][2]>0){
+            list_data[word_number][2] -=10
+         }
          if (word_number==max_words){
          }
-         else{if (parseInt(document.getElementById("3").innerHTML) > 0){
-            document.getElementById("3").innerHTML = parseInt(document.getElementById("3").innerHTML) - 10
+         else{next_word()
          }
-         next_word()}
+         }
          
-      }
       function addvalue(){
+         list_data[word_number][2] +=10
          if (word_number==max_words){
          }
-         else{document.getElementById("3").innerHTML = parseInt(document.getElementById("3").innerHTML) + 10
-         next_word()}
+         else {next_word()}
          
 
       }
