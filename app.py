@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, json
 from flask_sqlalchemy import SQLAlchemy
+import random
 
 
 app = Flask(__name__)
@@ -82,6 +83,7 @@ class RepeatEng(db.Model):
 def serialize(words):
     word_dict = {}
     n = 1
+    random.shuffle(words)
     for word in words:
         word_dict[n] = [word.word, word.part, word.answer, word.russian_id]
         n += 1
