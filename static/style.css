@@ -1,0 +1,13 @@
+.container{
+    margin: auto;
+    width: 800px;
+}
+
+input, select, textarea{
+    margin: 20px 0;
+}
+
+textarea{
+    width: 200px;
+    height: 150px;
+}

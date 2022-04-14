@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href='/static/style.css' />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{url_for('static', filename='main.js')}}"></script>
     <title>Document</title>
 </head>
 <body>
+   <div class="container">
+      <p id="1">Russian_word</p><br>
+      <div class="answer">
+         <textarea name="" id="2" cols="30" rows="10">Answers</textarea>
+      </div>
 
     <table>
         <thead>
@@ -30,13 +36,14 @@
      <button id="6" style="height: 30px; width: 200px; margin-top: 40px ;">wrong</button><br>
 
      <button id="7" style="height: 30px; width: 200px; margin-top: 140px ;">finish</button>
+   </div>
      <script type="text/javascript">
       let list_data = {{ words | tojson }}
       console.log(list_data)
       let word_number = 1;
       let max_words = Object.keys(list_data).length
       document.getElementById("1").innerHTML = list_data[word_number][0]
-      document.getElementById("2").innerHTML = list_data[word_number][1]
+      document.getElementById("2").innerHTML = list_data[word_number][4]
       document.getElementById("3").innerHTML = list_data[word_number][2]
       document.getElementById("4").innerHTML = list_data[word_number][3]
       document.getElementById("5").addEventListener("click", addvalue);
@@ -63,7 +70,7 @@
          if (max_words>word_number){
             word_number +=1
             document.getElementById("1").innerHTML = list_data[word_number][0]
-            document.getElementById("2").innerHTML = list_data[word_number][1]
+            document.getElementById("2").innerHTML = list_data[word_number][4]
             document.getElementById("3").innerHTML = list_data[word_number][2]
             document.getElementById("4").innerHTML = list_data[word_number][3]
          }

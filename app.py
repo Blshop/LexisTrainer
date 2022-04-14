@@ -85,7 +85,7 @@ def serialize(words):
     n = 1
     random.shuffle(words)
     for word in words:
-        word_dict[n] = [word.word, word.part, word.answer, word.russian_id]
+        word_dict[n] = [word[0], word.part, word.answer, word.russian_id, word[2]]
         n += 1
     return word_dict
 
@@ -97,8 +97,9 @@ def index():
 
 @app.route("/addword", methods=['GET', 'POST'])
 def add_word():
-    if request.method == 'POST':
-        translations = request.form['translation'].split('/')
+    if request.method == 'POST' and request.form['word']!='':
+        translations = request.form['translation'].split('\\r\\n')
+        print(translations)
         if Russian.query.filter_by(word=request.form['word'], part=request.form['part']).first() is None:
             ru_word = Russian(request.form['word'], request.form['part'])
             db.session.add(ru_word)
@@ -135,8 +136,9 @@ def learn():
     #     print(data)
     #     return render_template("viewWords.html", words=LearningRus.query.all())
     # words = LearningRus.query.filter(LearningRus.answer<100).all()
-    words = db.session.query(Russian.word, Russian.part,
-                             Translation.russian_id, Translation.english_id, LearningRus.rus_id, LearningRus.answer).join(Translation).join(LearningRus).all()
+    words = db.session.query(Russian.word, Russian.part, English.word,
+                             Translation.russian_id, Translation.english_id, LearningRus.rus_id, LearningRus.answer).join(Translation, Russian.id==Translation.russian_id).join(LearningRus).join(English, Translation.english_id==English.id).all()
+    print(words)
     # print(serialize(words))
     return render_template("learn.html", words=serialize(words))
 
