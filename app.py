@@ -81,12 +81,21 @@ class RepeatEng(db.Model):
 
 
 def serialize(words):
+    random.shuffle(words)
+    join_dict = {}
+    for word in words:
+        if word[0] in join_dict.keys():
+            join_dict[word[0]] = [join_dict[word[0]][0],join_dict[word[0]][1],join_dict[word[0]][2],join_dict[word[0]][3],join_dict[word[0]][4]+[word[2]]]
+        else:
+            join_dict[word[0]] = [word[0], word.part, word.answer, word.rus_id, [word[2]]]
+    print(join_dict)
     word_dict = {}
     n = 1
-    random.shuffle(words)
-    for word in words:
-        word_dict[n] = [word[0], word.part, word.answer, word.russian_id, word[2]]
+    for word in join_dict.values():
+        word_dict[n] = word
+        # word_dict[n] = [word[0], word.part, word.answer, word.russian_id, word[2]]
         n += 1
+    print(word_dict)
     return word_dict
 
 
@@ -98,7 +107,7 @@ def index():
 @app.route("/addword", methods=['GET', 'POST'])
 def add_word():
     if request.method == 'POST' and request.form['word']!='':
-        translations = request.form['translation'].split('\\r\\n')
+        translations = request.form['translation'].split('\r\n')
         print(translations)
         if Russian.query.filter_by(word=request.form['word'], part=request.form['part']).first() is None:
             ru_word = Russian(request.form['word'], request.form['part'])
