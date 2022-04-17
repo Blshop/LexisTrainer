@@ -130,7 +130,12 @@ def add_word():
             db.session.commit()
             # flash('Record was successfully added')
             return redirect(url_for('index'))
-    return render_template("AddWords.html")
+    else:
+        words = db.session.query(Russian.word).all()
+        word_list = []
+        for word in words:
+            word_list.append(word[0])
+        return render_template("AddWords.html", words={"1":word_list})
 
 
 @app.route("/view")
