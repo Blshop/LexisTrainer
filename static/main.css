@@ -1,0 +1,125 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box !important;
+  color: black;
+}
+
+.container {
+  margin: auto;
+  width: 1200px;
+  padding: 100px 0;
+  background-color: bisque;
+}
+.container .lang-select {
+  margin: auto;
+  text-align: center;
+  width: 300px;
+}
+.container .lang-select p {
+  text-transform: uppercase;
+  padding: 10px;
+}
+.container .lang-select ul {
+  display: flex;
+  justify-content: space-around;
+}
+.container .lang-select ul li {
+  list-style: none;
+  padding: 10px;
+  background-color: #eec450;
+  margin: 5px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.container .lang-select ul .active {
+  border: 2px solid #be1c1c;
+  background-color: #cea945;
+}
+.container .main-menu ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container .main-menu ul li {
+  list-style: none;
+}
+.container .main-menu ul li :hover {
+  outline: 3px solid red;
+  width: 800px;
+  transition: 0.2s;
+}
+.container .main-menu ul li a {
+  display: inline-block;
+  background-color: aqua;
+  margin-top: 15px;
+  border-radius: 7px;
+  padding: 10px;
+  border-radius: 7px;
+  margin-top: 10px;
+  width: 600px;
+  text-decoration: none;
+  text-align: center;
+}
+.container .main-menu ul li a :visited {
+  color: inherit;
+}
+.container form .add_word {
+  width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.container form .add_word label {
+  text-align: center;
+}
+.container form .add_word input {
+  width: inherit;
+  height: 35px;
+}
+.container form .translations {
+  display: flex;
+  justify-content: space-around;
+  margin: 15px 0;
+}
+.container form .translations .trans {
+  border: 2px solid red;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.container form .translations .trans textarea {
+  width: 250px;
+  height: 150px;
+  text-align: justify;
+  line-height: 130%;
+}
+.container form .translations #two,
+.container form .translations #three {
+  display: none;
+}
+.container form input {
+  display: block;
+  margin: auto;
+  width: 150px;
+  height: 50px;
+  margin-bottom: 50px;
+}
+.container .controls {
+  width: 400px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+.container .controls #result,
+.container .controls #add {
+  width: 175px;
+  height: 40px;
+}/*# sourceMappingURL=main.css.map */
