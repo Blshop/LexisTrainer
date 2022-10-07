@@ -13,57 +13,45 @@
     <div class="container">
         <form action="{{ request.path }}" method="post">
             <div class="add_word">
-                <label for="word">word</label>
+                <label for="word">{{lang}} word</label>
                 <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff" />
             </div>
             <div class="translations">
                 <div class="trans" id="one">
-                    <label for="part">part</label>
-                    <select name="part" id="part">
+                    <label for="part-1">part</label>
+                    <select name="part-1" id="part-1">
                         <option value="noun">noun</option>
-                        <option value="pronoun">pronoun</option>
                         <option value="verb">verb</option>
-                        <option value="ajective">ajective</option>
+                        <option value="adjective">ajective</option>
                         <option value="adverb">adverb</option>
-                        <option value="preposition">preposition</option>
-                        <option value="conjunction">conjunction</option>
-                        <option value="interjection">interjection</option>
-                        <option value="phrase">phrase</option>
+                        <option value="misc">phrase</option>
                     </select>
-                    <label for="translation">translation</label>
-                    <textarea name="translation" placeholder="translation"></textarea>
+                    <label for="translation-1">translation</label>
+                    <textarea name="translation-1" placeholder="translation-1"></textarea>
                 </div>
                 <div class="trans" id="two">
-                    <label for="part">part</label>
-                    <select name="part" id="part">
+                    <label for="part-2">part</label>
+                    <select name="part-2" id="part-2">
                         <option value="noun">noun</option>
-                        <option value="pronoun">pronoun</option>
                         <option value="verb">verb</option>
-                        <option value="ajective">ajective</option>
+                        <option value="adjective">ajective</option>
                         <option value="adverb">adverb</option>
-                        <option value="preposition">preposition</option>
-                        <option value="conjunction">conjunction</option>
-                        <option value="interjection">interjection</option>
-                        <option value="phrase">phrase</option>
+                        <option value="misc">phrase</option>
                     </select>
-                    <label for="translation">translation</label>
-                    <textarea name="translation" placeholder="translation"></textarea>
+                    <label for="translation-2">translation</label>
+                    <textarea name="translation-2" placeholder="translation-2"></textarea>
                 </div>
                 <div class="trans" id="three">
-                    <label for="part">part</label>
-                    <select name="part" id="part">
+                    <label for="part-3">part</label>
+                    <select name="part-3" id="part-3">
                         <option value="noun">noun</option>
-                        <option value="pronoun">pronoun</option>
                         <option value="verb">verb</option>
-                        <option value="ajective">ajective</option>
+                        <option value="adjective">ajective</option>
                         <option value="adverb">adverb</option>
-                        <option value="preposition">preposition</option>
-                        <option value="conjunction">conjunction</option>
-                        <option value="interjection">interjection</option>
-                        <option value="phrase">phrase</option>
+                        <option value="misc">phrase</option>
                     </select>
-                    <label for="translation">translation</label>
-                    <textarea name="translation" placeholder="translation"></textarea>
+                    <label for="translation-3">translation</label>
+                    <textarea name="translation-3" placeholder="translation-3"></textarea>
                 </div>
             </div>
             <input type="submit" value="Submit" />
@@ -71,9 +59,8 @@
         <div class="controls">
             <button id="result">Check</button>
             <button id="add">Add translation</button>
+            <button id="edit">Edit word</button>
         </div>
-
-
     </div>
     <script>
         let list_data = {{ words | safe }}

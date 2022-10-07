@@ -142,13 +142,14 @@
     }
 
     .controls {
-        width: 400px;
+        width: 700px;
         margin: auto;
         display: flex;
         justify-content: space-between;
 
         #result,
-        #add {
+        #add,
+        #edit {
             width: 175px;
             height: 40px;
         }

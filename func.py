@@ -25,32 +25,22 @@ def select_words(lang):
     return json.dumps(word_list, ensure_ascii=False)
 
 
-def add_words(lang, params):
+def add_words(lang, add_word, part, translations):
     if lang == "russian":
         add_model = Russian
         trans_model = English
     elif lang == "english":
         add_model = English
         trans_model = Russian
-    if (
-        add_model.query.filter_by(word=params["add_word"], part=params["part"]).first()
-        is None
-    ):
-        add_word = add_model(
-            word=params["add_word"], part=params["part"], verified=True
-        )
+    if add_model.query.filter_by(word=add_word, part=part).first() is None:
+        add_word = add_model(word=add_word, part=part, verified=True)
         db.session.add(add_word)
-        for item in params["translations"]:
-            if (
-                trans_model.query.filter_by(word=item, part=params["part"]).first()
-                is None
-            ):
-                trans_word = trans_model(word=item, part=params["part"])
+        for item in translations:
+            if trans_model.query.filter_by(word=item, part=part).first() is None:
+                trans_word = trans_model(word=item, part=part)
                 db.session.add(trans_word)
                 add_word.translation.append(trans_word)
             else:
-                trans_word = trans_model.query.filter_by(
-                    word=item, part=params["part"]
-                ).first()
+                trans_word = trans_model.query.filter_by(word=item, part=part).first()
                 add_word.translation.append(trans_word)
         db.session.commit()

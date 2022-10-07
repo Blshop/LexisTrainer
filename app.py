@@ -25,6 +25,7 @@ def lang_select():
     if request.method == "POST":
         global ACTIVE_LANGUAGE
         ACTIVE_LANGUAGE = request.json
+    return "", 204
 
 
 @app.route("/")
@@ -35,17 +36,19 @@ def index():
 @app.route("/addword", methods=["GET", "POST"])
 def add_word():
     if request.method == "POST" and request.form["add_word"] != "":
-        form_data = {
-            "translations": request.form["translation"].split("\r\n"),
-            "add_word": request.form["add_word"],
-            "part": request.form["part"],
-        }
-        print(form_data)
-        add_words(ACTIVE_LANGUAGE, form_data)
+        for i in range(1, 4):
+            print(request.form["translation-1"])
+            if request.form[f"translation-{i}"] != "":
+                add_words(
+                    ACTIVE_LANGUAGE,
+                    request.form["add_word"],
+                    request.form[f"part-{i}"],
+                    request.form[f"translation-{i}"].split("\r\n"),
+                )
         return redirect(url_for("index"))
     else:
         words = select_words(ACTIVE_LANGUAGE)
-        return render_template("AddWords.html", words=words)
+        return render_template("AddWords.html", words=words, lang=ACTIVE_LANGUAGE)
 
 
 @app.route("/view")
@@ -55,12 +58,10 @@ def view():
 
 @app.route("/learn", methods=["GET", "POST"])
 def learn():
-    words = Russian.query.filter(
-        Russian.answer < 100, Russian.verified == True).all()
+    words = Russian.query.filter(Russian.answer < 100, Russian.verified == True).all()
     random.shuffle(words)
     word_list = {
-        word.word: [word.answer, [
-            translation.word for translation in word.translation]]
+        word.word: [word.answer, [translation.word for translation in word.translation]]
         for word in words
     }
     return render_template(
@@ -126,5 +127,6 @@ def edit():
 
 
 if __name__ == "__main__":
-    # db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
