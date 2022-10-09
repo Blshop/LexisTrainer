@@ -9,7 +9,7 @@ from flask import (
     json,
 )
 import random
-from func import edit_prep, select_words, add_words, study_words
+from func import edit_prep, select_words, add_words, study_words, learned
 from models import db, Russian, English
 
 
@@ -67,10 +67,8 @@ def learn():
 @app.route("/finish", methods=["GET", "POST"])
 def finish():
     data = json.loads(request.form.get("data"))
-    for key, value in data.items():
-        Russian.query.filter(Russian.word == key).update(dict(answer=value[0]))
-    db.session.commit()
-    return jsonify("everything is good")
+    learned(ACTIVE_LANGUAGE, data)
+    return redirect(url_for("index"))
 
 
 @app.route("/edit", methods=["GET", "POST"])

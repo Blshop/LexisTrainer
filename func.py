@@ -63,3 +63,15 @@ def study_words(lang):
             prep_words[word.word] = {word.part: [word.answer, [
                 trans.word for trans in word.translation]]}
     return prep_words
+
+
+def learned(lang, words):
+    if lang == "russian":
+        model = Russian
+    elif lang == "english":
+        model = English
+    for word, parts in words.items():
+        for part, answer in parts.items():
+            model.query.filter(model.word == word, model.part ==
+                               part).update(dict(answer=answer[0]))
+    db.session.commit()

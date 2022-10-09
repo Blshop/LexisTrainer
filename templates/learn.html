@@ -45,6 +45,7 @@
       let keys = Object.keys(list_data)
       let random
       let ru_word
+      let parts
       document.getElementById("all").innerHTML = max_words
       next_word()
 
@@ -109,9 +110,13 @@
 
       }
       function minusvalue() {
-         if (list_data[ru_word][0] > 0) {
-            list_data[ru_word][0] -= 10
+         parts = Object.keys(list_data[ru_word])
+         for (i in parts) {
+            if (list_data[ru_word][parts[i]][0] > 0) {
+               plist_data[ru_word][parts[i]][0] -= 10
+            }
          }
+
          if (word_number == max_words) {
             document.getElementById("translation-0").innerHTML = 'Finished'
             document.getElementById("translation-1").innerHTML = 'Finished'
@@ -123,9 +128,15 @@
       }
 
       function addvalue() {
-         list_data[ru_word][0] += 10
+         parts = Object.keys(list_data[ru_word])
+         for (i in parts) {
+            list_data[ru_word][parts[i]][0] += 10
+            console.log(list_data[ru_word][parts[i]][0])
+         }
          if (word_number == max_words) {
-            document.getElementById("2").innerHTML = 'Finished'
+            document.getElementById("translation-0").innerHTML = 'Finished'
+            document.getElementById("translation-1").innerHTML = 'Finished'
+            document.getElementById("translation-2").innerHTML = 'Finished'
          }
          else { next_word() }
 
