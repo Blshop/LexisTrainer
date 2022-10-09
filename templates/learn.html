@@ -8,58 +8,57 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
    <script src="{{url_for('static', filename='main.js')}}"></script>
    <title>Document</title>
+   <link rel="stylesheet" href="/static/main.css">
 </head>
 
 <body>
    <div class="container">
-      <p id="current"></p>
-      <p id="all">id</p>
-      <p id="1">Russian_word</p><br>
-      <div class="answer">
-         <textarea name="" id="2" cols="50" rows="15">Answers</textarea>
+      <div class="status">
+         <p>Current word number <span id="current"></span> out of <span id="all"></span></p>
       </div>
-
-      <table>
-         <thead>
-            <tr>
-               <th id="1">russian_word</th>
-               <th id="2">part</th>
-               <th id="3">correct_count</th>
-               <th id="4">russian_id</th>
-            </tr>
-         </thead>
-         <tbody>
-            <tr>
-               <td></td>
-               <td></td>
-            </tr>
-         </tbody>
-      </table>
+      <p id="1"></p><br>
+      <div class="translations">
+         <div class="trans" id="one">
+            <p id="part-0">part</p>
+            <label for="translation-1">translation</label>
+            <textarea id="translation-0" name="translation-0" placeholder="translation-1"></textarea>
+         </div>
+         <div class="trans" id="two">
+            <p id="part-1">part</p>
+            <label for="translation-2">translation</label>
+            <textarea id="translation-1" name="translation-1" placeholder="translation-2"></textarea>
+         </div>
+         <div class="trans" id="three">
+            <p id="part-2">part</p>
+            <label for="translation-2">translation</label>
+            <textarea id="translation-2" name="translation-3" placeholder="translation-3"></textarea>
+         </div>
+      </div>
       <button id="5" style="height: 30px; width: 200px;">correct</button><br>
       <button id="6" style="height: 30px; width: 200px; margin-top: 40px ;">wrong</button><br>
       <button id="7" style="height: 30px; width: 200px; margin-top: 140px ;">finish</button>
    </div>
    <script type="text/javascript">
       let list_data = {{ words | safe }}
-      let word_number = 1;
+      let word_number = 0;
       let max_words = Object.keys(list_data).length
       let keys = Object.keys(list_data)
-      let random = Math.floor(Math.random() * keys.length)
-      let ru_word = keys[random]
-      keys.splice(random, 1)
+      let random
+      let ru_word
       document.getElementById("all").innerHTML = max_words
-      document.getElementById("current").innerHTML = word_number
-      document.getElementById("1").innerHTML = ru_word
-      document.getElementById("2").innerHTML = ''
-      // document.getElementById("3").innerHTML = list_data[word_number][2]
-      // document.getElementById("4").innerHTML = list_data[word_number][3]
+      next_word()
+
       document.getElementById("5").addEventListener("click", addvalue);
       document.getElementById("6").addEventListener("click", minusvalue);
       document.getElementById("7").addEventListener("click", finish);
-      document.getElementById("2").addEventListener("click", show);
+      document.getElementById("translation-0").addEventListener("click", show);
+      document.getElementById("translation-1").addEventListener("click", show);
+      document.getElementById("translation-2").addEventListener("click", show);
 
       function show() {
-         document.getElementById("2").innerHTML = list_data[ru_word][1].join('\r\n')
+         document.getElementById("translation-0").style.color = 'black'
+         document.getElementById("translation-1").style.color = 'black'
+         document.getElementById("translation-2").style.color = 'black'
       }
 
       function finish() {
@@ -79,14 +78,31 @@
       }
 
       function next_word() {
+         document.getElementById("translation-0").style.color = 'white'
+         document.getElementById("translation-1").style.color = 'white'
+         document.getElementById("translation-2").style.color = 'white'
+         document.getElementById("part-0").style.color = 'white'
+         document.getElementById("part-1").style.color = 'white'
+         document.getElementById("part-2").style.color = 'white'
+         document.getElementById("translation-0").innerHTML = ''
+         document.getElementById("translation-1").innerHTML = ''
+         document.getElementById("translation-2").innerHTML = ''
+
          if (max_words > word_number) {
             word_number += 1
             random = Math.floor(Math.random() * keys.length)
             ru_word = keys[random]
+            parts = Object.keys(list_data[ru_word])
+            console.log(parts)
             keys.splice(random, 1)
             document.getElementById("current").innerHTML = word_number
             document.getElementById("1").innerHTML = ru_word
-            document.getElementById("2").innerHTML = ''
+            for (i in parts) {
+               document.getElementById('part-' + i).innerHTML = parts[i]
+               document.getElementById("part-" + i).style.color = 'black'
+               document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]][1].join('\r\n')
+            }
+            // document.getElementById("2").innerHTML = ''
             // document.getElementById("3").innerHTML = list_data[word_number][2]
             // document.getElementById("4").innerHTML = list_data[word_number][3]
          }
@@ -97,7 +113,9 @@
             list_data[ru_word][0] -= 10
          }
          if (word_number == max_words) {
-            document.getElementById("2").innerHTML = 'Finished'
+            document.getElementById("translation-0").innerHTML = 'Finished'
+            document.getElementById("translation-1").innerHTML = 'Finished'
+            document.getElementById("translation-2").innerHTML = 'Finished'
          }
          else {
             next_word()

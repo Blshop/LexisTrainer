@@ -41,6 +41,25 @@ def add_words(lang, add_word, part, translations):
                 db.session.add(trans_word)
                 add_word.translation.append(trans_word)
             else:
-                trans_word = trans_model.query.filter_by(word=item, part=part).first()
+                trans_word = trans_model.query.filter_by(
+                    word=item, part=part).first()
                 add_word.translation.append(trans_word)
         db.session.commit()
+
+
+def study_words(lang):
+    if lang == "russian":
+        model = Russian
+    elif lang == "english":
+        model = English
+    words = model.query.filter(
+        model.answer < 100, model.verified == True).all()
+    prep_words = {}
+    for word in words:
+        if word .word in prep_words.keys():
+            prep_words[word.word][word.part] = [word.answer, [
+                trans.word for trans in word.translation]]
+        else:
+            prep_words[word.word] = {word.part: [word.answer, [
+                trans.word for trans in word.translation]]}
+    return prep_words

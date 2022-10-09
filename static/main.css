@@ -3,8 +3,7 @@
   font-size: 24px;
   margin: 0px;
   padding: 0px;
-  -webkit-box-sizing: border-box !important;
-          box-sizing: border-box !important;
+  box-sizing: border-box !important;
   color: black;
 }
 
@@ -14,26 +13,19 @@
   padding: 100px 0;
   background-color: bisque;
 }
-
 .container .lang-select {
   margin: auto;
   text-align: center;
   width: 300px;
 }
-
 .container .lang-select p {
   text-transform: uppercase;
   padding: 10px;
 }
-
 .container .lang-select ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  justify-content: space-around;
 }
-
 .container .lang-select ul li {
   list-style: none;
   padding: 10px;
@@ -42,39 +34,24 @@
   border-radius: 15px;
   cursor: pointer;
 }
-
 .container .lang-select ul .active {
   border: 2px solid #be1c1c;
   background-color: #cea945;
 }
-
 .container .main-menu ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
 .container .main-menu ul li {
   list-style: none;
 }
-
 .container .main-menu ul li :hover {
   outline: 3px solid red;
   width: 800px;
-  -webkit-transition: 0.2s;
   transition: 0.2s;
 }
-
 .container .main-menu ul li a {
   display: inline-block;
   background-color: aqua;
@@ -87,96 +64,66 @@
   text-decoration: none;
   text-align: center;
 }
-
 .container .main-menu ul li a :visited {
   color: inherit;
 }
-
-.container form .add_word {
+.container .add-word .add_word {
   width: 500px;
   margin: auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  justify-content: center;
   gap: 10px;
 }
-
-.container form .add_word label {
+.container .add-word .add_word label {
   text-align: center;
 }
-
-.container form .add_word input {
+.container .add-word .add_word input {
   width: inherit;
   height: 35px;
 }
-
-.container form .translations {
-  display: -webkit-box;
-  display: -ms-flexbox;
+.container .add-word .translations {
   display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  justify-content: space-around;
   margin: 15px 0;
 }
-
-.container form .translations .trans {
+.container .add-word .translations .trans {
   border: 2px solid red;
   border-radius: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   gap: 10px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
-
-.container form .translations .trans textarea {
+.container .add-word .translations .trans textarea {
   width: 250px;
   height: 150px;
   text-align: justify;
   line-height: 130%;
 }
-
-.container form .translations #two,
-.container form .translations #three {
+.container .add-word .translations #two,
+.container .add-word .translations #three {
   display: none;
 }
-
-.container form input {
+.container .add-word input {
   display: block;
   margin: auto;
   width: 150px;
   height: 50px;
   margin-bottom: 50px;
 }
-
 .container .controls {
   width: 700px;
   margin: auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .container .controls #result,
 .container .controls #add,
 .container .controls #edit {
   width: 175px;
   height: 40px;
 }
-/*# sourceMappingURL=main.css.map */
+.container textarea :target {
+  color: black;
+}/*# sourceMappingURL=main.css.map */

@@ -84,7 +84,7 @@
 
     }
 
-    form {
+    .add-word {
         .add_word {
             width: 500px;
             margin: auto;
@@ -152,6 +152,12 @@
         #edit {
             width: 175px;
             height: 40px;
+        }
+    }
+
+    textarea {
+        :target {
+            color: black;
         }
     }
 }

@@ -9,7 +9,7 @@ from flask import (
     json,
 )
 import random
-from func import edit_prep, select_words, add_words
+from func import edit_prep, select_words, add_words, study_words
 from models import db, Russian, English
 
 
@@ -37,7 +37,6 @@ def index():
 def add_word():
     if request.method == "POST" and request.form["add_word"] != "":
         for i in range(1, 4):
-            print(request.form["translation-1"])
             if request.form[f"translation-{i}"] != "":
                 add_words(
                     ACTIVE_LANGUAGE,
@@ -58,14 +57,10 @@ def view():
 
 @app.route("/learn", methods=["GET", "POST"])
 def learn():
-    words = Russian.query.filter(Russian.answer < 100, Russian.verified == True).all()
-    random.shuffle(words)
-    word_list = {
-        word.word: [word.answer, [translation.word for translation in word.translation]]
-        for word in words
-    }
+    prep_words = study_words(ACTIVE_LANGUAGE)
+    print(prep_words)
     return render_template(
-        "learn.html", words=json.dumps(word_list, ensure_ascii=False)
+        "learn.html", words=json.dumps(prep_words, ensure_ascii=False)
     )
 
 

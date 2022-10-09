@@ -11,7 +11,7 @@
 
 <body>
     <div class="container">
-        <form action="{{ request.path }}" method="post">
+        <form class="add-word" action="{{ request.path }}" method="post">
             <div class="add_word">
                 <label for="word">{{lang}} word</label>
                 <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff" />
