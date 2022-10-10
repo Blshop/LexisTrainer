@@ -9,7 +9,7 @@ from flask import (
     json,
 )
 import random
-from func import edit_prep, select_words, add_words, study_words, learned
+from func import edit_prep, select_words, add_words, study_words, learned, edit_word, all_words, not_verified
 from models import db, Russian, English
 
 
@@ -58,7 +58,6 @@ def view():
 @app.route("/learn", methods=["GET", "POST"])
 def learn():
     prep_words = study_words(ACTIVE_LANGUAGE)
-    print(prep_words)
     return render_template(
         "learn.html", words=json.dumps(prep_words, ensure_ascii=False)
     )
@@ -74,49 +73,43 @@ def finish():
 @app.route("/edit", methods=["GET", "POST"])
 def edit():
     if request.method == "POST" and request.form["word"] != "":
-        new_translation = request.form["translation"].split("\r\n")
-        old_word = Russian.query.filter_by(word=request.form["word"]).first()
-        new_word = LearningRus.query.filter_by(rus_id=old_word.id).first()
-        new_word.answer = 0
-        old_translation = (
-            db.session.query(
-                Translation.russian_id, Translation.english_id, English.word
-            )
-            .join(Translation)
-            .filter(Translation.russian_id == old_word.id)
-            .all()
-        )
-        for word in old_translation:
-            if word[2] not in new_translation:
-                Translation.query.filter_by(
-                    english_id=word[1], russian_id=word[0]
-                ).delete()
-            else:
-                new_translation.remove(word[2])
-        db.session.commit()
-        for word in new_translation:
-            if English.query.filter_by(word=word).first() is None:
-                new_word = English(word=word, part=request.form["part"])
-                db.session.add(new_word)
-                db.session.flush()
-                translation = Translation(new_word.id, old_word.id)
-                db.session.add(translation)
-                db.session.commit()
-            else:
-                new_word = English.query.filter_by(word=word).first()
-                translation = Translation(new_word.id, old_word.id)
-                db.session.add(translation)
-                db.session.commit()
+        for i in range(3):
+            if request.form[f"translation-{i}"] != "":
+                edit_word(
+                    ACTIVE_LANGUAGE,
+                    request.form[f"id-{i}"],
+                    request.form["word"],
+                    request.form[f"part-{i}"],
+                    request.form[f"translation-{i}"].split("\r\n"),
+                )
         return redirect(url_for("index"))
     else:
-        all_words = (
-            db.session.query(Russian.word, English.word)
-            .join(Translation, Translation.russian_id == Russian.id)
-            .join(English)
-            .all()
+        words = all_words(ACTIVE_LANGUAGE)
+        unverified = not_verified(ACTIVE_LANGUAGE)
+        return render_template(
+            "edit.html", words=json.dumps(words), unverified=unverified
         )
-        all_words = edit_prep(all_words)
-        return render_template("edit.html", words=json.dumps(all_words))
+
+
+@app.route("/edit_word", methods={"GET", "POST"})
+def edit_words():
+    if request.method == "POST" and request.form["word"] != "":
+        for i in range(3):
+            if request.form[f"translation-{i}"] != "":
+                edit_word(
+                    ACTIVE_LANGUAGE,
+                    request.form["id"],
+                    request.form["word"],
+                    request.form[f"part-{i}"],
+                    request.form[f"translation-{i}"].split("\r\n"),
+                )
+        return redirect(url_for("index"))
+    else:
+        words = all_words(ACTIVE_LANGUAGE)
+        unverified = not_verified(ACTIVE_LANGUAGE)
+        return render_template(
+            "edit.html", words=json.dumps(words), unverified=unverified
+        )
 
 
 if __name__ == "__main__":

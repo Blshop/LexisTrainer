@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href='/static/style.css' />
+    <link rel="stylesheet" href='/static/main.css' />
     <title>Document</title>
 </head>
 
@@ -13,39 +13,80 @@
     <div class="container">
         <form action="{{ request.path }}" method="post">
             <label for="word">Name</label><br>
-            <input id="word" type="text" name="word" autocomplete="off" list="autocompleteOff" /><br>
-            <label for="part">Part</label><br>
-            <select name="part" id="part">
-                <option value="noun">noun</option>
-                <option value="pronoun">pronoun</option>
-                <option value="verb">verb</option>
-                <option value="ajective">ajective</option>
-                <option value="adverb">adverb</option>
-                <option value="preposition">preposition</option>
-                <option value="conjunction">conjunction</option>
-                <option value="interjection">interjection</option>
-                <option value="phrase">phrase</option>
-            </select><br>
-            <label for="translation">addr</label><br>
-            <textarea id="2" name="translation" placeholder="translation"></textarea><br>
+            <input id="word" type="text" name="word" autocomplete="off" list="autocompleteOff" />
+            <input id="id" type="text" name="id" autocomplete="off" list="autocompleteOff" />
+            <div class="translations">
+                <div class="trans" id="one">
+                    <label for="part-0">part</label>
+                    <select name="part-0" id="part-0">
+                        <option value="noun">noun</option>
+                        <option value="verb">verb</option>
+                        <option value="adjective">ajective</option>
+                        <option value="adverb">adverb</option>
+                        <option value="misc">phrase</option>
+                    </select>
+                    <label for="translation-0">translation</label>
+                    <textarea id="translation-0" name="translation-0" placeholder="translation-0"></textarea>
+                    <input id="id-0" type="text" name="id-0" autocomplete="off" list="autocompleteOff" />
+                </div>
+                <div class="trans" id="two">
+                    <label for="part-1">part</label>
+                    <select name="part-1" id="part-1">
+                        <option value="noun">noun</option>
+                        <option value="verb">verb</option>
+                        <option value="adjective">ajective</option>
+                        <option value="adverb">adverb</option>
+                        <option value="misc">phrase</option>
+                    </select>
+                    <label for="translation-1">translation</label>
+                    <textarea id="translation-1" name="translation-1" placeholder="translation-1"></textarea>
+                    <input id="id-1" type="text" name="id-1" autocomplete="off" list="autocompleteOff" />
+                </div>
+                <div class="trans" id="three">
+                    <label for="part-2">part</label>
+                    <select name="part-2" id="part-2">
+                        <option value="noun">noun</option>
+                        <option value="verb">verb</option>
+                        <option value="adjective">ajective</option>
+                        <option value="adverb">adverb</option>
+                        <option value="misc">phrase</option>
+                    </select>
+                    <label for="translation-2">translation</label>
+                    <textarea id="translation-2" name="translation-2" placeholder="translation-2"></textarea>
+                    <input id="id-2" type="text" name="id-2" autocomplete="off" list="autocompleteOff" />
+                </div>
+            </div>
             <input type="submit" value="Submit" />
         </form>
         check:<button style="height: 50px; width:150px;" id="result"></button>
+        {% for word in unverified.keys()%}
+        <p onclick="tip(this.innerHTML)">{{word}}</p>
+        {%endfor%}
     </div>
     <script>
-        let list_data = {{ words | safe }}
-        console.log(list_data)
+        let all_words = {{ words | safe }}
+
         var input = document.getElementById('word');
         document.getElementById("result").addEventListener("click", check);
         function check() {
-
-            if (list_data[input.value] !== -1) {
-                document.getElementById("2").innerHTML = list_data[input.value].join('\r\n')
+            let parts = Object.keys(all_words[input.value])
+            console.log(parts)
+            if (all_words[input.value] !== -1) {
+                for (i in parts) {
+                    document.getElementById('part-' + i).value = parts[i]
+                    console.log(all_words[input.value][parts[i]][2].join('\r\n'))
+                    document.getElementById("translation-" + i).innerHTML = all_words[input.value][parts[i]][2].join('\r\n')
+                    document.getElementById("id-" + i).value = all_words[input.value][parts[i]][1]
+                }
             } else {
                 alert("Value does not exists!")
             }
         }
-
+        function tip(word) {
+            console.log(word)
+            document.getElementById("word").value = word
+            check()
+        }
     </script>
 </body>
 
