@@ -1,3 +1,4 @@
+from gettext import translation
 from models import db, Russian, English
 from flask import json
 
@@ -41,8 +42,7 @@ def add_words(lang, add_word, part, translations):
                 db.session.add(trans_word)
                 add_word.translation.append(trans_word)
             else:
-                trans_word = trans_model.query.filter_by(
-                    word=item, part=part).first()
+                trans_word = trans_model.query.filter_by(word=item, part=part).first()
                 add_word.translation.append(trans_word)
         db.session.commit()
 
@@ -52,16 +52,18 @@ def study_words(lang):
         model = Russian
     elif lang == "english":
         model = English
-    words = model.query.filter(
-        model.answer < 100, model.verified == True).all()
+    words = model.query.filter(model.answer < 100, model.verified == True).all()
     prep_words = {}
     for word in words:
-        if word .word in prep_words.keys():
-            prep_words[word.word][word.part] = [word.answer, [
-                trans.word for trans in word.translation]]
+        if word.word in prep_words.keys():
+            prep_words[word.word][word.part] = [
+                word.answer,
+                [trans.word for trans in word.translation],
+            ]
         else:
-            prep_words[word.word] = {word.part: [word.answer, [
-                trans.word for trans in word.translation]]}
+            prep_words[word.word] = {
+                word.part: [word.answer, [trans.word for trans in word.translation]]
+            }
     return prep_words
 
 
@@ -72,8 +74,9 @@ def learned(lang, words):
         model = English
     for word, parts in words.items():
         for part, answer in parts.items():
-            model.query.filter(model.word == word, model.part ==
-                               part).update(dict(answer=answer[0]))
+            model.query.filter(model.word == word, model.part == part).update(
+                dict(answer=answer[0])
+            )
     db.session.commit()
 
 
@@ -117,8 +120,7 @@ def not_verified(lang):
             ]
         else:
             prep_words[word.word] = {
-                word.part: [word.answer, [
-                    trans.word for trans in word.translation]]
+                word.part: [word.answer, [trans.word for trans in word.translation]]
             }
     return prep_words
 
@@ -130,28 +132,37 @@ def edit_word(lang, word_id, edit_word, part, translations):
     elif lang == "english":
         add_model = English
         trans_model = Russian
-    if add_model.query.filter_by(id=word_id, part=part).first() is None:
-        add_word = add_model(word=edit_word, part=part,
-                             answer=0, verified=True)
+    if word_id == "":
+        add_word = add_model(word=edit_word, part=part, answer=0, verified=True)
+        db.session.add(add_word)
+    elif translations == [""]:
+        add_word = add_model.query.filter_by(id=word_id).first()
+        add_word.translation = []
+        add_model.query.filter_by(id=word_id).delete()
+    elif add_model.query.filter_by(id=word_id).first().part != part:
+        add_word = add_model.query.filter_by(id=word_id).first()
+        add_word.translation = []
+        add_model.query.filter_by(id=word_id).delete()
+        add_word = add_model(word=edit_word, part=part, answer=0, verified=True)
         db.session.add(add_word)
     else:
+        add_word = add_model.query.filter_by(id=word_id).first()
         add_model.query.filter_by(id=word_id).update(
-            dict(word=edit_word, verified=True, answer=0, part=part)
+            dict(word=edit_word, verified=True, answer=0)
         )
-        add_word = add_model.query.filter_by(id=word_id, part=part).first()
+    print(add_word.translation)
     for trans in add_word.translation:
+        print(trans.word, translations)
         if trans.word in translations:
             translations.remove(trans.word)
         else:
             add_word.translation.remove(trans)
     for trans in translations:
         if trans_model.query.filter_by(word=trans, part=part).first() is None:
-            trans_word = trans_model(
-                word=trans, part=part, answer=0, verified=False)
+            trans_word = trans_model(word=trans, part=part, answer=0, verified=False)
+            db.session.add(trans_word)
             add_word.translation.append(trans_word)
         else:
-            trans_word = trans_model.query.filter_by(
-                word=trans, part=part).first()
-            db.session.add(trans_word)
+            trans_word = trans_model.query.filter_by(word=trans, part=part).first()
             add_word.translation.append(trans_word)
     db.session.commit()

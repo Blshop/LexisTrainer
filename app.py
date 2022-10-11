@@ -9,7 +9,16 @@ from flask import (
     json,
 )
 import random
-from func import edit_prep, select_words, add_words, study_words, learned, edit_word, all_words, not_verified
+from func import (
+    edit_prep,
+    select_words,
+    add_words,
+    study_words,
+    learned,
+    edit_word,
+    all_words,
+    not_verified,
+)
 from models import db, Russian, English
 
 
@@ -74,7 +83,9 @@ def finish():
 def edit():
     if request.method == "POST" and request.form["word"] != "":
         for i in range(3):
-            if request.form[f"translation-{i}"] != "":
+            if request.form[f"translation-{i}"] == "" and request.form[f"id-{i}"] == "":
+                pass
+            else:
                 edit_word(
                     ACTIVE_LANGUAGE,
                     request.form[f"id-{i}"],
