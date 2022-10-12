@@ -23,11 +23,12 @@
                         <option value="verb">verb</option>
                         <option value="adjective">ajective</option>
                         <option value="adverb">adverb</option>
-                        <option value="misc">phrase</option>
+                        <option value="misc">misc</option>
                     </select>
                     <label for="translation-0">translation</label>
                     <textarea id="translation-0" name="translation-0" placeholder="translation-0"></textarea>
                     <input id="id-0" type="text" name="id-0" autocomplete="off" list="autocompleteOff" />
+                    <input id="answer-0" type="text" name="answer-0" autocomplete="off" list="autocompleteOff" />
                 </div>
                 <div class="trans" id="two">
                     <label for="part-1">part</label>
@@ -41,6 +42,7 @@
                     <label for="translation-1">translation</label>
                     <textarea id="translation-1" name="translation-1" placeholder="translation-1"></textarea>
                     <input id="id-1" type="text" name="id-1" autocomplete="off" list="autocompleteOff" />
+                    <input id="answer-1" type="text" name="answer-1" autocomplete="off" list="autocompleteOff" />
                 </div>
                 <div class="trans" id="three">
                     <label for="part-2">part</label>
@@ -54,6 +56,7 @@
                     <label for="translation-2">translation</label>
                     <textarea id="translation-2" name="translation-2" placeholder="translation-2"></textarea>
                     <input id="id-2" type="text" name="id-2" autocomplete="off" list="autocompleteOff" />
+                    <input id="answer-2" type="text" name="answer-2" autocomplete="off" list="autocompleteOff" />
                 </div>
             </div>
             <input type="submit" value="Submit" />
@@ -70,13 +73,13 @@
         document.getElementById("result").addEventListener("click", check);
         function check() {
             let parts = Object.keys(all_words[input.value])
-            console.log(parts)
             if (all_words[input.value] !== -1) {
                 for (i in parts) {
                     document.getElementById('part-' + i).value = parts[i]
-                    console.log(all_words[input.value][parts[i]][2].join('\r\n'))
-                    document.getElementById("translation-" + i).innerHTML = all_words[input.value][parts[i]][2].join('\r\n')
+                    console.log(all_words[input.value][parts[i]][3].join('\r\n'))
+                    document.getElementById("translation-" + i).innerHTML = all_words[input.value][parts[i]][3].join('\r\n')
                     document.getElementById("id-" + i).value = all_words[input.value][parts[i]][1]
+                    document.getElementById("answer-" + i).value = all_words[input.value][parts[i]][2]
                 }
             } else {
                 alert("Value does not exists!")

@@ -18,6 +18,7 @@ from func import (
     edit_word,
     all_words,
     not_verified,
+    stats,
 )
 from models import db, Russian, English
 
@@ -92,8 +93,9 @@ def edit():
                     request.form["word"],
                     request.form[f"part-{i}"],
                     request.form[f"translation-{i}"].split("\r\n"),
+                    request.form[f"answer-{i}"],
                 )
-        return redirect(url_for("index"))
+        return redirect(url_for("edit"))
     else:
         words = all_words(ACTIVE_LANGUAGE)
         unverified = not_verified(ACTIVE_LANGUAGE)
@@ -113,14 +115,21 @@ def edit_words():
                     request.form["word"],
                     request.form[f"part-{i}"],
                     request.form[f"translation-{i}"].split("\r\n"),
+                    request.form[f"answer-{i}"],
                 )
-        return redirect(url_for("index"))
+        return redirect(url_for("edit_words"))
     else:
         words = all_words(ACTIVE_LANGUAGE)
         unverified = not_verified(ACTIVE_LANGUAGE)
         return render_template(
             "edit.html", words=json.dumps(words), unverified=unverified
         )
+
+
+@app.route("/statistics")
+def statistics():
+    words = stats(ACTIVE_LANGUAGE)
+    return render_template("stats.html", all_words=words)
 
 
 if __name__ == "__main__":
