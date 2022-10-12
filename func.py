@@ -42,7 +42,8 @@ def add_words(lang, add_word, part, translations):
                 db.session.add(trans_word)
                 add_word.translation.append(trans_word)
             else:
-                trans_word = trans_model.query.filter_by(word=item, part=part).first()
+                trans_word = trans_model.query.filter_by(
+                    word=item, part=part).first()
                 add_word.translation.append(trans_word)
         db.session.commit()
 
@@ -52,7 +53,8 @@ def study_words(lang):
         model = Russian
     elif lang == "english":
         model = English
-    words = model.query.filter(model.answer < 100, model.verified == True).all()
+    words = model.query.filter(
+        model.answer < 100, model.verified == True).all()
     prep_words = {}
     for word in words:
         if word.word in prep_words.keys():
@@ -62,7 +64,8 @@ def study_words(lang):
             ]
         else:
             prep_words[word.word] = {
-                word.part: [word.answer, [trans.word for trans in word.translation]]
+                word.part: [word.answer, [
+                    trans.word for trans in word.translation]]
             }
     return prep_words
 
@@ -122,7 +125,8 @@ def not_verified(lang):
             ]
         else:
             prep_words[word.word] = {
-                word.part: [word.answer, [trans.word for trans in word.translation]]
+                word.part: [word.answer, [
+                    trans.word for trans in word.translation]]
             }
     return prep_words
 
@@ -135,7 +139,8 @@ def edit_word(lang, word_id, edit_word, part, translations, answer):
         add_model = English
         trans_model = Russian
     if word_id == "":
-        add_word = add_model(word=edit_word, part=part, answer=answer, verified=True)
+        add_word = add_model(word=edit_word, part=part,
+                             answer=answer, verified=True)
         db.session.add(add_word)
     elif translations == [""]:
         add_word = add_model.query.filter_by(id=word_id).first()
@@ -145,25 +150,34 @@ def edit_word(lang, word_id, edit_word, part, translations, answer):
         add_word = add_model.query.filter_by(id=word_id).first()
         add_word.translation = []
         add_model.query.filter_by(id=word_id).delete()
-        add_word = add_model(word=edit_word, part=part, answer=answer, verified=True)
+        add_word = add_model(word=edit_word, part=part,
+                             answer=answer, verified=True)
         db.session.add(add_word)
     else:
         add_word = add_model.query.filter_by(id=word_id).first()
         add_model.query.filter_by(id=word_id).update(
-            dict(word=edit_word, verified=True, answer=0)
+            dict(word=edit_word, verified=True, answer=answer)
         )
+    all_trans = []
+    print(all_trans)
     for trans in add_word.translation:
+        print(trans.word, translations)
         if trans.word in translations:
             translations.remove(trans.word)
         else:
-            add_word.translation.remove(trans)
+            all_trans.append(trans)
+    add_word.translation = all_trans
+    print(add_word.translation)
+    print(all_trans)
     for trans in translations:
         if trans_model.query.filter_by(word=trans, part=part).first() is None:
-            trans_word = trans_model(word=trans, part=part, answer=0, verified=False)
+            trans_word = trans_model(
+                word=trans, part=part, answer=0, verified=False)
             db.session.add(trans_word)
             add_word.translation.append(trans_word)
         else:
-            trans_word = trans_model.query.filter_by(word=trans, part=part).first()
+            trans_word = trans_model.query.filter_by(
+                word=trans, part=part).first()
             add_word.translation.append(trans_word)
     db.session.commit()
 
@@ -174,6 +188,8 @@ def stats(lang):
     elif lang == "english":
         model = English
     all_words = len(model.query.group_by(model.word).all())
-    learned = len(model.query.filter(model.answer == 100).group_by(model.word).all())
-    to_learn = len(model.query.filter(model.answer < 100).group_by(model.word).all())
+    learned = len(model.query.filter(
+        model.answer == 100).group_by(model.word).all())
+    to_learn = len(model.query.filter(
+        model.answer < 100).group_by(model.word).all())
     return [all_words, learned, to_learn]

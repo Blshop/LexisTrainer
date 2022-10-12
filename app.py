@@ -93,7 +93,7 @@ def edit():
                     request.form["word"],
                     request.form[f"part-{i}"],
                     request.form[f"translation-{i}"].split("\r\n"),
-                    request.form[f"answer-{i}"],
+                    request.form[f"answer-0"],
                 )
         return redirect(url_for("edit"))
     else:
@@ -115,7 +115,7 @@ def edit_words():
                     request.form["word"],
                     request.form[f"part-{i}"],
                     request.form[f"translation-{i}"].split("\r\n"),
-                    request.form[f"answer-{i}"],
+                    request.form[f"answer-0"],
                 )
         return redirect(url_for("edit_words"))
     else:
