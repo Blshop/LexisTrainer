@@ -3,58 +3,94 @@
   font-size: 24px;
   margin: 0px;
   padding: 0px;
-  box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
+          box-sizing: border-box !important;
+}
+
+a:visited {
   color: black;
+}
+
+body {
+  background: linear-gradient(324deg, #b8b5f8 0%, white 50%, #3dddfd 100%);
 }
 
 .container {
   margin: auto;
   width: 1200px;
   padding: 100px 0;
-  background-color: bisque;
+  height: 100vh;
 }
-.container .lang-select {
+
+.lang-select {
   margin: auto;
   text-align: center;
   width: 300px;
+  padding-bottom: 30px;
 }
-.container .lang-select p {
+
+.lang-select p {
   text-transform: uppercase;
   padding: 10px;
 }
-.container .lang-select ul {
+
+.lang-select ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-around;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
 }
-.container .lang-select ul li {
+
+.lang-select ul li {
   list-style: none;
   padding: 10px;
-  background-color: #eec450;
+  background-color: #00ffc8;
   margin: 5px;
   border-radius: 15px;
   cursor: pointer;
 }
-.container .lang-select ul .active {
-  border: 2px solid #be1c1c;
-  background-color: #cea945;
+
+.lang-select ul .active {
+  border: 2px solid #009978;
+  background-color: #00d8a9;
+  -webkit-box-shadow: 2px 2px 5px #009978;
+          box-shadow: 2px 2px 5px #009978;
+  color: #692177;
 }
-.container .main-menu ul {
+
+.main-menu ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
-.container .main-menu ul li {
+
+.main-menu ul li {
   list-style: none;
 }
-.container .main-menu ul li :hover {
-  outline: 3px solid red;
+
+.main-menu ul li :hover {
+  -webkit-box-shadow: 2px 2px 5px #009978;
+          box-shadow: 2px 2px 5px #009978;
   width: 800px;
-  transition: 0.2s;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  color: #692177;
 }
-.container .main-menu ul li a {
+
+.main-menu ul li a {
   display: inline-block;
-  background-color: aqua;
+  background-color: #00ffc8;
   margin-top: 15px;
   border-radius: 7px;
   padding: 10px;
@@ -64,66 +100,104 @@
   text-decoration: none;
   text-align: center;
 }
-.container .main-menu ul li a :visited {
-  color: inherit;
-}
-.container .add-word .add_word {
+
+.add-word .add_word {
   width: 500px;
   margin: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   gap: 10px;
 }
-.container .add-word .add_word label {
+
+.add-word .add_word label {
   text-align: center;
 }
-.container .add-word .add_word input {
+
+.add-word .add_word input {
   width: inherit;
   height: 35px;
+  border-radius: 17px;
+  text-align: center;
 }
-.container .add-word .translations {
+
+.add-word .translations {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-around;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
   margin: 15px 0;
 }
-.container .add-word .translations .trans {
-  border: 2px solid red;
+
+.add-word .translations .trans {
+  -webkit-box-shadow: 0px 0px 10px #009978;
+          box-shadow: 0px 0px 10px #009978;
   border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   gap: 10px;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
-.container .add-word .translations .trans textarea {
+
+.add-word .translations .trans textarea {
   width: 250px;
   height: 150px;
   text-align: justify;
   line-height: 130%;
+  border-radius: 5px;
 }
-.container .add-word .translations #two,
-.container .add-word .translations #three {
+
+.add-word .translations #id1,
+.add-word .translations #id2 {
   display: none;
 }
-.container .add-word input {
+
+.add-word input {
   display: block;
   margin: auto;
   width: 150px;
   height: 50px;
   margin-bottom: 50px;
 }
-.container .controls {
+
+.controls {
   width: 700px;
   margin: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
-.container .controls #result,
-.container .controls #add,
-.container .controls #edit {
+
+.controls #result,
+.controls #add,
+.controls #edit {
   width: 175px;
   height: 40px;
 }
-.container textarea :target {
+
+textarea {
+  padding: 5px;
+}
+
+textarea :target {
   color: black;
-}/*# sourceMappingURL=main.css.map */
+}
+/*# sourceMappingURL=main.css.map */

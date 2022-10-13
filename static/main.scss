@@ -4,160 +4,166 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box !important;
+}
+
+a:visited {
     color: black;
 }
 
+body {
+    background: linear-gradient(324deg, rgb(184, 181, 248) 0%, rgba(255, 255, 255, 1) 50%, rgb(61, 221, 253) 100%);
+}
 
 .container {
     margin: auto;
     width: 1200px;
     padding: 100px 0;
-    background-color: bisque;
+    height: 100vh;
+}
 
-    .lang-select {
-        margin: auto;
-        text-align: center;
-        width: 300px;
+.lang-select {
+    margin: auto;
+    text-align: center;
+    width: 300px;
+    padding-bottom: 30px;
 
-        p {
-            text-transform: uppercase;
+    p {
+        text-transform: uppercase;
+        padding: 10px;
+    }
+
+    ul {
+        display: flex;
+        justify-content: space-around;
+
+        li {
+            list-style: none;
             padding: 10px;
+            background-color: rgb(0, 255, 200);
+            margin: 5px;
+            border-radius: 15px;
+            cursor: pointer;
         }
 
-        ul {
-            display: flex;
-            justify-content: space-around;
+        .active {
+            border: 2px solid rgb(0, 153, 120);
+            background-color: rgb(0, 216, 169);
+            box-shadow: 2px 2px 5px rgb(0, 153, 120);
+            color: rgb(105, 33, 119);
+        }
+    }
+}
 
-            li {
-                list-style: none;
+.main-menu {
+    ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        li {
+            list-style: none;
+
+            :hover {
+                box-shadow: 2px 2px 5px rgb(0, 153, 120);
+                width: 800px;
+                transition: 0.3s;
+                color: rgb(105, 33, 119);
+            }
+
+            a {
+                display: inline-block;
+                background-color: rgb(0, 255, 200);
+                margin-top: 15px;
+                border-radius: 7px;
                 padding: 10px;
-                background-color: #eec450;
-                margin: 5px;
-                border-radius: 15px;
-                cursor: pointer;
-            }
-
-            .active {
-                border: 2px solid #be1c1c;
-                background-color: #cea945;
-            }
-        }
-    }
-
-    .main-menu {
-        ul {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            li {
-                list-style: none;
-
-                :hover {
-                    outline: 3px solid red;
-                    width: 800px;
-                    transition: 0.2s;
-                }
-
-                a {
-                    display: inline-block;
-                    background-color: aqua;
-                    margin-top: 15px;
-                    border-radius: 7px;
-                    padding: 10px;
-                    border-radius: 7px;
-                    margin-top: 10px;
-                    width: 600px;
-                    text-decoration: none;
-                    text-align: center;
-
-                    :visited {
-                        color: inherit;
-                    }
-
-                }
-
-            }
-        }
-
-
-    }
-
-    .add-word {
-        .add_word {
-            width: 500px;
-            margin: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 10px;
-
-            label {
+                border-radius: 7px;
+                margin-top: 10px;
+                width: 600px;
+                text-decoration: none;
                 text-align: center;
             }
 
-            input {
-                width: inherit;
-                height: 35px;
-            }
         }
+    }
+}
 
-        .translations {
-            display: flex;
-            justify-content: space-around;
-            margin: 15px 0;
+.add-word {
+    .add_word {
+        width: 500px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
 
-            .trans {
-                border: 2px solid red;
-                border-radius: 10px;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
-
-                textarea {
-                    width: 250px;
-                    height: 150px;
-                    text-align: justify;
-                    line-height: 130%;
-                }
-
-            }
-
-            #two,
-            #three {
-                display: none;
-            }
-
+        label {
+            text-align: center;
         }
 
         input {
-            display: block;
-            margin: auto;
-            width: 150px;
-            height: 50px;
-            margin-bottom: 50px;
+            width: inherit;
+            height: 35px;
+            border-radius: 17px;
+            text-align: center;
         }
     }
 
-    .controls {
-        width: 700px;
-        margin: auto;
+    .translations {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
+        margin: 15px 0;
 
-        #result,
-        #add,
-        #edit {
-            width: 175px;
-            height: 40px;
+        .trans {
+            box-shadow: 0px 0px 10px rgb(0, 153, 120);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+
+            textarea {
+                width: 250px;
+                height: 150px;
+                text-align: justify;
+                line-height: 130%;
+                border-radius: 5px;
+            }
+        }
+
+        #id1,
+        #id2 {
+            display: none;
         }
     }
 
-    textarea {
-        :target {
-            color: black;
-        }
+    input {
+        display: block;
+        margin: auto;
+        width: 150px;
+        height: 50px;
+        margin-bottom: 50px;
+    }
+}
+
+.controls {
+    width: 700px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+
+    #result,
+    #add,
+    #edit {
+        width: 175px;
+        height: 40px;
+    }
+}
+
+textarea {
+    padding: 5px;
+
+    :target {
+        color: black;
     }
 }

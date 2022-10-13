@@ -16,48 +16,24 @@
             <input id="word" type="text" name="word" autocomplete="off" list="autocompleteOff" />
             <input id="id" type="text" name="id" autocomplete="off" list="autocompleteOff" />
             <div class="translations">
-                <div class="trans" id="one">
-                    <label for="part-0">part</label>
-                    <select name="part-0" id="part-0">
+                {% for i in range(3) %}
+                <div class="trans" id="id{{i}}">
+                    <label for="part-{{i}}">part</label>
+                    <select name="part-{{i}}" id="part-{{i}}">
                         <option value="noun">noun</option>
                         <option value="verb">verb</option>
                         <option value="adjective">ajective</option>
                         <option value="adverb">adverb</option>
                         <option value="misc">misc</option>
                     </select>
-                    <label for="translation-0">translation</label>
-                    <textarea id="translation-0" name="translation-0" placeholder="translation-0"></textarea>
-                    <input id="id-0" type="text" name="id-0" autocomplete="off" list="autocompleteOff" />
-                    <input id="answer-0" type="text" name="answer-0" autocomplete="off" list="autocompleteOff" />
+                    <label for="translation-{{i}}">translation</label>
+                    <textarea id="translation-{{i}}" name="translation-{{i}}"
+                        placeholder="translation-{{i}}"></textarea>
+                    <input id="id-{{i}}" type="text" name="id-{{i}}" autocomplete="off" list="autocompleteOff" />
+                    <input id="answer-{{i}}" type="text" name="answer-{{i}}" autocomplete="off"
+                        list="autocompleteOff" />
                 </div>
-                <div class="trans" id="two">
-                    <label for="part-1">part</label>
-                    <select name="part-1" id="part-1">
-                        <option value="noun">noun</option>
-                        <option value="verb">verb</option>
-                        <option value="adjective">ajective</option>
-                        <option value="adverb">adverb</option>
-                        <option value="misc">misc</option>
-                    </select>
-                    <label for="translation-1">translation</label>
-                    <textarea id="translation-1" name="translation-1" placeholder="translation-1"></textarea>
-                    <input id="id-1" type="text" name="id-1" autocomplete="off" list="autocompleteOff" />
-                    <input id="answer-1" type="text" name="answer-1" autocomplete="off" list="autocompleteOff" />
-                </div>
-                <div class="trans" id="three">
-                    <label for="part-2">part</label>
-                    <select name="part-2" id="part-2">
-                        <option value="noun">noun</option>
-                        <option value="verb">verb</option>
-                        <option value="adjective">ajective</option>
-                        <option value="adverb">adverb</option>
-                        <option value="misc">misc</option>
-                    </select>
-                    <label for="translation-2">translation</label>
-                    <textarea id="translation-2" name="translation-2" placeholder="translation-2"></textarea>
-                    <input id="id-2" type="text" name="id-2" autocomplete="off" list="autocompleteOff" />
-                    <input id="answer-2" type="text" name="answer-2" autocomplete="off" list="autocompleteOff" />
-                </div>
+                {% endfor %}
             </div>
             <input type="submit" value="Submit" />
         </form>

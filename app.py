@@ -2,7 +2,6 @@ from flask import (
     Flask,
     render_template,
     request,
-    flash,
     redirect,
     url_for,
     jsonify,
@@ -30,7 +29,7 @@ db.init_app(app)
 ACTIVE_LANGUAGE = "russian"
 
 
-@app.route("/get_lang", methods=["POST"])
+@app.route("/set_lang", methods=["POST"])
 def lang_select():
     if request.method == "POST":
         global ACTIVE_LANGUAGE
@@ -46,7 +45,7 @@ def index():
 @app.route("/addword", methods=["GET", "POST"])
 def add_word():
     if request.method == "POST" and request.form["add_word"] != "":
-        for i in range(1, 4):
+        for i in range(3):
             if request.form[f"translation-{i}"] != "":
                 add_words(
                     ACTIVE_LANGUAGE,

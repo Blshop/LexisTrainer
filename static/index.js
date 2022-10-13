@@ -4,7 +4,7 @@ function lang_select(language, id_1, id_2) {
     lang = language
     document.getElementById(id_1).classList.toggle('active')
     document.getElementById(id_2).classList.toggle('active')
-    fetch('/get_lang', {
+    fetch('/set_lang', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

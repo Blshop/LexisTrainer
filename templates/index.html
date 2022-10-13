@@ -1,34 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href='/static/main.css' />
-    <title>Document</title>
+{% block title %}
+<title>Language</title>
+{% endblock %}
 
-</head>
-
-<body>
-    <div class="container">
-        <div class="lang-select">
-            <p>select language</p>
-            <ul>
-                <li id='eng'>English</li>
-                <li id='rus' class="active">Russian</li>
-            </ul>
-        </div>
-        <div class="main-menu">
-            <ul>
-                <li id="add"><a href="/addword">Add</a></li>
-                <li id="view"><a href="/statistics">Statistics</a></li>
-                <li><a href="/learn">Study</a></li>
-                <li><a href="/edit">Edit</a></li>
-            </ul>
-        </div>
+{% block main %}
+<div class="container">
+    <div class="lang-select">
+        <p>select language</p>
+        <ul>
+            <li id='eng'>English</li>
+            <li id='rus' class="active">Russian</li>
+        </ul>
     </div>
-</body>
-<script src="{{url_for('static', filename='index.js')}}"></script>
+    <div class="main-menu">
+        <ul>
+            <li><a href="/addword">Add</a></li>
+            <li><a href="/statistics">Statistics</a></li>
+            <li><a href="/learn">Study</a></li>
+            <li><a href="/edit">Edit</a></li>
+        </ul>
+    </div>
+</div>
+{%endblock%}
 
-</html>
+{%block script%}
+<script src="{{url_for('static', filename='index.js')}}"></script>
+{%endblock%}

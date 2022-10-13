@@ -1,11 +1,11 @@
 document.getElementById('add').addEventListener('click', show)
 
 function show() {
-    if (document.getElementById('two').style.display == 'flex') {
-        document.getElementById('three').style.display = 'flex'
+    if (document.getElementById('id1').style.display == 'flex') {
+        document.getElementById('id2').style.display = 'flex'
     }
     else {
-        document.getElementById('two').style.display = 'flex'
+        document.getElementById('id1').style.display = 'flex'
     }
 
 }

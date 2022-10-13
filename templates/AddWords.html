@@ -1,83 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html'%}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/main.css">
-    <title>Document</title>
-</head>
+{% block title %}
+<title>Add word</title>
+{% endblock %}
 
-<body>
-    <div class="container">
-        <form class="add-word" action="{{ request.path }}" method="post">
-            <div class="add_word">
-                <label for="word">{{lang}} word</label>
-                <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff" />
-            </div>
-            <div class="translations">
-                <div class="trans" id="one">
-                    <label for="part-1">part</label>
-                    <select name="part-1" id="part-1">
-                        <option value="noun">noun</option>
-                        <option value="verb">verb</option>
-                        <option value="adjective">ajective</option>
-                        <option value="adverb">adverb</option>
-                        <option value="misc">misc</option>
-                    </select>
-                    <label for="translation-1">translation</label>
-                    <textarea name="translation-1" placeholder="translation-1"></textarea>
-                </div>
-                <div class="trans" id="two">
-                    <label for="part-2">part</label>
-                    <select name="part-2" id="part-2">
-                        <option value="noun">noun</option>
-                        <option value="verb">verb</option>
-                        <option value="adjective">ajective</option>
-                        <option value="adverb">adverb</option>
-                        <option value="misc">phrase</option>
-                    </select>
-                    <label for="translation-2">translation</label>
-                    <textarea name="translation-2" placeholder="translation-2"></textarea>
-                </div>
-                <div class="trans" id="three">
-                    <label for="part-3">part</label>
-                    <select name="part-3" id="part-3">
-                        <option value="noun">noun</option>
-                        <option value="verb">verb</option>
-                        <option value="adjective">ajective</option>
-                        <option value="adverb">adverb</option>
-                        <option value="misc">phrase</option>
-                    </select>
-                    <label for="translation-3">translation</label>
-                    <textarea name="translation-3" placeholder="translation-3"></textarea>
-                </div>
-            </div>
-            <input type="submit" value="Submit" />
-        </form>
-        <div class="controls">
-            <button id="result">Check</button>
-            <button id="add">Add translation</button>
-            <button id="edit">Edit word</button>
+{% block main %}
+<div class="container">
+    <form class="add-word" action="{{ request.path }}" method="post">
+        <div class="add_word">
+            <label for="word">{{lang}} word</label>
+            <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff" />
         </div>
+        <div class="translations">
+            {%for i in range(3)%}
+            <div class="trans" id="id{{i}}">
+                <label for="part-{{i}}">part</label>
+                <select name="part-{{i}}" id="part-{{i}}">
+                    <option value="noun">noun</option>
+                    <option value="verb">verb</option>
+                    <option value="adjective">adjective</option>
+                    <option value="adverb">adverb</option>
+                    <option value="misc">misc</option>
+                </select>
+                <label for="translation-{{i}}">translation</label>
+                <textarea name="translation-{{i}}" placeholder="translation-{{i}}"></textarea>
+            </div>
+            {%endfor%}
+        </div>
+        <input type="submit" value="Submit" />
+    </form>
+    <div class="controls">
+        <button id="result">Check</button>
+        <button id="add">Add translation</button>
+        <button id="edit">Edit word</button>
     </div>
-    <script>
-        let list_data = {{ words | safe }}
-        console.log(list_data)
-        var input = document.getElementById('word');
-        document.getElementById("result").addEventListener("click", check);
-        function check() {
+</div>
+{% endblock%}
 
-            if (list_data.indexOf(input.value) !== -1) {
-                alert("Value exists!")
-            } else {
-                alert("Value does not exists!")
-            }
+{% block script%}
+<script>
+    let list_data = {{ words | safe }}
+    console.log(list_data)
+    var input = document.getElementById('word');
+    document.getElementById("result").addEventListener("click", check);
+    function check() {
+        if (list_data.indexOf(input.value) !== -1) {
+            alert("Value exists!")
+        } else {
+            alert("Value does not exists!")
         }
-
-    </script>
-    <script src="{{url_for('static', filename='add_word.js')}}"></script>
-</body>
-
-</html>
+    }
+</script>
+<script src="{{url_for('static', filename='add_word.js')}}"></script>
+{% endblock %}
