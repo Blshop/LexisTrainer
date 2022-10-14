@@ -39,17 +39,7 @@
 
 {% block script%}
 <script>
-    let list_data = {{ words | safe }}
-    console.log(list_data)
-    var input = document.getElementById('word');
-    document.getElementById("result").addEventListener("click", check);
-    function check() {
-        if (list_data.indexOf(input.value) !== -1) {
-            alert("Value exists!")
-        } else {
-            alert("Value does not exists!")
-        }
-    }
+    let word_list = {{ words | safe }}
 </script>
 <script src="{{url_for('static', filename='add_word.js')}}"></script>
 {% endblock %}

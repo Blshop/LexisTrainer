@@ -64,11 +64,11 @@ def view():
     return render_template("viewWords.html")
 
 
-@app.route("/learn", methods=["GET", "POST"])
+@app.route("/study", methods=["GET", "POST"])
 def learn():
     prep_words = study_words(ACTIVE_LANGUAGE)
     return render_template(
-        "learn.html", words=json.dumps(prep_words, ensure_ascii=False)
+        "study.html", words=json.dumps(prep_words, ensure_ascii=False)
     )
 
 
