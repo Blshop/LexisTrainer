@@ -3,8 +3,7 @@
   font-size: 24px;
   margin: 0px;
   padding: 0px;
-  -webkit-box-sizing: border-box !important;
-          box-sizing: border-box !important;
+  box-sizing: border-box !important;
 }
 
 a:visited {
@@ -12,7 +11,8 @@ a:visited {
 }
 
 body {
-  background: linear-gradient(324deg, #b8b5f8 0%, white 50%, #3dddfd 100%);
+  background: linear-gradient(324deg, rgb(184, 181, 248) 0%, rgb(255, 255, 255) 50%, rgb(61, 221, 253) 100%);
+  background-attachment: fixed;
 }
 
 .container {
@@ -28,69 +28,47 @@ body {
   width: 300px;
   padding-bottom: 30px;
 }
-
 .lang-select p {
   text-transform: uppercase;
   padding: 10px;
 }
-
 .lang-select ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  justify-content: space-around;
 }
-
 .lang-select ul li {
   list-style: none;
   padding: 10px;
-  background-color: #00ffc8;
+  background-color: rgb(0, 255, 200);
   margin: 5px;
   border-radius: 15px;
   cursor: pointer;
 }
-
 .lang-select ul .active {
-  border: 2px solid #009978;
-  background-color: #00d8a9;
-  -webkit-box-shadow: 2px 2px 5px #009978;
-          box-shadow: 2px 2px 5px #009978;
-  color: #692177;
+  border: 2px solid rgb(0, 153, 120);
+  background-color: rgb(0, 216, 169);
+  box-shadow: 2px 2px 5px rgb(0, 153, 120);
+  color: rgb(105, 33, 119);
 }
 
 .main-menu ul {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-
 .main-menu ul li {
   list-style: none;
 }
-
 .main-menu ul li :hover {
-  -webkit-box-shadow: 2px 2px 5px #009978;
-          box-shadow: 2px 2px 5px #009978;
+  box-shadow: 2px 2px 5px rgb(0, 153, 120);
   width: 800px;
-  -webkit-transition: 0.3s;
   transition: 0.3s;
-  color: #692177;
+  color: rgb(105, 33, 119);
 }
-
 .main-menu ul li a {
   display: inline-block;
-  background-color: #00ffc8;
+  background-color: rgb(0, 255, 200);
   margin-top: 15px;
   border-radius: 7px;
   padding: 10px;
@@ -104,58 +82,34 @@ body {
 .add-word .add_word {
   width: 500px;
   margin: auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  flex-direction: column;
+  justify-content: center;
   gap: 10px;
 }
-
 .add-word .add_word label {
   text-align: center;
 }
-
 .add-word .add_word input {
   width: inherit;
   height: 35px;
   border-radius: 17px;
   text-align: center;
 }
-
 .add-word .translations {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   gap: 20px;
   margin: 15px 0;
 }
-
 .add-word .translations .trans {
-  -webkit-box-shadow: 0px 0px 10px #009978;
-          box-shadow: 0px 0px 10px #009978;
+  box-shadow: 0px 0px 10px rgb(0, 153, 120);
   border-radius: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   gap: 10px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
-
 .add-word .translations .trans textarea {
   width: 250px;
   height: 150px;
@@ -163,18 +117,13 @@ body {
   line-height: 130%;
   border-radius: 5px;
 }
-
 .add-word .translations #id1,
 .add-word .translations #id2 {
   display: none;
 }
-
 .add-word .translations #id0 {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
-
 .add-word input {
   display: block;
   margin: auto;
@@ -182,26 +131,20 @@ body {
   height: 50px;
   margin-bottom: 50px;
 }
-
 .add-word input[type=submit] {
-  background-color: #00ffc8;
+  background-color: rgb(0, 255, 200);
 }
 
 .controls {
   width: 700px;
   margin: auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .controls #result,
 .controls #add,
 .controls #edit {
-  background-color: #00ffc8;
+  background-color: rgb(0, 255, 200);
   border-radius: 5px;
   width: 175px;
   height: 40px;
@@ -215,39 +158,24 @@ body {
 textarea {
   padding: 5px;
 }
-
 textarea :target {
   color: black;
 }
 
 .translations {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   gap: 20px;
   margin: 15px 0;
 }
-
 .translations .trans {
-  -webkit-box-shadow: 0px 0px 10px #009978;
-          box-shadow: 0px 0px 10px #009978;
+  box-shadow: 0px 0px 10px rgb(0, 153, 120);
   border-radius: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   gap: 10px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
-
 .translations .trans textarea {
   width: 250px;
   height: 150px;
@@ -255,7 +183,6 @@ textarea :target {
   line-height: 130%;
   border-radius: 5px;
 }
-
 .translations #id0,
 .translations #id1,
 .translations #id2 {
@@ -263,21 +190,16 @@ textarea :target {
 }
 
 .answer {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   gap: 50px;
   margin-top: 50px;
 }
-
 .answer #correct,
 .answer #wrong {
   height: 50px;
   width: 200px;
-  background-color: #00ffc8;
+  background-color: rgb(0, 255, 200);
   border-radius: 5px;
 }
 
@@ -285,11 +207,58 @@ textarea :target {
   text-align: center;
   margin-top: 75px;
 }
-
 .finish #finish {
   height: 50px;
   width: 300px;
-  background-color: #00ffc8;
+  background-color: rgb(0, 255, 200);
   border-radius: 15px;
 }
-/*# sourceMappingURL=main.css.map */
+
+.add_word {
+  width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+.add_word label {
+  text-align: center;
+}
+.add_word input {
+  width: inherit;
+  height: 35px;
+  border-radius: 17px;
+  text-align: center;
+}
+
+.check {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 50px;
+}
+.check #check,
+.check #add {
+  height: 50px;
+  width: 200px;
+  background-color: rgb(0, 255, 200);
+  border-radius: 5px;
+}
+
+.edit {
+  text-align: center;
+  margin-top: 75px;
+}
+.edit #edit {
+  margin-bottom: 35px;
+  height: 50px;
+  width: 300px;
+  background-color: rgb(0, 255, 200);
+  border-radius: 15px;
+}
+
+span {
+  padding: 0px 5px;
+}/*# sourceMappingURL=main.css.map */

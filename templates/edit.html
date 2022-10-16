@@ -1,72 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href='/static/main.css' />
-    <title>Document</title>
-</head>
+{% block title %}
+<title>Edit</title>
+{% endblock %}
 
-<body>
-    <div class="container">
-        <form action="{{ request.path }}" method="post">
-            <label for="word">Name</label><br>
+{% block main %}
+<div class="container">
+    <form action="{{ request.path }}" method="post">
+        <div class="add_word">
+            <label for="word">{{lang}} word</label>
             <input id="word" type="text" name="word" autocomplete="off" list="autocompleteOff" />
-            <input id="id" type="text" name="id" autocomplete="off" list="autocompleteOff" />
-            <div class="translations">
-                {% for i in range(3) %}
-                <div class="trans" id="id{{i}}">
-                    <label for="part-{{i}}">part</label>
-                    <select name="part-{{i}}" id="part-{{i}}">
-                        <option value="noun">noun</option>
-                        <option value="verb">verb</option>
-                        <option value="adjective">ajective</option>
-                        <option value="adverb">adverb</option>
-                        <option value="misc">misc</option>
-                    </select>
-                    <label for="translation-{{i}}">translation</label>
-                    <textarea id="translation-{{i}}" name="translation-{{i}}"
-                        placeholder="translation-{{i}}"></textarea>
-                    <input id="id-{{i}}" type="text" name="id-{{i}}" autocomplete="off" list="autocompleteOff" />
-                    <input id="answer-{{i}}" type="text" name="answer-{{i}}" autocomplete="off"
-                        list="autocompleteOff" />
-                </div>
-                {% endfor %}
+        </div>
+        <div class="translations">
+            {% for i in range(3) %}
+            <div class="trans" id="id{{i}}">
+                <label for="part-{{i}}">part</label>
+                <select name="part-{{i}}" id="part-{{i}}">
+                    <option value="noun">noun</option>
+                    <option value="verb">verb</option>
+                    <option value="adjective">adjective</option>
+                    <option value="adverb">adverb</option>
+                    <option value="misc">misc</option>
+                </select>
+                <label for="translation-{{i}}">translation</label>
+                <textarea id="translation-{{i}}" name="translation-{{i}}" placeholder="translation-{{i}}"></textarea>
+                <input id="id-{{i}}" type="text" name="id-{{i}}" autocomplete="off" list="autocompleteOff" />
+                <input id="answer-{{i}}" type="text" name="answer-{{i}}" autocomplete="off" list="autocompleteOff" />
             </div>
-            <input type="submit" value="Submit" />
-        </form>
-        check:<button style="height: 50px; width:150px;" id="result"></button>
-        {% for word in unverified.keys()%}
-        <p onclick="tip(this.innerHTML)">{{word}}</p>
-        {%endfor%}
-    </div>
-    <script>
-        let all_words = {{ words | safe }}
+            {% endfor %}
+        </div>
+        <div class="check">
+            <button id="check" type="button">check</button>
+            <button id="add" type="button">add</button>
+        </div>
+        <div class="edit">
+            <input type="submit" value="Edit" id="edit" />
+        </div>
+    </form>
+    {% for word in unverified.keys()%}
+    <span onclick="tip(this.innerHTML)">{{word}}</span>
+    {%endfor%}
+</div>
+{% endblock %}
 
-        var input = document.getElementById('word');
-        document.getElementById("result").addEventListener("click", check);
-        function check() {
-            let parts = Object.keys(all_words[input.value])
-            if (all_words[input.value] !== -1) {
-                for (i in parts) {
-                    document.getElementById('part-' + i).value = parts[i]
-                    console.log(all_words[input.value][parts[i]][3].join('\r\n'))
-                    document.getElementById("translation-" + i).innerHTML = all_words[input.value][parts[i]][3].join('\r\n')
-                    document.getElementById("id-" + i).value = all_words[input.value][parts[i]][1]
-                    document.getElementById("answer-" + i).value = all_words[input.value][parts[i]][2]
-                }
-            } else {
-                alert("Value does not exists!")
-            }
-        }
-        function tip(word) {
-            console.log(word)
-            document.getElementById("word").value = word
-            check()
-        }
-    </script>
-</body>
-
-</html>
+{% block script %}
+<script>
+    let all_words = {{ words | safe }}
+</script>
+<script src="{{url_for('static', filename='edit.js')}}"></script>
+{% endblock %}

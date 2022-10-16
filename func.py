@@ -164,8 +164,9 @@ def edit_word(lang, word_id, edit_word, part, translations, answer):
         print(trans.word, translations)
         if trans.word in translations:
             translations.remove(trans.word)
-        else:
             all_trans.append(trans)
+        else:
+            pass
     add_word.translation = all_trans
     print(add_word.translation)
     print(all_trans)

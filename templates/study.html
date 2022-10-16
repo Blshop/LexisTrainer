@@ -27,13 +27,13 @@
    <div class="finish">
       <button id="finish">finish</button>
    </div>
+</div>
+{% endblock %}
 
-   {% endblock %}
-
-   {% block script %}
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-   <script>
-      let list_data = {{ words | safe }}
-   </script>
-   <script src="{{url_for('static', filename='study.js')}}"></script>
-   {% endblock %}
+{% block script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+   let list_data = {{ words | safe }}
+</script>
+<script src="{{url_for('static', filename='study.js')}}"></script>
+{% endblock %}
