@@ -72,7 +72,7 @@ function minusvalue() {
     parts = Object.keys(list_data[ru_word])
     for (i in parts) {
         if (list_data[ru_word][parts[i]][0] > 0) {
-            plist_data[ru_word][parts[i]][0] -= 10
+            list_data[ru_word][parts[i]][0] -= 10
         }
     }
 
