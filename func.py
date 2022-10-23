@@ -193,5 +193,5 @@ def stats(lang):
     learned = len(model.query.filter(
         model.answer == 100).group_by(model.word).all())
     to_learn = len(model.query.filter(
-        model.answer < 100).group_by(model.word).all())
+        model.answer < 100, model.verified == True).group_by(model.word).all())
     return [all_words, learned, to_learn]

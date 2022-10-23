@@ -10,7 +10,7 @@
         <p>select language</p>
         <ul>
             <li id='eng'>English</li>
-            <li id='rus' class="active">Russian</li>
+            <li id='rus'>Russian</li>
         </ul>
     </div>
     <div class="main-menu">
@@ -25,5 +25,8 @@
 {%endblock%}
 
 {%block script%}
+<script>
+    let language = {{ lang| safe}}
+</script>
 <script src="{{url_for('static', filename='index.js')}}"></script>
 {%endblock%}

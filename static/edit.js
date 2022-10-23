@@ -4,14 +4,12 @@ document.getElementById("add").addEventListener("click", show);
 document.getElementById('id0').style.display = "flex"
 
 function check() {
-    document.getElementById('id1').style.display = "none"
-    document.getElementById('id2').style.display = "none"
+    clear()
     let parts = Object.keys(all_words[input.value])
     if (all_words[input.value] !== -1) {
         for (i in parts) {
             document.getElementById('id' + i).style.display = "flex"
             document.getElementById('part-' + i).value = parts[i]
-            console.log(all_words[input.value][parts[i]][3].join('\r\n'))
             document.getElementById("translation-" + i).innerHTML = all_words[input.value][parts[i]][3].join('\r\n')
             document.getElementById("id-" + i).value = all_words[input.value][parts[i]][1]
             document.getElementById("answer-" + i).value = all_words[input.value][parts[i]][2]

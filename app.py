@@ -4,12 +4,9 @@ from flask import (
     request,
     redirect,
     url_for,
-    jsonify,
     json,
 )
-import random
 from func import (
-    edit_prep,
     select_words,
     add_words,
     study_words,
@@ -19,7 +16,7 @@ from func import (
     not_verified,
     stats,
 )
-from models import db, Russian, English
+from models import db
 
 
 app = Flask(__name__)
@@ -39,7 +36,7 @@ def lang_select():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", lang=json.dumps(ACTIVE_LANGUAGE))
 
 
 @app.route("/addword", methods=["GET", "POST"])
@@ -57,11 +54,6 @@ def add_word():
     else:
         words = select_words(ACTIVE_LANGUAGE)
         return render_template("AddWords.html", words=words, lang=ACTIVE_LANGUAGE)
-
-
-@app.route("/view")
-def view():
-    return render_template("viewWords.html")
 
 
 @app.route("/study", methods=["GET", "POST"])

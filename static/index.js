@@ -1,17 +1,26 @@
+active_lang(language)
 
-let lang = ""
-function lang_select(language, id_1, id_2) {
-    lang = language
-    document.getElementById(id_1).classList.toggle('active')
-    document.getElementById(id_2).classList.toggle('active')
+function active_lang(language) {
+    if (language == 'russian') {
+        document.getElementById('rus').classList.add('active')
+        document.getElementById('eng').classList.remove('active')
+    }
+    else {
+        document.getElementById('eng').classList.add('active')
+        document.getElementById('rus').classList.remove('active')
+    }
+}
+
+function lang_select(language) {
+    active_lang(language)
     fetch('/set_lang', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(lang),
+        body: JSON.stringify(language),
     })
-        .then((response) => response.json())
+        .then((response) => response.text())
         .then((data) => {
             console.log('Success:', data);
         })
@@ -20,5 +29,5 @@ function lang_select(language, id_1, id_2) {
         });
 }
 
-document.getElementById("eng").addEventListener("click", function () { lang_select("english", 'eng', 'rus') })
-document.getElementById("rus").addEventListener("click", function () { lang_select("russian", 'rus', 'eng') })
+document.getElementById("eng").addEventListener("click", function () { lang_select("english") })
+document.getElementById("rus").addEventListener("click", function () { lang_select("russian") })
