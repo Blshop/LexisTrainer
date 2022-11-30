@@ -12,9 +12,12 @@
 <body>
     <div class="container">
         {% include "back.html" %}
-        {%for item in all_words%}
-        <p>all_words: {{item}}</p>
+        <p>all_words: {{all_words[0]}}</p>
+        <p>Learned: {{all_words[1]}}</p>
+        {%for item in all_words[2]%}
+        <p>{{item[0]}}: {{item[1]}}</p>
         {%endfor%}
+        <p>To learn: {{all_words[3]}}</p>
     </div>
 </body>
 
