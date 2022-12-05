@@ -162,7 +162,7 @@ def edit_word(lang, word_id, edit_word, part, translations):
 def stats(lang):
     model = single_model(lang)
     all_words = len(model.query.group_by(model.word).all())
-    learned = len(model.query.filter(model.answer == 100).group_by(model.word).all())
+    learned = len(model.query.filter(model.answer == 100, model.verified==True).group_by(model.word).all())
     sq = (
         db.session.query(model.word, model.answer)
         .filter(model.answer < 100, model.verified == True)
