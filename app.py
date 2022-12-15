@@ -15,6 +15,8 @@ from func import (
     all_words,
     not_verified,
     stats,
+    prep_revew,
+    reviewed,
 )
 from models import db
 
@@ -119,6 +121,24 @@ def edit_words():
 def statistics():
     words = stats(ACTIVE_LANGUAGE)
     return render_template("stats.html", all_words=words)
+
+
+@app.route("/review")
+def review():
+    if request.method == "POST":
+        pass
+    else:
+        words = prep_revew(ACTIVE_LANGUAGE)
+        return render_template(
+            "review.html", words=json.dumps(words, ensure_ascii=False)
+        )
+
+
+@app.route("/review_finish", methods=["GET", "POST"])
+def review_finish():
+    data = json.loads(request.form.get("data"))
+    learned(ACTIVE_LANGUAGE, data)
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
