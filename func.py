@@ -201,16 +201,17 @@ def prep_revew(lang):
         if word.word in prep_words.keys():
             prep_words[word.word][word.part] = [
                 word.answer,
+                word.repeat_delay,
                 [trans.word for trans in word.translation],
             ]
         else:
             prep_words[word.word] = {
                 word.part: [
                     word.answer,
+                    word.repeat_delay,
                     [trans.word for trans in word.translation],
                 ]
             }
-    print(prep_words)
     return prep_words
 
 
@@ -218,16 +219,19 @@ def reviewed(lang, words):
     model = single_model(lang)
     for word, parts in words.items():
         for part, answer in parts.items():
-            if answer[0] == 100:
+            if answer[0] == 1:
+                model.query.filter(model.word == word, model.part == part).update(
+                    dict(
+                        learned_date=date.today() + timedelta(days=answer[1] * 3),
+                        repeat_delay=answer[1] * 3,
+                    )
+                )
+            if answer[0] == 0:
                 model.query.filter(model.word == word, model.part == part).update(
                     dict(
                         answer=answer[0],
                         learned_date=date.today(),
-                        repeat_delay=model.repeat_delay * 3,
+                        repeat_delay=5,
                     )
-                )
-            else:
-                model.query.filter(model.word == word, model.part == part).update(
-                    dict(answer=answer[0])
                 )
     db.session.commit()

@@ -137,7 +137,7 @@ def review():
 @app.route("/review_finish", methods=["GET", "POST"])
 def review_finish():
     data = json.loads(request.form.get("data"))
-    learned(ACTIVE_LANGUAGE, data)
+    reviewed(ACTIVE_LANGUAGE, data)
     return redirect(url_for("index"))
 
 

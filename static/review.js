@@ -61,7 +61,7 @@ function next_word() {
             document.getElementById('id' + i).style.display = "flex"
             document.getElementById('part-' + i).innerHTML = parts[i]
             document.getElementById("part-" + i).style.color = 'black'
-            document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]][1].join('\r\n')
+            document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]][2].join('\r\n')
         }
         // document.getElementById("2").innerHTML = ''
         // document.getElementById("3").innerHTML = list_data[word_number][2]
@@ -73,7 +73,6 @@ function minusvalue() {
     parts = Object.keys(list_data[ru_word])
     for (i in parts) {
         list_data[ru_word][parts[i]][0] = 0
-
     }
 
     if (word_number == max_words) {
@@ -88,6 +87,9 @@ function minusvalue() {
 
 function addvalue() {
     parts = Object.keys(list_data[ru_word])
+    for (i in parts) {
+        list_data[ru_word][parts[i]][0] = 1
+    }
     if (word_number == max_words) {
         document.getElementById("translation-0").innerHTML = 'Finished'
         document.getElementById("translation-1").innerHTML = 'Finished'
