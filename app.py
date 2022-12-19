@@ -39,10 +39,11 @@ def index():
 def add_word():
     if request.method == "POST" and request.form["add_word"] != "":
         for i in range(3):
-            if request.form[f"translation-{i}"] != "":
+            if request.form[f"translation-{i}"] != "" and request.form[f"id-{i}"] != '':
                 add_words(
                     ACTIVE_LANGUAGE,
                     request.form["add_word"],
+                    request.form[f"id-{i}"],
                     request.form[f"part-{i}"],
                     request.form[f"translation-{i}"].split("\r\n"),
                 )

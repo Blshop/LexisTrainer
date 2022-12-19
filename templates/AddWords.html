@@ -26,6 +26,8 @@
                 </select>
                 <label for="translation-{{i}}">translation</label>
                 <textarea name="translation-{{i}}" placeholder="translation-{{i}}" id="translation-{{i}}"></textarea>
+                <input id="id-{{i}}" type="text" name="id-{{i}}" autocomplete="off" list="autocompleteOff" />
+                <input id="answer-{{i}}" type="text" name="answer-{{i}}" autocomplete="off" list="autocompleteOff" />
             </div>
             {%endfor%}
         </div>
