@@ -7,10 +7,11 @@
 {% block main %}
 <div class="container">
     {% include "back.html" %}
-    <form class="add-word" action="{{ request.path }}" method="post">
+    <form class="add-word" method="post">
         <div class="add_word">
             <label for="word">{{lang}} word</label>
-            <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff" />
+            <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff"
+                onkeypress="return noenter()" />
         </div>
         <div class="translations">
             {%for i in range(3)%}
@@ -24,17 +25,19 @@
                     <option value="misc">misc</option>
                 </select>
                 <label for="translation-{{i}}">translation</label>
-                <textarea name="translation-{{i}}" placeholder="translation-{{i}}"></textarea>
+                <textarea name="translation-{{i}}" placeholder="translation-{{i}}" id="translation-{{i}}"></textarea>
             </div>
             {%endfor%}
         </div>
         <input type="submit" value="Submit" />
     </form>
     <div class="controls">
-        <button id="result">Check</button>
         <button id="add">Add translation</button>
-        <button id="edit">Edit word</button>
     </div>
+    <br>
+    {% for word in unverified.keys()%}
+    <span onclick="tip(this.innerHTML)">{{word}}</span>
+    {%endfor%}
 </div>
 {% endblock%}
 

@@ -46,16 +46,14 @@ def add_words(lang, add_word, part, translations):
                 trans_model.query.filter(trans_model.word == item).update(
                     dict(answer=0)
                 )
-                trans_word = trans_model.query.filter_by(
-                    word=item, part=part).first()
+                trans_word = trans_model.query.filter_by(word=item, part=part).first()
                 add_word.translation.append(trans_word)
         db.session.commit()
 
 
 def study_words(lang):
     model = single_model(lang)
-    words = model.query.filter(
-        model.answer < 100, model.verified == True).all()
+    words = model.query.filter(model.answer < 100, model.verified == True).all()
     prep_words = {}
     for word in words:
         if word.word in prep_words.keys():
@@ -65,8 +63,7 @@ def study_words(lang):
             ]
         else:
             prep_words[word.word] = {
-                word.part: [word.answer, [
-                    trans.word for trans in word.translation]]
+                word.part: [word.answer, [trans.word for trans in word.translation]]
             }
     return prep_words
 
@@ -77,8 +74,7 @@ def learned(lang, words):
         for part, answer in parts.items():
             if answer[0] == 100:
                 model.query.filter(model.word == word, model.part == part).update(
-                    dict(answer=answer[0],
-                         learned_date=date.today(), repeat_delay=5)
+                    dict(answer=answer[0], learned_date=date.today(), repeat_delay=5)
                 )
             else:
                 model.query.filter(model.word == word, model.part == part).update(
@@ -123,8 +119,7 @@ def not_verified(lang):
             ]
         else:
             prep_words[word.word] = {
-                word.part: [word.answer, [
-                    trans.word for trans in word.translation]]
+                word.part: [word.answer, [trans.word for trans in word.translation]]
             }
     return prep_words
 
@@ -166,8 +161,7 @@ def edit_word(lang, word_id, edit_word, part, translations):
                 trans_model.query.filter_by(word=trans).update(dict(answer=0))
             else:
                 trans_model.query.filter_by(word=trans).update(dict(answer=0))
-                trans_word = trans_model.query.filter_by(
-                    word=trans, part=part).first()
+                trans_word = trans_model.query.filter_by(word=trans, part=part).first()
                 add_word.translation.append(trans_word)
         db.session.commit()
 
@@ -228,8 +222,7 @@ def reviewed(lang, words):
             if answer[0] == 1:
                 model.query.filter(model.word == word, model.part == part).update(
                     dict(
-                        learned_date=date.today() +
-                        timedelta(days=answer[1] * 3),
+                        learned_date=date.today() + timedelta(days=answer[1] * 3),
                         repeat_delay=answer[1] * 3,
                     )
                 )
@@ -242,3 +235,12 @@ def reviewed(lang, words):
                     )
                 )
     db.session.commit()
+
+
+def load_word(word, lang):
+    model = single_model(lang)
+    words = model.query.filter(model.word == word).all()
+    prep_words = {}
+    for word in words:
+        prep_words[word.part] = [trans.word for trans in word.translation]
+    return prep_words

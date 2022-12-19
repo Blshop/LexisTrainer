@@ -1,11 +1,4 @@
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect,
-    url_for,
-    json,
-)
+from flask import Flask, render_template, request, redirect, url_for, json, jsonify
 from func import (
     select_words,
     add_words,
@@ -17,6 +10,7 @@ from func import (
     stats,
     prep_revew,
     reviewed,
+    load_word,
 )
 from models import db
 
@@ -55,7 +49,13 @@ def add_word():
         return redirect(url_for("index"))
     else:
         words = select_words(ACTIVE_LANGUAGE)
-        return render_template("AddWords.html", words=words, lang=ACTIVE_LANGUAGE)
+        unverified = not_verified(ACTIVE_LANGUAGE)
+        return render_template(
+            "AddWords.html",
+            words=words,
+            lang=ACTIVE_LANGUAGE,
+            unverified=unverified,
+        )
 
 
 @app.route("/study", methods=["GET", "POST"])
@@ -139,6 +139,13 @@ def review_finish():
     data = json.loads(request.form.get("data"))
     reviewed(ACTIVE_LANGUAGE, data)
     return redirect(url_for("index"))
+
+
+@app.route("/get_word", methods=["GET", "POST"])
+def get_word():
+    word = request.json
+    print(load_word(word, ACTIVE_LANGUAGE))
+    return jsonify(load_word(word, ACTIVE_LANGUAGE))
 
 
 if __name__ == "__main__":
