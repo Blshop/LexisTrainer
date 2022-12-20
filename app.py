@@ -4,8 +4,6 @@ from func import (
     add_words,
     study_words,
     learned,
-    edit_word,
-    all_words,
     not_verified,
     stats,
     prep_revew,
@@ -39,7 +37,10 @@ def index():
 def add_word():
     if request.method == "POST" and request.form["add_word"] != "":
         for i in range(3):
-            if request.form[f"translation-{i}"] != "" and request.form[f"id-{i}"] != '':
+            print(request.form[f"translation-{i}"] == "")
+            if not (
+                request.form[f"translation-{i}"] == "" and request.form[f"id-{i}"] == ""
+            ):
                 add_words(
                     ACTIVE_LANGUAGE,
                     request.form["add_word"],
@@ -74,50 +75,6 @@ def finish():
     return redirect(url_for("index"))
 
 
-@app.route("/edit", methods=["GET", "POST"])
-def edit():
-    if request.method == "POST" and request.form["word"] != "":
-        for i in range(3):
-            if request.form[f"translation-{i}"] == "" and request.form[f"id-{i}"] == "":
-                pass
-            else:
-                edit_word(
-                    ACTIVE_LANGUAGE,
-                    request.form[f"id-{i}"],
-                    request.form["word"],
-                    request.form[f"part-{i}"],
-                    request.form[f"translation-{i}"].split("\r\n"),
-                )
-        return redirect(url_for("edit"))
-    else:
-        words = all_words(ACTIVE_LANGUAGE)
-        unverified = not_verified(ACTIVE_LANGUAGE)
-        return render_template(
-            "edit.html", words=json.dumps(words), unverified=unverified
-        )
-
-
-@app.route("/edit_word", methods={"GET", "POST"})
-def edit_words():
-    if request.method == "POST" and request.form["word"] != "":
-        for i in range(3):
-            if request.form[f"translation-{i}"] != "":
-                edit_word(
-                    ACTIVE_LANGUAGE,
-                    request.form["id"],
-                    request.form["word"],
-                    request.form[f"part-{i}"],
-                    request.form[f"translation-{i}"].split("\r\n"),
-                )
-        return redirect(url_for("edit_words"))
-    else:
-        words = all_words(ACTIVE_LANGUAGE)
-        unverified = not_verified(ACTIVE_LANGUAGE)
-        return render_template(
-            "edit.html", words=json.dumps(words), unverified=unverified
-        )
-
-
 @app.route("/statistics")
 def statistics():
     words = stats(ACTIVE_LANGUAGE)
@@ -145,7 +102,6 @@ def review_finish():
 @app.route("/get_word", methods=["GET", "POST"])
 def get_word():
     word = request.json
-    print(load_word(word, ACTIVE_LANGUAGE))
     return jsonify(load_word(word, ACTIVE_LANGUAGE))
 
 

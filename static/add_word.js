@@ -63,3 +63,14 @@ function tip(word) {
     verify_value()
     load_word()
 }
+
+
+function clear() {
+    for (let i = 0; i < 3; i++) {
+        document.getElementById('id' + i).style.display = "none"
+        document.getElementById('part-' + i).value = ''
+        document.getElementById("translation-" + i).innerHTML = ""
+        document.getElementById("id-" + i).value = ''
+        document.getElementById("answer-" + i).value = ''
+    }
+}
