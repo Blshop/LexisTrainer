@@ -221,3 +221,14 @@ def load_word(word, lang):
             "answer": word.answer,
         }
     return prep_words
+
+
+def cleaning(lang):
+    model = single_model(lang)
+    words = (
+        model.query.filter(model.verified == True)
+        .group_by(model.word, model.answer)
+        .all()
+    )
+    for word in words:
+        print(word.word, word.answer)

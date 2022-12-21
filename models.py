@@ -20,7 +20,10 @@ class English(db.Model):
     repeat_delay = db.Column("repeat_delay", db.Integer, default=5)
     verified = db.Column("verified", db.Boolean, default=False, nullable=False)
     translation = db.relationship(
-        "Russian", secondary=translation, backref="translations"
+        "Russian",
+        secondary=translation,
+        backref="translations",
+        overlaps="translation,translations",
     )
 
 
@@ -33,7 +36,10 @@ class Russian(db.Model):
     repeat_delay = db.Column("repeat_delay", db.Integer, default=5)
     verified = db.Column("verified", db.Boolean, default=False, nullable=False)
     translation = db.relationship(
-        "English", secondary=translation, backref="translations"
+        "English",
+        secondary=translation,
+        backref="translations",
+        overlaps="translation,translations",
     )
 
 

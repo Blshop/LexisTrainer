@@ -9,6 +9,7 @@ from func import (
     prep_revew,
     reviewed,
     load_word,
+    cleaning,
 )
 from models import db
 
@@ -30,6 +31,7 @@ def lang_select():
 
 @app.route("/")
 def index():
+    # cleaning(ACTIVE_LANGUAGE)
     return render_template("index.html", lang=json.dumps(ACTIVE_LANGUAGE))
 
 
