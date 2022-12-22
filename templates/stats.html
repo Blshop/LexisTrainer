@@ -12,12 +12,13 @@
 <body>
     <div class="container">
         {% include "back.html" %}
-        <p>all_words: {{all_words[0]}}</p>
-        <p>Learned: {{all_words[1]}}</p>
-        {%for item in all_words[2]%}
+        <p>all_words: {{all_words['all_words']}}</p>
+        <p>Learned: {{all_words['learned']}}</p>
+        {%for item in all_words['count']%}
         <p>{{item[0]}}: {{item[1]}}</p>
         {%endfor%}
-        <p>To learn: {{all_words[3]}}</p>
+        <p>To learn: {{all_words['to_learn']}}</p>
+        <p>To review: {{all_words['to_review']}}</p>
     </div>
 </body>
 

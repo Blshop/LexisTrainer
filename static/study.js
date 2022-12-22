@@ -60,7 +60,7 @@ function next_word() {
             document.getElementById('id' + i).style.display = "flex"
             document.getElementById('part-' + i).innerHTML = parts[i]
             document.getElementById("part-" + i).style.color = 'black'
-            document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]][1].join('\r\n')
+            document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]]['translation'].join('\r\n')
         }
         // document.getElementById("2").innerHTML = ''
         // document.getElementById("3").innerHTML = list_data[word_number][2]
@@ -71,8 +71,8 @@ function next_word() {
 function minusvalue() {
     parts = Object.keys(list_data[ru_word])
     for (i in parts) {
-        if (list_data[ru_word][parts[i]][0] > 0) {
-            list_data[ru_word][parts[i]][0] -= 10
+        if (list_data[ru_word][parts[i]]['amswer'] > 0) {
+            list_data[ru_word][parts[i]]['answer'] -= 10
         }
     }
 
@@ -89,8 +89,8 @@ function minusvalue() {
 function addvalue() {
     parts = Object.keys(list_data[ru_word])
     for (i in parts) {
-        list_data[ru_word][parts[i]][0] += 10
-        console.log(list_data[ru_word][parts[i]][0])
+        list_data[ru_word][parts[i]]['answer'] += 10
+        console.log(list_data[ru_word][parts[i]]['answer'])
     }
     if (word_number == max_words) {
         document.getElementById("translation-0").innerHTML = 'Finished'
