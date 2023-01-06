@@ -32,10 +32,13 @@ def select_words(lang):
 def add_translation(model, word, part):
     trans = model.query.filter(model.word == word).all()
     existing_tran = model.query.filter(model.word == word, model.part == part).first()
+    verified = False
     for tran in trans:
+        if tran.verified == True:
+            verified = True
         tran.answer = 0
     if existing_tran is None:
-        new_tran = model(word=word, part=part)
+        new_tran = model(word=word, part=part, verified=verified)
         db.session.add(new_tran)
         return new_tran
     return existing_tran
