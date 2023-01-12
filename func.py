@@ -101,7 +101,9 @@ def learned(lang, words):
             if data["answer"] == 100:
                 model.query.filter(model.word == word, model.part == part).update(
                     dict(
-                        answer=data["answer"], learned_date=date.today(), repeat_delay=5
+                        answer=data["answer"],
+                        learned_date=date.today() + timedelta(days=5),
+                        repeat_delay=5,
                     )
                 )
             else:
