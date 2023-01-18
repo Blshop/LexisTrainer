@@ -216,6 +216,7 @@ def reviewed(lang, words):
 def load_word(word, lang):
     model = single_model(lang)
     words = model.query.filter(model.word == word).all()
+    print(words)
     prep_words = {}
     for word in words:
         prep_words[word.part] = {
