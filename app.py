@@ -3,7 +3,7 @@ from func import (
     select_words,
     add_words,
     study_words,
-    learned,
+    learned, 
     not_verified,
     stats,
     prep_revew,
