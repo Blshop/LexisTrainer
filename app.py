@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, json, jsonify
+from config import DevConfig
 from func import (
     select_words,
     add_words,
@@ -14,6 +15,7 @@ from models import db
 
 
 app = Flask(__name__)
+app.config.from_object(DevConfig)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Languages.db"
 db.init_app(app)
 
