@@ -1,8 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
-
 db = SQLAlchemy()
-
 
 translation = db.Table(
     "translation",
