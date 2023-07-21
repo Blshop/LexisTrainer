@@ -1,4 +1,4 @@
-from models import db, Russian, English
+from models import db, Russian_temp, English_temp
 from flask import json
 from datetime import date, timedelta
 from sqlalchemy import func
@@ -6,19 +6,19 @@ from sqlalchemy import func
 
 def single_model(lang):
     if lang == "russian":
-        model = Russian
+        model = Russian_temp
     elif lang == "english":
-        model = English
+        model = English_temp
     return model
 
 
 def double_model(lang):
     if lang == "russian":
-        add_model = Russian
-        trans_model = English
+        add_model = Russian_temp
+        trans_model = English_temp
     elif lang == "english":
-        add_model = English
-        trans_model = Russian
+        add_model = English_temp
+        trans_model = Russian_temp
     return (add_model, trans_model)
 
 
