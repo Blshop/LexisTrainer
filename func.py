@@ -1,4 +1,4 @@
-from models import db, Russian_temp, English_temp
+from models import db, Russian_temp, English_temp, English, English_part, Parts, Russian, Russian_part
 from flask import json
 from datetime import date, timedelta
 from sqlalchemy import func
@@ -225,3 +225,7 @@ def load_word(word, lang):
             "answer": word.answer,
         }
     return prep_words
+
+def new_word_load():
+    word = English.query.all()
+    print(word)

@@ -10,6 +10,7 @@ from func import (
     prep_revew,
     reviewed,
     load_word,
+    new_word_load
 )
 from models import db
 
@@ -23,6 +24,7 @@ ACTIVE_LANGUAGE = "russian"
 
 @app.route("/set_lang", methods=["POST"])
 def lang_select():
+    new_word_load()
     if request.method == "POST":
         global ACTIVE_LANGUAGE
         ACTIVE_LANGUAGE = request.json
