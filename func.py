@@ -4,27 +4,27 @@ from datetime import date, timedelta
 from sqlalchemy import func
 
 
+models = {
+    ('english', 'russian'): (English, Russian),
+    ('russian', 'english'): (Russian, English)
+}
+
+
+
 def single_model(lang):
-    if lang == "russian":
-        model = Russian_temp
-    elif lang == "english":
-        model = English_temp
-    return model
+    print(db.metadata.tables[lang].decl_class)
+
+    print(type(English))
+    return models[lang][0]
 
 
 def double_model(lang):
-    if lang == "russian":
-        add_model = Russian_temp
-        trans_model = English_temp
-    elif lang == "english":
-        add_model = English_temp
-        trans_model = Russian_temp
-    return (add_model, trans_model)
+    return (models[lang])
 
 
 def select_words(lang):
     model = single_model(lang)
-    words = db.session.query(model.word).distinct().all()
+    words = db.session.query(model.word).all()
     word_list = [word.word for word in words]
     return json.dumps(word_list, ensure_ascii=False)
 
@@ -48,7 +48,10 @@ def add_words(lang, add_word, id, part, translations):
     print(lang, add_word, id, part, translations)
     add_model, trans_model = double_model(lang)
     if id == "":
-        add_word = add_model(word=add_word, part=part, verified=True)
+        add_word = add_model(word=add_word, verified=True)
+        db.session.flush()
+        part_id = Parts.query.filter_by(part=part).first()
+        add_word_part = (word_id)
         db.session.add(add_word)
         for translation in translations:
             add_word.translation.append(add_translation(trans_model, translation, part))
@@ -117,15 +120,16 @@ def not_verified(lang):
     words = model.query.filter(model.verified == False).all()
     prep_words = {}
     for word in words:
-        if word.word in prep_words.keys():
-            prep_words[word.word][word.part] = [
-                word.answer,
-                [trans.word for trans in word.translation],
-            ]
-        else:
-            prep_words[word.word] = {
-                word.part: [word.answer, [trans.word for trans in word.translation]]
-            }
+        print(word.word, word.russian_parts[0].part.part)
+        # if word.word in prep_words.keys():
+        #     prep_words[word.word][word.part] = [
+        #         word.answer,
+        #         [trans.word for trans in word.translation],
+        #     ]
+        # else:
+        #     prep_words[word.word] = {
+        #         word.part: [word.answer, [trans.word for trans in word.translation]]
+        #     }
     return prep_words
 
 
@@ -225,7 +229,3 @@ def load_word(word, lang):
             "answer": word.answer,
         }
     return prep_words
-
-def new_word_load():
-    word = English.query.all()
-    print(word)

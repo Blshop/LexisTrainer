@@ -67,12 +67,12 @@ class Parts(db.Model):
 
 
 class English(db.Model):
-    id = db.Column("id",db.Integer, primary_key=True)
+    id = db.Column("id",db.Integer, autoincrement=True, primary_key=True)
     word = db.Column("word", db.String(30), unique=True)
     answer = db.Column("answer", db.Integer, nullable=False, default=0)
     verified = db.Column("verified", db.Boolean, nullable=False, default=False)
-    delay = db.Column("delay", db.Interval, nullable=False, default=5)
-    date_repeate = db.Column("date_repeate", db.Date, nullable=False, default=date.today())
+    delay = db.Column("delay", db.Integer, nullable=False, default=5)
+    repeat_date = db.Column("repeat_date", db.String, nullable=False, default=date.today())
     english_parts = db.Relationship('English_part', backref='english')
 
 class English_part(db.Model):
@@ -86,8 +86,8 @@ class Russian(db.Model):
     word = db.Column("word", db.String(30), unique=True)
     answer = db.Column("answer", db.Integer, nullable=False, default=0)
     verified = db.Column("verified", db.Boolean, nullable=False, default=False)
-    delay = db.Column("delay", db.Interval, nullable=False, default=5)
-    date_repeat = db.Column("date_repeat", db.Date, nullable=False, default=date.today())
+    delay = db.Column("delay", db.Integer, nullable=False, default=5)
+    repeat_date = db.Column("repeat_date", db.Date, nullable=False, default=date.today())
     russian_parts = db.Relationship('Russian_part', backref='russian')
 
 class Russian_part(db.Model):
