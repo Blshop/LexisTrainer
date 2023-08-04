@@ -8,9 +8,15 @@
 <div class="container">
     <div class="lang-select">
         <p>select language</p>
-        <ul>
-            <li id='eng'>English</li>
-            <li id='rus'>Russian</li>
+        <ul id="main-language">
+            {% for language in languages %}
+            <li class='{{language}}' onclick="get_main_language(event)">{{language}}</li>
+            {% endfor %}
+        </ul>
+        <ul id="secondary-language">
+            {% for language in languages %}
+            <li class='{{language}}' onclick="get_secondary_class_name(event)">{{language}}</li>
+            {% endfor %}
         </ul>
     </div>
     <div class="main-menu">

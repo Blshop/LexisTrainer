@@ -12,6 +12,17 @@ VALUES
 ("misc")
 ;
 
+CREATE TABLE languages(
+id integer PRIMARY KEY AUTOINCREMENT,
+'language' varchar(15) UNIQUE NOT NULL
+);
+
+INSERT INTO languages('language')
+VALUES
+('russian'),
+('english'),
+('polish');
+
 --===============================================================================================
 
 CREATE TABLE english(
@@ -74,21 +85,21 @@ UNIQUE(word_id, part_id)
 
 --===============================================================================================
 
-CREATE TABLE eng_rus(
-main_word_id int,
-sec_word_id int,
-FOREIGN KEY (main_word_id) REFERENCES english_part(id),
-FOREIGN KEY (sec_word_id) REFERENCES russian_part(id)
+CREATE TABLE english_russian(
+main_part_id int,
+sec_part_id int,
+FOREIGN KEY (main_part_id) REFERENCES english_part(id),
+FOREIGN KEY (sec_part_id) REFERENCES russian_part(id)
 );
 
-CREATE TABLE eng_pol(
-main_word_id int,
-sec_word_id int,
-FOREIGN KEY (main_word_id) REFERENCES english_part(id),
-FOREIGN KEY (sec_word_id) REFERENCES polish_part(id)
+CREATE TABLE english_polish(
+main_part_id int,
+sec_part_id int,
+FOREIGN KEY (main_part_id) REFERENCES english_part(id),
+FOREIGN KEY (sec_part_id) REFERENCES polish_part(id)
 );
 
-CREATE TABLE rus_pol(
+CREATE TABLE russian_polish(
 main_word_id int,
 sec_word_id int,
 FOREIGN KEY (main_word_id) REFERENCES polish_part(id),

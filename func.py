@@ -1,30 +1,44 @@
-from models import db, Russian_temp, English_temp, English, English_part, Parts, Russian, Russian_part
+from models import (
+    db,
+    Russian_temp,
+    English_temp,
+    English,
+    English_part,
+    Parts,
+    Russian,
+    Russian_part,
+    Languages,
+)
 from flask import json
 from datetime import date, timedelta
 from sqlalchemy import func
 
 
-models = {
-    ('english', 'russian'): (English, Russian),
-    ('russian', 'english'): (Russian, English)
-}
+def get_languages():
+    return [lang.language for lang in Languages.query.all()]
 
 
+def load_models(lang):
+    all_models = {
+        classes.__tablename__: classes for classes in db.Model.__subclasses__()
+    }
+    models = {
+        "main_model": all_models[lang["main_language"]],
+        "main_part_model": all_models[lang["main_language"] + "_part"],
+        "secondary_model": all_models[lang["secondary_language"]],
+        "secondary_part_model": all_models[lang["secondary_language"] + "_part"],
+        "translation_model": [
+            s
+            for s in all_models.keys()
+            if (lang["main_language"] in s and lang["secondary_language"] in s)
+        ],
+    }
+    return models
 
-def single_model(lang):
-    print(db.metadata.tables[lang].decl_class)
 
-    print(type(English))
-    return models[lang][0]
-
-
-def double_model(lang):
-    return (models[lang])
-
-
-def select_words(lang):
-    model = single_model(lang)
-    words = db.session.query(model.word).all()
+def all_words(lang):
+    main_model = load_models(lang)["main_model"]
+    words = db.session.query(main_model.word).all()
     word_list = [word.word for word in words]
     return json.dumps(word_list, ensure_ascii=False)
 
@@ -44,15 +58,16 @@ def add_translation(model, word, part):
     return existing_tran
 
 
-def add_words(lang, add_word, id, part, translations):
-    print(lang, add_word, id, part, translations)
-    add_model, trans_model = double_model(lang)
+def add_words(lang, word, id, part, translations):
+    print(lang, word, id, part, translations)
+    add_model, add_part, trans_model, trans_part = double_model(lang)
     if id == "":
-        add_word = add_model(word=add_word, verified=True)
+        add_word = add_model(word=word, verified=True)
         db.session.flush()
         part_id = Parts.query.filter_by(part=part).first()
-        add_word_part = (word_id)
+        add_word_part = add_part(word_id=add_word.id, part_id=part_id)
         db.session.add(add_word)
+        db.session.add(add_word_part)
         for translation in translations:
             add_word.translation.append(add_translation(trans_model, translation, part))
     elif translations == [""]:
@@ -116,21 +131,10 @@ def learned(lang, words):
 
 
 def not_verified(lang):
-    model = single_model(lang)
-    words = model.query.filter(model.verified == False).all()
-    prep_words = {}
-    for word in words:
-        print(word.word, word.russian_parts[0].part.part)
-        # if word.word in prep_words.keys():
-        #     prep_words[word.word][word.part] = [
-        #         word.answer,
-        #         [trans.word for trans in word.translation],
-        #     ]
-        # else:
-        #     prep_words[word.word] = {
-        #         word.part: [word.answer, [trans.word for trans in word.translation]]
-        #     }
-    return prep_words
+    main_model = load_models(lang)["main_model"]
+    words = main_model.query.filter(main_model.verified == False).all()
+    word_list = [word.word for word in words]
+    return word_list
 
 
 def stats(lang):
@@ -218,14 +222,13 @@ def reviewed(lang, words):
 
 
 def load_word(word, lang):
-    model = single_model(lang)
-    words = model.query.filter(model.word == word).all()
-    print(words)
-    prep_words = {}
-    for word in words:
-        prep_words[word.part] = {
-            "translation": [trans.word for trans in word.translation],
-            "id": word.id,
-            "answer": word.answer,
-        }
+    models = load_models(lang)
+    main_model = models["main_model"]
+    sec_model = models["secondary_model"]
+    word = main_model.query.filter_by(word=word).first()
+    prep_words = {"word": word.word, "id": word.id, "parts": {}}
+    for part in word.word_parts:
+        prep_words["parts"][part.part.part] = [
+            word.word.word for word in getattr(part, sec_model.__tablename__)
+        ]
     return prep_words

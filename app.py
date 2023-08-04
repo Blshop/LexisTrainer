@@ -1,15 +1,26 @@
-from flask import Flask, render_template, request, redirect, url_for, json, jsonify, session
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    json,
+    jsonify,
+    session,
+)
 from config import Config
 from func import (
-    select_words,
+    get_languages,
+    all_words,
     add_words,
     study_words,
-    learned, 
+    learned,
     not_verified,
     stats,
     prep_revew,
     reviewed,
     load_word,
+    load_models,
 )
 from models import db
 
@@ -18,20 +29,21 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
-ACTIVE_LANGUAGE = "russian"
-
 
 @app.route("/set_lang", methods=["POST"])
 def lang_select():
     if request.method == "POST":
-        global ACTIVE_LANGUAGE
-        ACTIVE_LANGUAGE = request.json
+        session["lang"] = request.json
     return "", 204
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", lang=json.dumps(ACTIVE_LANGUAGE))
+    if "languages" not in session.keys():
+        session["languages"] = get_languages()
+    return render_template(
+        "index.html", lang=json.dumps(session["lang"]), languages=session["languages"]
+    )
 
 
 @app.route("/addword", methods=["GET", "POST"])
@@ -43,7 +55,7 @@ def add_word():
                 request.form[f"translation-{i}"] == "" and request.form[f"id-{i}"] == ""
             ):
                 add_words(
-                    ACTIVE_LANGUAGE,
+                    session["lang"],
                     request.form["add_word"],
                     request.form[f"id-{i}"],
                     request.form[f"part-{i}"],
@@ -51,19 +63,19 @@ def add_word():
                 )
         return redirect(url_for("index"))
     else:
-        words = select_words(ACTIVE_LANGUAGE)
-        unverified = not_verified(ACTIVE_LANGUAGE)
+        words = all_words(session["lang"])
+        unverified = not_verified(session["lang"])
         return render_template(
             "AddWords.html",
             words=words,
-            lang=ACTIVE_LANGUAGE,
+            lang=session["lang"],
             unverified=unverified,
         )
 
 
 @app.route("/study", methods=["GET", "POST"])
 def learn():
-    prep_words = study_words(ACTIVE_LANGUAGE)
+    prep_words = study_words(session["lang"])
     return render_template(
         "study.html", words=json.dumps(prep_words, ensure_ascii=False)
     )
@@ -72,13 +84,13 @@ def learn():
 @app.route("/finish", methods=["GET", "POST"])
 def finish():
     data = json.loads(request.form.get("data"))
-    learned(ACTIVE_LANGUAGE, data)
+    learned(session["lang"], data)
     return redirect(url_for("index"))
 
 
 @app.route("/statistics")
 def statistics():
-    words = stats(ACTIVE_LANGUAGE)
+    words = stats(session["lang"])
     return render_template("stats.html", all_words=words)
 
 
@@ -87,7 +99,7 @@ def review():
     if request.method == "POST":
         pass
     else:
-        words = prep_revew(ACTIVE_LANGUAGE)
+        words = prep_revew(session["lang"])
         return render_template(
             "review.html", words=json.dumps(words, ensure_ascii=False)
         )
@@ -96,14 +108,14 @@ def review():
 @app.route("/review_finish", methods=["GET", "POST"])
 def review_finish():
     data = json.loads(request.form.get("data"))
-    reviewed(ACTIVE_LANGUAGE, data)
+    reviewed(session["lang"], data)
     return redirect(url_for("index"))
 
 
 @app.route("/get_word", methods=["GET", "POST"])
 def get_word():
     word = request.json
-    return jsonify(load_word(word, ACTIVE_LANGUAGE))
+    return jsonify(load_word(word, session["lang"]))
 
 
 if __name__ == "__main__":

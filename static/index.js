@@ -1,33 +1,59 @@
-active_lang(language)
+let main_language = ''
+let secondary_language = ''
 
-function active_lang(language) {
-    if (language == 'russian') {
-        document.getElementById('rus').classList.add('active')
-        document.getElementById('eng').classList.remove('active')
+function get_main_language() {
+    let main_container = document.querySelector('#main-language')
+    let current_active_language = main_container.querySelector('.active')
+    selected_language = event.target
+    main_language = selected_language.classList.value
+    selected_language.classList.add('active')
+    if (current_active_language != null) {
+        current_active_language.classList.remove('active')
+        main_language = ''
     }
-    else {
-        document.getElementById('eng').classList.add('active')
-        document.getElementById('rus').classList.remove('active')
+    if ((main_language != "") && (secondary_language != "")) {
+        lang_select(main_language, secondary_language)
     }
 }
 
-function lang_select(language) {
-    active_lang(language)
+function get_secondary_class_name() {
+    let main_container = document.querySelector('#secondary-language')
+    let current_active_language = main_container.querySelector('.active')
+    selected_language = event.target
+    secondary_language = selected_language.classList.value
+    selected_language.classList.add('active')
+    if (current_active_language != null) {
+        current_active_language.classList.remove('active')
+        secondary_language = ''
+    }
+    if ((main_language != "") && (secondary_language != "")) {
+        lang_select(main_language, secondary_language)
+    }
+}
+
+function lang_select(main_language, secondary_language) {
     fetch('/set_lang', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(language),
-    })
-        .then((response) => response.text())
-        .then((data) => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+        body: JSON.stringify({ 'main_language': main_language, 'secondary_language': secondary_language }),
+    });
 }
-
-document.getElementById("eng").addEventListener("click", function () { lang_select("english") })
-document.getElementById("rus").addEventListener("click", function () { lang_select("russian") })
+// function lang_select(language) {
+//     active_lang(language)
+//     fetch('/set_lang', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(language),
+//     })
+//         .then((response) => response.text())
+//         .then((data) => {
+//             console.log('Success:', data);
+//         })
+//         .catch((error) => {
+//             console.error('Error:', error);
+//         });
+// }
