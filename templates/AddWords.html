@@ -9,7 +9,8 @@
     {% include "back.html" %}
     <form class="add-word" method="post">
         <div class="add_word">
-            <label for="word">{{lang}} word</label>
+            <input type="hidden" id="id" value="">
+            <label for="word">{{lang['main_language']}} word</label>
             <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff"
                 onkeypress="return noenter()" />
         </div>
@@ -26,7 +27,6 @@
                 </select>
                 <label for="translation-{{i}}">translation</label>
                 <textarea name="translation-{{i}}" placeholder="translation-{{i}}" id="translation-{{i}}"></textarea>
-                <input id="id-{{i}}" type="text" name="id-{{i}}" autocomplete="off" list="autocompleteOff" />
                 <input id="answer-{{i}}" type="text" name="answer-{{i}}" autocomplete="off" list="autocompleteOff" />
             </div>
             {%endfor%}

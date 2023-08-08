@@ -40,20 +40,3 @@ function lang_select(main_language, secondary_language) {
         body: JSON.stringify({ 'main_language': main_language, 'secondary_language': secondary_language }),
     });
 }
-// function lang_select(language) {
-//     active_lang(language)
-//     fetch('/set_lang', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(language),
-//     })
-//         .then((response) => response.text())
-//         .then((data) => {
-//             console.log('Success:', data);
-//         })
-//         .catch((error) => {
-//             console.error('Error:', error);
-//         });
-// }
