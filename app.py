@@ -11,6 +11,7 @@ from flask import (
 from config import Config
 from func import (
     get_languages,
+    get_parts,
     all_words,
     add_words,
     study_words,
@@ -65,11 +66,13 @@ def add_word():
     else:
         words = all_words(session["lang"])
         unverified = not_verified(session["lang"])
+        parts = get_parts()
         return render_template(
             "AddWords.html",
             words=words,
             lang=session["lang"],
             unverified=unverified,
+            parts=parts,
         )
 
 

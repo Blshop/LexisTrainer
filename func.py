@@ -18,6 +18,10 @@ def get_languages():
     return [lang.language for lang in Languages.query.all()]
 
 
+def get_parts():
+    return [part.part for part in Parts.query.all()]
+
+
 def load_models(lang):
     all_models = {
         classes.__tablename__: classes for classes in db.Model.__subclasses__()

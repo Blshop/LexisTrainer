@@ -15,21 +15,6 @@
                 onkeypress="return noenter()" />
         </div>
         <div class="translations">
-            {%for i in range(3)%}
-            <div class="trans" id="id{{i}}">
-                <label for="part-{{i}}">part</label>
-                <select name="part-{{i}}" id="part-{{i}}">
-                    <option value="noun">noun</option>
-                    <option value="verb">verb</option>
-                    <option value="adjective">adjective</option>
-                    <option value="adverb">adverb</option>
-                    <option value="misc">misc</option>
-                </select>
-                <label for="translation-{{i}}">translation</label>
-                <textarea name="translation-{{i}}" placeholder="translation-{{i}}" id="translation-{{i}}"></textarea>
-                <input id="answer-{{i}}" type="text" name="answer-{{i}}" autocomplete="off" list="autocompleteOff" />
-            </div>
-            {%endfor%}
         </div>
         <input type="submit" value="Submit" />
     </form>
@@ -46,6 +31,7 @@
 {% block script%}
 <script>
     let word_list = {{ words | safe }}
+    let parts = {{ parts | safe }}
 </script>
 <script src="{{url_for('static', filename='add_word.js')}}"></script>
 {% endblock %}

@@ -1,15 +1,11 @@
-let translation_number = 0
+let translation_counter = 0
 var input = document.getElementById('word');
 input.addEventListener('input', verify_value);
 document.getElementById('add').addEventListener('click', show)
 
 function show() {
-    if (document.getElementById('id1').style.display == 'flex') {
-        document.getElementById('id2').style.display = 'flex'
-    }
-    else {
-        document.getElementById('id1').style.display = 'flex'
-    }
+    create_translations()
+    translation_counter += 1
 }
 
 
@@ -44,16 +40,19 @@ function noenter() {
 
 
 function check(word) {
-    console.log(word)
-    let parts = word['parts']
-    console.log(parts)
-    document.getElementById("id").value = word['id']
-    for (i in parts) {
-        document.getElementById('part-' + i).value = parts[i]
-        document.getElementById("translation-" + i).innerHTML = word[parts[i]]['translation'].join('\r\n')
-        document.getElementById("id-" + i).value = word[parts[i]]['id']
-        document.getElementById("answer-" + i).value = word[parts[i]]['answer']
+    let word_parts = word['parts']
+    clear_translations()
+    for (let i = 0; i < Object.keys(word_parts).length; i++) {
+        create_translations()
     }
+    temp = 1
+    for (let part of Object.keys(word_parts)) {
+        let parent = document.getElementById(temp)
+        parent.getElementsByTagName('select')[0].value = part
+        parent.getElementsByTagName('textarea')[0].innerHTML = word_parts[part].join('\r\n')
+        temp += 1
+    }
+    document.getElementById("id").value = word['id']
 }
 
 function tip(word) {
@@ -63,32 +62,35 @@ function tip(word) {
 }
 
 
-function clear() {
-    for (let i = 0; i < 3; i++) {
-        document.getElementById('id' + i).style.display = "none"
-        document.getElementById('part-' + i).value = ''
-        document.getElementById("translation-" + i).innerHTML = ""
-        document.getElementById("id-" + i).value = ''
-        document.getElementById("answer-" + i).value = ''
+function create_translation() {
+    translation_counter += 1
+    var parent_container = document.getElementsByClassName('translations')[0]
+    parent_container.innerHTML += `
+    <div class="trans" id="`+ translation_counter + `">
+        <label for="part">part</label>
+        <select name="part">
+        </select>
+        <label for="translation">translation</label>
+        <textarea name="translation" placeholder="translation"></textarea>
+        <input type="text" name="answer" autocomplete="off" list="autocompleteOff" />
+    </div>
+    `
+    parent = document.getElementById(translation_counter).getElementsByTagName('select')[0]
+    parent.id = translation_counter + 10
+    for (let part of parts) {
+        var option = document.createElement('option')
+        option.value = part
+        option.innerHTML = part
+        parent.appendChild(option)
     }
 }
 
-function create_translations() {
-    var parent_container = document.getElementsByClassName('translations')[0]
-    parent_container.innerHTML += `
-    <div class="trans" id="id{{i}}">
-                <label for="part-{{i}}">partdfgdfg</label>
-                <select name="part-{{i}}" id="part-{{i}}">
-                    <option value="noun">noun</option>
-                    <option value="verb">verb</option>
-                    <option value="adjective">adjective</option>
-                    <option value="adverb">adverb</option>
-                    <option value="misc">misc</option>
-                </select>
-                <label for="translation-{{i}}">translation</label>
-                <textarea name="translation-{{i}}" placeholder="translation-{{i}}" id="translation-{{i}}"></textarea>
-    </div>
-    `
+function clear_translations() {
+    for (let i = 1; i <= translation_counter; i++) {
+        document.getElementById(i).remove()
+
+    }
+    translation_counter = 0
 }
 
 create_translations()
