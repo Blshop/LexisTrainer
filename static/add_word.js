@@ -4,7 +4,7 @@ input.addEventListener('input', verify_value);
 document.getElementById('add').addEventListener('click', show)
 
 function show() {
-    create_translations()
+    create_translation()
     translation_counter += 1
 }
 
@@ -43,7 +43,7 @@ function check(word) {
     let word_parts = word['parts']
     clear_translations()
     for (let i = 0; i < Object.keys(word_parts).length; i++) {
-        create_translations()
+        create_translation()
     }
     temp = 1
     for (let part of Object.keys(word_parts)) {
