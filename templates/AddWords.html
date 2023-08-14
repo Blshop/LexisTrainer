@@ -5,33 +5,29 @@
 {% endblock %}
 
 {% block main %}
-<div class="container">
-    {% include "back.html" %}
-    <form class="add-word" method="post">
-        <div class="add_word">
-            <input type="hidden" id="id" value="">
-            <label for="word">{{lang['main_language']}} word</label>
-            <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff"
-                onkeypress="return noenter()" />
-        </div>
-        <div class="translations">
-        </div>
-        <input type="submit" value="Submit" />
-    </form>
-    <div class="controls">
-        <button id="add">Add translation</button>
+{% include "back.html" %}
+<form class="add-word" method="post">
+    <div class="add_word">
+        <input type="hidden" id="id" value="">
+        <label for="word">{{session['lang']['main_language']}} word</label>
+        <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff"
+            onkeypress="return noenter()" />
     </div>
-    <br>
-    {% for word in unverified %}
-    <span onclick="tip(this.innerHTML)">{{word}}</span>
-    {%endfor%}
+    <div class="translations">
+    </div>
+    <input type="submit" value="Submit" />
+</form>
+<div class="controls">
+    <button id="add">Add translation</button>
 </div>
+<br>
+{% for word in unverified %}
+<span onclick="tip(this.innerHTML)">{{word}}</span>
+{%endfor%}
+<meta name="words" data-words='{{words|safe}}'>
+<meta name="parts" data-parts="{{parts}}">
 {% endblock%}
 
 {% block script%}
-<script>
-    let word_list = {{ words | safe }}
-    let parts = {{ parts | safe }}
-</script>
 <script src="{{url_for('static', filename='add_word.js')}}"></script>
 {% endblock %}

@@ -1,3 +1,8 @@
+let word_list = JSON.parse(document.getElementsByTagName('meta')[3].getAttribute('data-words'))
+let parts = JSON.parse(document.getElementsByTagName('meta')[4].getAttribute('data-parts'))
+// console.log(JSON.parse(word_list))
+// console.log(JSON.parse(JSON.parse(word_list)))
+
 let translation_counter = 0
 var input = document.getElementById('word');
 input.addEventListener('input', verify_value);
@@ -93,4 +98,4 @@ function clear_translations() {
     translation_counter = 0
 }
 
-create_translations()
+create_translation()

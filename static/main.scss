@@ -19,24 +19,23 @@ body {
 .container {
     margin: auto;
     width: 1200px;
-    padding: 100px 0;
+    padding: 50px 0;
     height: 100vh;
 }
 
-.lang-select {
+.language-menu {
     margin: auto;
     text-align: center;
-    width: 300px;
     padding-bottom: 30px;
 
     p {
         text-transform: uppercase;
-        padding: 10px;
+        padding-bottom: 10px;
     }
 
     ul {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
 
         li {
             list-style: none;
@@ -48,10 +47,14 @@ body {
         }
 
         .active {
-            border: 2px solid rgb(0, 153, 120);
+            margin: 2px solid rgb(0, 153, 120);
             background-color: rgb(0, 216, 169);
             box-shadow: 2px 2px 5px rgb(0, 153, 120);
             color: rgb(105, 33, 119);
+        }
+
+        .inactive {
+            visibility: hidden;
         }
     }
 }

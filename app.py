@@ -34,17 +34,15 @@ db.init_app(app)
 @app.route("/set_lang", methods=["POST"])
 def lang_select():
     if request.method == "POST":
-        session["lang"] = request.json
+        session["active_languages"] = request.json
     return "", 204
 
 
 @app.route("/")
 def index():
-    if "languages" not in session.keys():
-        session["languages"] = get_languages()
-    return render_template(
-        "index.html", lang=json.dumps(session["lang"]), languages=session["languages"]
-    )
+    if "all_languages" not in session.keys():
+        session["all_languages"] = get_languages()
+    return render_template("index.html")
 
 
 @app.route("/addword", methods=["GET", "POST"])
@@ -72,7 +70,7 @@ def add_word():
             words=words,
             lang=session["lang"],
             unverified=unverified,
-            parts=parts,
+            parts=json.dumps(parts),
         )
 
 

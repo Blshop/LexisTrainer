@@ -5,34 +5,31 @@
 {% endblock %}
 
 {% block main %}
-<div class="container">
-    <div class="lang-select">
-        <p>select language</p>
-        <ul id="main-language">
-            {% for language in languages %}
-            <li class='{{language}}' onclick="get_main_language(event)">{{language}}</li>
-            {% endfor %}
-        </ul>
-        <ul id="secondary-language">
-            {% for language in languages %}
-            <li class='{{language}}' onclick="get_secondary_class_name(event)">{{language}}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="main-menu">
-        <ul>
-            <li><a href="/addword">Add / Edit</a></li>
-            <li><a href="/statistics">Statistics</a></li>
-            <li><a href="/study">Study</a></li>
-            <li><a href="/review">Review</a></li>
-        </ul>
-    </div>
+<div class="language-menu">
+    <p>select language</p>
+    <ul id="main-language">
+        {% for language in session['all_languages'] %}
+        <li class='{{language}}' onclick="get_main_language(event)">{{language}}</li>
+        {% endfor %}
+    </ul>
+    <ul id="secondary-language">
+        {% for language in session['all_languages'] %}
+        <li class='{{language}}' onclick="get_secondary_class_name(event)">{{language}}</li>
+        {% endfor %}
+    </ul>
 </div>
+<div class="main-menu">
+    <ul>
+        <li><a href="{{url_for('add_word')}}">Add / Edit</a></li>
+        <li><a href="{{url_for('statistics')}}">Statistics</a></li>
+        <li><a href="{{url_for('learn')}}">Study</a></li>
+        <li><a href="{{url_for('review')}}">Review</a></li>
+    </ul>
+</div>
+<meta name="active_languages" data-active_languages="{{session['active_languages']}}">
 {%endblock%}
 
+
 {%block script%}
-<script>
-    let language = {{ lang| safe}}
-</script>
 <script src="{{url_for('static', filename='index.js')}}"></script>
 {%endblock%}

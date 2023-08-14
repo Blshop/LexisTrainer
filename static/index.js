@@ -1,5 +1,7 @@
-let main_language = ''
-let secondary_language = ''
+let active_languages = JSON.parse(document.querySelector('meta[name="active_languages"]').getAttribute('data-active_languages'))
+console.log(active_languages)
+let containers
+
 
 function get_main_language() {
     let main_container = document.querySelector('#main-language')
@@ -32,6 +34,7 @@ function get_secondary_class_name() {
 }
 
 function lang_select(main_language, secondary_language) {
+    console.log(main_language, secondary_language)
     fetch('/set_lang', {
         method: 'POST',
         headers: {
@@ -39,4 +42,12 @@ function lang_select(main_language, secondary_language) {
         },
         body: JSON.stringify({ 'main_language': main_language, 'secondary_language': secondary_language }),
     });
+}
+
+function activate_languages(languages) {
+
+}
+
+function lang_container_selection(languages) {
+    main_container = document.querySelector('#secondary-language')
 }
