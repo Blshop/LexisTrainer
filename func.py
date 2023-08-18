@@ -26,22 +26,24 @@ def load_models(lang):
     all_models = {
         classes.__tablename__: classes for classes in db.Model.__subclasses__()
     }
+    print(lang)
     models = {
-        "main_model": all_models[lang["main_language"]],
-        "main_part_model": all_models[lang["main_language"] + "_part"],
+        "primary_model": all_models[lang["primary_language"]],
+        "primary_part_model": all_models[lang["primary_language"] + "_part"],
         "secondary_model": all_models[lang["secondary_language"]],
         "secondary_part_model": all_models[lang["secondary_language"] + "_part"],
         "translation_model": [
             s
             for s in all_models.keys()
-            if (lang["main_language"] in s and lang["secondary_language"] in s)
+            if (lang["primary_language"] in s and lang["secondary_language"] in s)
         ],
     }
     return models
 
 
 def all_words(lang):
-    main_model = load_models(lang)["main_model"]
+    print(lang)
+    main_model = load_models(lang)["primary_model"]
     words = db.session.query(main_model.word).all()
     word_list = [word.word for word in words]
     return json.dumps(word_list, ensure_ascii=False)
@@ -135,7 +137,7 @@ def learned(lang, words):
 
 
 def not_verified(lang):
-    main_model = load_models(lang)["main_model"]
+    main_model = load_models(lang)["primary_model"]
     words = main_model.query.filter(main_model.verified == False).all()
     word_list = [word.word for word in words]
     return word_list

@@ -34,7 +34,8 @@ db.init_app(app)
 @app.route("/set_lang", methods=["POST"])
 def lang_select():
     if request.method == "POST":
-        session["active_languages"] = request.json
+        session["active_languages"] = json.dumps(request.json)
+        print(session["active_languages"])
     return "", 204
 
 
@@ -62,8 +63,9 @@ def add_word():
                 )
         return redirect(url_for("index"))
     else:
-        words = all_words(session["lang"])
-        unverified = not_verified(session["lang"])
+        print(json.loads(session["active_languages"]))
+        words = all_words(json.loads(session["active_languages"]))
+        unverified = not_verified(json.loads(session["active_languages"]))
         parts = get_parts()
         return render_template(
             "AddWords.html",

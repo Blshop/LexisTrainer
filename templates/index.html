@@ -7,14 +7,14 @@
 {% block main %}
 <div class="language-menu">
     <p>select language</p>
-    <ul id="main-language">
+    <ul id="primary-language">
         {% for language in session['all_languages'] %}
-        <li class='{{language}}' onclick="get_main_language(event)">{{language}}</li>
+        <li id='primary-{{language}}' onclick="set_primary_language(event)">{{language}}</li>
         {% endfor %}
     </ul>
     <ul id="secondary-language">
         {% for language in session['all_languages'] %}
-        <li class='{{language}}' onclick="get_secondary_class_name(event)">{{language}}</li>
+        <li id='secondary-{{language}}' onclick="set_secondary_language(event)">{{language}}</li>
         {% endfor %}
     </ul>
 </div>
