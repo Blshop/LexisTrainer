@@ -1,15 +1,14 @@
-let active_languages
+let active_languages = JSON.parse(
+  document
+    .querySelector('meta[name="active_languages"]')
+    .getAttribute('data-active_languages')
+)
 let primary_language = ''
 let secondary_language = ''
 let primary_element
 let secondary_element
 
 if (active_languages != null) {
-  active_languages = JSON.parse(
-    document
-      .querySelector('meta[name="active_languages"]')
-      .getAttribute('data-active_languages')
-  )
   primary_language = active_languages['primary_language']
   secondary_language = active_languages['secondary_language']
   primary_element = document.getElementById('primary-' + primary_language)

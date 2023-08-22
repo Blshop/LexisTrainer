@@ -1,7 +1,5 @@
 from models import (
     db,
-    Russian_temp,
-    English_temp,
     English,
     English_part,
     Parts,
