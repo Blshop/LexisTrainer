@@ -54,7 +54,8 @@ body {
         }
 
         .inactive {
-            visibility: hidden;
+            pointer-events: none;
+            background-color: rgb(214, 214, 214);
         }
     }
 }
@@ -114,7 +115,7 @@ body {
         }
     }
 
-    .translations {
+    #translations {
         display: flex;
         justify-content: center;
         gap: 20px;
@@ -155,7 +156,12 @@ body {
         margin-bottom: 50px;
     }
 
-    input[type=submit] {
+    button {
+        display: block;
+        margin: auto;
+        width: 150px;
+        height: 50px;
+        margin-bottom: 50px;
         background-color: rgb(0, 255, 200);
     }
 }

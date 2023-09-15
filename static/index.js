@@ -3,84 +3,81 @@ let active_languages = JSON.parse(
     .querySelector('meta[name="active_languages"]')
     .getAttribute('data-active_languages')
 )
-let primary_language = ''
-let secondary_language = ''
-let primary_element
-let secondary_element
 
-if (active_languages != null) {
-  primary_language = active_languages['primary_language']
-  secondary_language = active_languages['secondary_language']
-  primary_element = document.getElementById('primary-' + primary_language)
-  secondary_element = document.getElementById('secondary-' + secondary_language)
-  primary_element.classList.add('active')
-  secondary_element.classList.add('active')
+var primary_element
+var secondary_element
+
+if (active_languages == null) {
+  primary_element = null
+  secondary_element = null
+} else {
+  primary_element = document.getElementById(
+    'primary-' + active_languages['primary_language']
+  )
+  secondary_element = document.getElementById(
+    'secondary-' + active_languages['secondary_language']
+  )
+  primary(primary_element, secondary_element)
 }
 
 function set_primary_language () {
   let new_element = event.target
-  if (new_element.classList.contains('active')) {
-    new_element.classList.remove('active')
-    document
-      .getElementById('secondary-' + new_element.innerHTML)
-      .classList.toggle('inactive')
-    primary_language = ''
-    primary_element = null
-  } else {
-    new_element.classList.add('active')
-    let inactive_language = document.getElementsByClassName('inactive')[0]
-    if (secondary_language == new_element.innerHTML) {
-      secondary_element.classList.toggle('active')
-      secondary_language = ''
-      secondary_element = null
-    }
-    if (inactive_language != null) {
-      inactive_language.classList.toggle('inactive')
-    }
-    if (primary_element != null) {
-      primary_element.classList.remove('active')
-    }
-    document
-      .getElementById('secondary-' + new_element.innerHTML)
-      .classList.toggle('inactive')
-    primary_element = new_element
-    primary_language = new_element.innerHTML
-  }
-  if (primary_language != '' && secondary_language != '') {
-    lang_select(primary_language, secondary_language)
-  }
+  primary(new_element)
 }
 
 function set_secondary_language () {
   let new_element = event.target
-  if (new_element.classList.contains('active')) {
-    new_element.classList.remove('active')
-    secondary_language = ''
-    secondary_element = null
-  } else {
-    new_element.classList.add('active')
-    if (secondary_element != null) {
-      secondary_element.classList.remove('active')
-    }
-    secondary_element = new_element
-    secondary_language = new_element.innerHTML
-  }
+  secondary(new_element)
+  lang_select()
+}
 
-  if (primary_language != '' && secondary_language != '') {
-    lang_select(primary_language, secondary_language)
+function lang_select () {
+  if (primary_element != null && secondary_element != null) {
+    fetch('/set_lang', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        primary_language: primary_element.innerHTML,
+        secondary_language: secondary_element.innerHTML
+      })
+    })
   }
 }
 
-function lang_select (primary_language, secondary_language) {
-  console.log(primary_language, secondary_language)
-  fetch('/set_lang', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      "primary_language": primary_language,
-      "secondary_language": secondary_language
-    })
-  })
+function primary (new_element) {
+  if (new_element.classList.contains('active')) {
+    new_element.classList.remove('active')
+    var secondaries = document.getElementById('secondary-language').children
+    for (i = 0; i < secondaries.length; i++) {
+      secondaries[i].classList.add('inactive')
+      secondaries[i].classList.remove('active')
+    }
+    primary_element = null
+    secondary_element = null
+    console.log(primary_element)
+  } else {
+    if (primary_element != null) {
+      primary_element.classList.remove('active')
+    }
+    new_element.classList.add('active')
+    primary_element = new_element
+    secondary(secondary_element)
+  }
+}
+
+function secondary (new_element = null) {
+  var secondaries = document.getElementById('secondary-language').children
+  for (i = 0; i < secondaries.length; i++) {
+    secondaries[i].classList.remove('inactive')
+    secondaries[i].classList.remove('active')
+  }
+  document
+    .getElementById('secondary-' + primary_element.innerHTML)
+    .classList.add('inactive')
+  if (new_element != null) {
+    new_element.classList.add('active')
+    secondary_element = new_element
+  }
 }

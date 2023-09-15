@@ -6,17 +6,17 @@
 
 {% block main %}
 {% include "back.html" %}
-<form class="add-word" method="post">
+<div class="add-word">
     <div class="add_word">
         <input type="hidden" id="id" value="">
         <label for="word">{{session['lang']['primary_language']}} word</label>
         <input id="word" type="text" name="add_word" autocomplete="off" list="autocompleteOff"
             onkeypress="return noenter()" />
     </div>
-    <div class="translations">
+    <div id="translations">
     </div>
-    <input type="submit" value="Submit" />
-</form>
+    <button id="submit">Submit</button>
+</div>
 <div class="controls">
     <button id="add">Add translation</button>
 </div>
@@ -24,7 +24,7 @@
 {% for word in unverified %}
 <span onclick="tip(this.innerHTML)">{{word}}</span>
 {%endfor%}
-<meta name="words" data-words='{{words|safe}}'>
+<meta name="words" data-words='{{words}}'>
 <meta name="parts" data-parts="{{parts}}">
 {% endblock%}
 

@@ -51,7 +51,8 @@ body {
   color: rgb(105, 33, 119);
 }
 .language-menu ul .inactive {
-  visibility: hidden;
+  pointer-events: none;
+  background-color: rgb(214, 214, 214);
 }
 
 .main-menu ul {
@@ -99,13 +100,13 @@ body {
   border-radius: 17px;
   text-align: center;
 }
-.add-word .translations {
+.add-word #translations {
   display: flex;
   justify-content: center;
   gap: 20px;
   margin: 15px 0;
 }
-.add-word .translations .trans {
+.add-word #translations .trans {
   box-shadow: 0px 0px 10px rgb(0, 153, 120);
   border-radius: 10px;
   display: flex;
@@ -113,18 +114,18 @@ body {
   gap: 10px;
   align-items: center;
 }
-.add-word .translations .trans textarea {
+.add-word #translations .trans textarea {
   width: 250px;
   height: 150px;
   text-align: justify;
   line-height: 130%;
   border-radius: 5px;
 }
-.add-word .translations #id1,
-.add-word .translations #id2 {
+.add-word #translations #id1,
+.add-word #translations #id2 {
   display: none;
 }
-.add-word .translations #id0 {
+.add-word #translations #id0 {
   display: flex;
 }
 .add-word input {
@@ -134,7 +135,12 @@ body {
   height: 50px;
   margin-bottom: 50px;
 }
-.add-word input[type=submit] {
+.add-word button {
+  display: block;
+  margin: auto;
+  width: 150px;
+  height: 50px;
+  margin-bottom: 50px;
   background-color: rgb(0, 255, 200);
 }
 

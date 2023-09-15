@@ -24,7 +24,6 @@ def load_models(lang):
     all_models = {
         classes.__tablename__: classes for classes in db.Model.__subclasses__()
     }
-    print(lang)
     models = {
         "primary_model": all_models[lang["primary_language"]],
         "primary_part_model": all_models[lang["primary_language"] + "_part"],
@@ -40,78 +39,93 @@ def load_models(lang):
 
 
 def all_words(lang):
-    print(lang)
     main_model = load_models(lang)["primary_model"]
     words = db.session.query(main_model.word).all()
     word_list = [word.word for word in words]
     return json.dumps(word_list, ensure_ascii=False)
 
 
-def add_translation(model, word, part):
-    trans = model.query.filter(model.word == word).all()
-    existing_tran = model.query.filter(model.word == word, model.part == part).first()
-    verified = False
-    for tran in trans:
-        if tran.verified == True:
-            verified = True
-        tran.answer = 0
-    if existing_tran is None:
-        new_tran = model(word=word, part=part, verified=verified)
-        db.session.add(new_tran)
-        return new_tran
-    return existing_tran
+def add_words(new_word, lang):
+    models = load_models(lang)
+    primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
+    primary_part_model = models["primary_part_model"]
+    secondary_part_model = models["secondary_part_model"]
 
-
-def add_words(lang, word, id, part, translations):
-    print(lang, word, id, part, translations)
-    add_model, add_part, trans_model, trans_part = double_model(lang)
-    if id == "":
-        add_word = add_model(word=word, verified=True)
-        db.session.flush()
-        part_id = Parts.query.filter_by(part=part).first()
-        add_word_part = add_part(word_id=add_word.id, part_id=part_id)
+    if new_word["id"] == "":
+        add_word = primary_model(word=new_word["word"], verified=True)
         db.session.add(add_word)
-        db.session.add(add_word_part)
-        for translation in translations:
-            add_word.translation.append(add_translation(trans_model, translation, part))
-    elif translations == [""]:
-        print("here")
-        add_word = add_model.query.filter_by(id=id).first()
-        add_word.translation = []
-        add_model.query.filter_by(id=id).delete()
+        db.session.flush()
+        for part in new_word["parts"].keys():
+            add_part = Parts.query.filter_by(part=part).first()
+            add_word_part = primary_part_model(word_id=add_word.id, part_id=add_part.id)
+            db.session.add(add_word_part)
+            for transl in new_word["parts"][part]:
+                translation = add_translation(
+                    secondary_model, secondary_part_model, add_part.id, transl
+                )
+                getattr(add_word_part, secondary_model.__tablename__).append(
+                    translation
+                )
     else:
-        add_word = add_model.query.filter(add_model.id == id).first()
-        add_word.part = part
+        add_word = primary_model.query.filter_by(word=new_word["word"]).first()
         add_word.answer = 0
-        add_word.verified = True
-        old_trans = add_word.translation
-        for old in old_trans:
-            if old.word not in translations:
-                old_trans.remove(old)
-            else:
-                translations.remove(old.word)
-        for translation in translations:
-            add_word.translation.append(add_translation(trans_model, translation, part))
+        for part in new_word["parts"].keys():
+            add_part = Parts.query.filter_by(part=part).first()
+            add_word_part = primary_part_model.query.filter(
+                primary_part_model.part_id == add_part.id,
+                primary_part_model.word_id == add_word.id,
+            ).first()
+            if not add_word_part:
+                add_word_part = primary_part_model(
+                    word_id=add_word.id, part_id=add_part.id
+                )
+            old_translations = getattr(add_word_part, secondary_model.__tablename__)
+            getattr(add_word_part, secondary_model.__tablename__)[:] = []
+            for transl in new_word["parts"][part]:
+                translation = add_translation(
+                    secondary_model, secondary_part_model, add_part.id, transl
+                )
+                getattr(add_word_part, secondary_model.__tablename__).append(
+                    translation
+                )
     db.session.commit()
 
 
+def add_translation(model, part_model, part_id, word):
+    translation = model.query.filter_by(word=word).first()
+    if translation:
+        translation_part = part_model.query.filter(
+            part_model.part_id == part_id, part_model.word_id == translation.id
+        ).first()
+        if not translation_part:
+            translation_part = part_model(word_id=translation.id, part_id=part_id)
+        db.session.add(translation_part)
+    else:
+        translation = model(word=word)
+        db.session.add(translation)
+        db.session.flush()
+        translation_part = part_model(word_id=translation.id, part_id=part_id)
+        db.session.add(translation_part)
+    db.session.commit()
+    return translation_part
+
+
 def study_words(lang):
-    model = single_model(lang)
-    words = model.query.filter(model.answer < 100, model.verified == True).all()
+    models = load_models(lang)
+    primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
     prep_words = {}
+    words = primary_model.query.filter(
+        primary_model.answer < 100, primary_model.verified == True
+    ).all()
     for word in words:
-        if word.word in prep_words.keys():
-            prep_words[word.word][word.part] = {
-                "answer": word.answer,
-                "translation": [trans.word for trans in word.translation],
-            }
-        else:
-            prep_words[word.word] = {
-                word.part: {
-                    "answer": word.answer,
-                    "translation": [trans.word for trans in word.translation],
-                }
-            }
+        prep_words[word.word] = {"id": word.id, "answer": word.answer, "parts": {}}
+        for part in word.word_parts:
+            prep_words[word.word]["parts"][part.part.part] = [
+                word.word.word for word in getattr(part, secondary_model.__tablename__)
+            ]
+    print(prep_words)
     return prep_words
 
 
@@ -227,10 +241,10 @@ def reviewed(lang, words):
 
 def load_word(word, lang):
     models = load_models(lang)
-    main_model = models["main_model"]
+    main_model = models["primary_model"]
     sec_model = models["secondary_model"]
     word = main_model.query.filter_by(word=word).first()
-    prep_words = {"word": word.word, "id": word.id, "parts": {}}
+    prep_words = {"word": word.word, "id": word.id, "answer": word.answer, "parts": {}}
     for part in word.word_parts:
         prep_words["parts"][part.part.part] = [
             word.word.word for word in getattr(part, sec_model.__tablename__)

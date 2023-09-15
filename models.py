@@ -42,24 +42,6 @@ db = SQLAlchemy()
 #     )
 
 
-class RepeatRus(db.Model):
-    word_id = db.Column("word_id", db.Integer, primary_key=True)
-    answer = db.Column("answer", db.Integer)
-
-    def __init__(self, word_id, answer):
-        self.word_id = word_id
-        self.answer = answer
-
-
-class RepeatEng(db.Model):
-    word_id = db.Column("word_id", db.Integer, primary_key=True)
-    answer = db.Column("answer", db.Integer)
-
-    def __init__(self, word_id, answer):
-        self.word_id = word_id
-        self.answer = answer
-
-
 class Parts(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
     part = db.Column("part", db.String(10), unique=True, nullable=False)
@@ -100,7 +82,7 @@ class English_part(db.Model):
 
 
 class Russian(db.Model):
-    id = db.Column("id", db.Integer, primary_key=True)
+    id = db.Column("id", db.Integer, autoincrement=True, primary_key=True)
     word = db.Column("word", db.String(30), unique=True)
     answer = db.Column("answer", db.Integer, nullable=False, default=0)
     verified = db.Column("verified", db.Boolean, nullable=False, default=False)

@@ -1,23 +1,21 @@
 let word_list = JSON.parse(
-  document.getElementsByTagName('meta')[3].getAttribute('data-words')
+  document.querySelector('meta[name="words"]').getAttribute('data-words')
 )
 let parts = JSON.parse(
-  document.getElementsByTagName('meta')[4].getAttribute('data-parts')
+  document.querySelector('meta[name="parts"]').getAttribute('data-parts')
 )
-console.log(JSON.parse(word_list))
-// console.log(JSON.parse(JSON.parse(word_list)))
+let translation_container = document.getElementById('translations')
 
-let translation_counter = 0
 var input = document.getElementById('word')
-input.addEventListener('input', verify_value)
+input.addEventListener('input', verify_word)
 document.getElementById('add').addEventListener('click', show)
-
-function show () {
+document.getElementById('submit').addEventListener('click', prep_word)
+function show() {
   create_translation()
   translation_counter += 1
 }
 
-function verify_value () {
+function verify_word() {
   if (word_list.indexOf(input.value.trim()) !== -1) {
     input.style.outline = '3px solid red'
   } else {
@@ -25,7 +23,7 @@ function verify_value () {
   }
 }
 
-function load_word () {
+function load_word() {
   fetch('/get_word', {
     method: 'POST',
     headers: {
@@ -37,44 +35,34 @@ function load_word () {
     .then(json => check(json))
 }
 
-function noenter () {
+function noenter() {
   if (window.event.keyCode == 13) {
     load_word()
   }
   return !(window.event.keyCode == 13)
 }
 
-function check (word) {
+function check(word) {
   let word_parts = word['parts']
   clear_translations()
-  for (let i = 0; i < Object.keys(word_parts).length; i++) {
-    create_translation()
-  }
-  temp = 1
   for (let part of Object.keys(word_parts)) {
-    let parent = document.getElementById(temp)
-    parent.getElementsByTagName('select')[0].value = part
-    parent.getElementsByTagName('textarea')[0].innerHTML =
+    create_translation(part)
+    translation_container.lastElementChild.getElementsByTagName('textarea')[0].innerHTML =
       word_parts[part].join('\r\n')
-    temp += 1
   }
   document.getElementById('id').value = word['id']
 }
 
-function tip (word) {
+function tip(word) {
   document.getElementById('word').value = word
-  verify_value()
+  verify_word()
   load_word()
 }
 
-function create_translation () {
-  translation_counter += 1
-  var parent_container = document.getElementsByClassName('translations')[0]
-  parent_container.innerHTML +=
+function create_translation(temp) {
+  translation_container.innerHTML +=
     `
-    <div class="trans" id="` +
-    translation_counter +
-    `">
+    <div class="trans">
         <label for="part">part</label>
         <select name="part">
         </select>
@@ -83,23 +71,51 @@ function create_translation () {
         <input type="text" name="answer" autocomplete="off" list="autocompleteOff" />
     </div>
     `
-  parent = document
-    .getElementById(translation_counter)
+  let parent = translation_container.lastElementChild
     .getElementsByTagName('select')[0]
-  parent.id = translation_counter + 10
   for (let part of parts) {
-    var option = document.createElement('option')
+    let option = document.createElement('option')
     option.value = part
     option.innerHTML = part
+    if (part == temp) { option.setAttribute('selected', 'selected') }
     parent.appendChild(option)
   }
 }
 
-function clear_translations () {
-  for (let i = 1; i <= translation_counter; i++) {
-    document.getElementById(i).remove()
-  }
-  translation_counter = 0
+function clear_translations() {
+  translation_container.innerHTML = ''
 }
 
-create_translation()
+create_translation(1)
+
+
+function prep_word() {
+  let parts = {}
+  for (let parent of translation_container.getElementsByClassName('trans')) {
+    console.log(parent)
+    parts[parent.getElementsByTagName('select')[0].value] = parent.getElementsByTagName('textarea')[0].value.split('\n')
+    console.log(parts)
+  }
+  if (input.value != "") {
+    var prepared_word = {
+      'word': input.value,
+      'id': document.getElementById('id').value,
+      'answer': 0,
+      'parts': parts
+    }
+  }
+  console.log(prepared_word)
+  upload_word(prepared_word)
+  // location.reload()
+}
+
+
+function upload_word(word) {
+  fetch('/add_word', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(word)
+  })
+}
