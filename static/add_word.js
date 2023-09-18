@@ -12,7 +12,6 @@ document.getElementById('add').addEventListener('click', show)
 document.getElementById('submit').addEventListener('click', prep_word)
 function show() {
   create_translation()
-  translation_counter += 1
 }
 
 function verify_word() {

@@ -5,21 +5,14 @@
 {% endblock %}
 
 {% block main %}
-<div class="container">
+<div class="add_word">
    {% include "back.html" %}
    <div class="status">
       <p>Progress</p>
       <p><span id="current"></span> out of <span id="all"></span></p><br>
       <p id="word"></p><br>
    </div>
-   <div class="translations">
-      {% for i in range(3) %}
-      <div class="trans" id="id{{i}}">
-         <p id="part-{{i}}">part</p>
-         <label for="translation-{{i}}">translation</label>
-         <textarea id="translation-{{i}}" name="translation-{{i}}" placeholder="translation-{{i}}"></textarea>
-      </div>
-      {% endfor %}
+   <div id="translations">
    </div>
    <div class="answer">
       <button id="correct">correct</button>
@@ -29,12 +22,11 @@
       <button id="finish">finish</button>
    </div>
 </div>
+<meta name="words" data-words='{{words}}'>
+<meta name="parts" data-parts="{{parts}}">
 {% endblock %}
 
 {% block script %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-   let list_data = {{ words | safe }}
-</script>
 <script src="{{url_for('static', filename='study.js')}}"></script>
 {% endblock %}

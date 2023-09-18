@@ -69,8 +69,11 @@ def add_word():
 @app.route("/study", methods=["GET", "POST"])
 def learn():
     prep_words = study_words(session["active_languages"])
+    parts = get_parts()
     return render_template(
-        "study.html", words=json.dumps(prep_words, ensure_ascii=False)
+        "study.html",
+        words=json.dumps(prep_words, ensure_ascii=False),
+        parts=json.dumps(parts),
     )
 
 

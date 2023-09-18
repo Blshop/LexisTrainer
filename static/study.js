@@ -1,17 +1,23 @@
+let all_words = JSON.parse(
+    document.querySelector('meta[name="words"]').getAttribute('data-words')
+)
+let parts = JSON.parse(
+    document.querySelector('meta[name="parts"]').getAttribute('data-parts')
+)
+console.log(parts)
+let translation_container = document.getElementById('translations')
+console.log(all_words)
 let word_number = 0;
-let max_words = Object.keys(list_data).length
-let keys = Object.keys(list_data)
+let max_words = Object.keys(all_words).length
+console.log(max_words)
+let keys = Object.keys(all_words)
+console.log(keys)
 let random
 let ru_word
-let parts
 document.getElementById("all").innerHTML = max_words
 document.getElementById("correct").addEventListener("click", addvalue);
 document.getElementById("wrong").addEventListener("click", minusvalue);
 document.getElementById("finish").addEventListener("click", finish);
-document.getElementById("translation-0").addEventListener("click", show);
-document.getElementById("translation-1").addEventListener("click", show);
-document.getElementById("translation-2").addEventListener("click", show);
-
 next_word()
 
 function show() {
@@ -37,23 +43,15 @@ function finish() {
 }
 
 function next_word() {
-    document.getElementById("translation-0").style.color = 'white'
-    document.getElementById("translation-1").style.color = 'white'
-    document.getElementById("translation-2").style.color = 'white'
-    document.getElementById("part-0").style.color = 'white'
-    document.getElementById("part-1").style.color = 'white'
-    document.getElementById("part-2").style.color = 'white'
-    document.getElementById("translation-0").innerHTML = ''
-    document.getElementById("translation-1").innerHTML = ''
-    document.getElementById("translation-2").innerHTML = ''
-
     if (max_words > word_number) {
         word_number += 1
         random = Math.floor(Math.random() * keys.length)
         ru_word = keys[random]
-        parts = Object.keys(list_data[ru_word])
-        console.log(parts)
+        console.log(ru_word)
+        let partss = (all_words[ru_word]['parts'])
+        console.log(partss)
         keys.splice(random, 1)
+        check(partss)
         document.getElementById("current").innerHTML = word_number
         document.getElementById("word").innerHTML = ru_word
         for (i in parts) {
@@ -62,9 +60,6 @@ function next_word() {
             document.getElementById("part-" + i).style.color = 'black'
             document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]]['translation'].join('\r\n')
         }
-        // document.getElementById("2").innerHTML = ''
-        // document.getElementById("3").innerHTML = list_data[word_number][2]
-        // document.getElementById("4").innerHTML = list_data[word_number][3]
     }
 
 }
@@ -100,4 +95,49 @@ function addvalue() {
     else { next_word() }
 
 
+}
+
+function check(word_parts) {
+    // let word_parts = word['parts']
+    clear_translations()
+    for (let part of Object.keys(word_parts)) {
+        create_translation(part)
+        translation_container.lastElementChild.getElementsByTagName('textarea')[0].innerHTML =
+            word_parts[part].join('\r\n')
+    }
+    document.getElementById('id').value = word['id']
+}
+
+function tip(word) {
+    document.getElementById('word').value = word
+    verify_word()
+    load_word()
+}
+
+function create_translation(temp) {
+    translation_container.innerHTML +=
+        `
+      <div class="trans">
+          <label for="part">part</label>
+          <select name="part">
+          </select>
+          <label for="translation">translation</label>
+          <textarea name="translation" placeholder="translation"></textarea>
+          <input type="text" name="answer" autocomplete="off" list="autocompleteOff" />
+      </div>
+      `
+    let parent = translation_container.lastElementChild
+        .getElementsByTagName('select')[0]
+    console.log(parts)
+    for (let part of parts) {
+        let option = document.createElement('option')
+        option.value = part
+        option.innerHTML = part
+        if (part == temp) { option.setAttribute('selected', 'selected') }
+        parent.appendChild(option)
+    }
+}
+
+function clear_translations() {
+    translation_container.innerHTML = ''
 }
