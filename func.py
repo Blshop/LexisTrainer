@@ -130,21 +130,19 @@ def study_words(lang):
 
 
 def learned(lang, words):
-    model = single_model(lang)
-    for word, parts in words.items():
-        for part, data in parts.items():
-            if data["answer"] == 100:
-                model.query.filter(model.word == word, model.part == part).update(
-                    dict(
-                        answer=data["answer"],
-                        learned_date=date.today() + timedelta(days=5),
-                        repeat_delay=5,
-                    )
-                )
-            else:
-                model.query.filter(model.word == word, model.part == part).update(
-                    dict(answer=data["answer"])
-                )
+    models = load_models(lang)
+    print(words)
+    primary_model = models["primary_model"]
+    for word in words.keys():
+        print(word)
+        if words[word]["answer"] == 100:
+            primary_model.query.filter_by(word=word).update(
+                dict(answer=words[word]["answer"])
+            )
+        else:
+            primary_model.query.filter_by(word=word).update(
+                dict(answer=words[word]["answer"])
+            )
     db.session.commit()
 
 

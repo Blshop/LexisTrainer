@@ -80,7 +80,7 @@ def learn():
 @app.route("/finish", methods=["GET", "POST"])
 def finish():
     data = json.loads(request.form.get("data"))
-    learned(session["lang"], data)
+    learned(session["active_languages"], data)
     return redirect(url_for("index"))
 
 

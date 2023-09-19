@@ -21,15 +21,15 @@ document.getElementById("finish").addEventListener("click", finish);
 next_word()
 
 function show() {
-    document.getElementById("translation-0").style.color = 'black'
-    document.getElementById("translation-1").style.color = 'black'
-    document.getElementById("translation-2").style.color = 'black'
+    for (textarea of translation_container.lastElementChild.getElementsByTagName('textarea')) {
+        textarea.style.color = 'black'
+    }
 }
 
 function finish() {
     $(document).ready(function () {
         var data = {
-            data: JSON.stringify(list_data)
+            data: JSON.stringify(all_words)
         }
         $.ajax({
             url: "/finish",
@@ -54,27 +54,31 @@ function next_word() {
         check(partss)
         document.getElementById("current").innerHTML = word_number
         document.getElementById("word").innerHTML = ru_word
-        for (i in parts) {
-            document.getElementById('id' + i).style.display = "flex"
-            document.getElementById('part-' + i).innerHTML = parts[i]
-            document.getElementById("part-" + i).style.color = 'black'
-            document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]]['translation'].join('\r\n')
-        }
+        // for (i in parts) {
+        //     document.getElementById('id' + i).style.display = "flex"
+        //     document.getElementById('part-' + i).innerHTML = parts[i]
+        //     document.getElementById("part-" + i).style.color = 'black'
+        //     document.getElementById("translation-" + i).innerHTML = list_data[ru_word][parts[i]]['translation'].join('\r\n')
+        // }
     }
 
 }
 function minusvalue() {
-    parts = Object.keys(list_data[ru_word])
-    for (i in parts) {
-        if (list_data[ru_word][parts[i]]['amswer'] > 0) {
-            list_data[ru_word][parts[i]]['answer'] -= 10
-        }
+    // parts = Object.keys(list_data[ru_word])
+    // for (i in parts) {
+    //     if (list_data[ru_word][parts[i]]['amswer'] > 0) {
+    //         list_data[ru_word][parts[i]]['answer'] -= 10
+    //     }
+    // }
+    if (all_words[ru_word]['answer'] > 0) {
+        all_words[ru_word]['answer'] += 10
     }
 
     if (word_number == max_words) {
-        document.getElementById("translation-0").innerHTML = 'Finished'
-        document.getElementById("translation-1").innerHTML = 'Finished'
-        document.getElementById("translation-2").innerHTML = 'Finished'
+        finish()
+        // document.getElementById("translation-0").innerHTML = 'Finished'
+        // document.getElementById("translation-1").innerHTML = 'Finished'
+        // document.getElementById("translation-2").innerHTML = 'Finished'
     }
     else {
         next_word()
@@ -82,15 +86,17 @@ function minusvalue() {
 }
 
 function addvalue() {
-    parts = Object.keys(list_data[ru_word])
-    for (i in parts) {
-        list_data[ru_word][parts[i]]['answer'] += 10
-        console.log(list_data[ru_word][parts[i]]['answer'])
-    }
+    // parts = Object.keys(list_data[ru_word])
+    // for (i in parts) {
+    //     list_data[ru_word][parts[i]]['answer'] += 10
+    //     console.log(list_data[ru_word][parts[i]]['answer'])
+    // }
+    all_words[ru_word]['answer'] += 10
     if (word_number == max_words) {
-        document.getElementById("translation-0").innerHTML = 'Finished'
-        document.getElementById("translation-1").innerHTML = 'Finished'
-        document.getElementById("translation-2").innerHTML = 'Finished'
+        finish()
+        // document.getElementById("translation-0").innerHTML = 'Finished'
+        // document.getElementById("translation-1").innerHTML = 'Finished'
+        // document.getElementById("translation-2").innerHTML = 'Finished'
     }
     else { next_word() }
 
@@ -98,14 +104,14 @@ function addvalue() {
 }
 
 function check(word_parts) {
-    // let word_parts = word['parts']
     clear_translations()
     for (let part of Object.keys(word_parts)) {
         create_translation(part)
         translation_container.lastElementChild.getElementsByTagName('textarea')[0].innerHTML =
             word_parts[part].join('\r\n')
+        translation_container.lastElementChild.getElementsByTagName('textarea')[0].style.color = 'white'
+        translation_container.lastElementChild.getElementsByTagName('textarea')[0].addEventListener('click', show)
     }
-    document.getElementById('id').value = word['id']
 }
 
 function tip(word) {
