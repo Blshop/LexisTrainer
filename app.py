@@ -51,6 +51,7 @@ def index():
 @app.route("/add_word", methods=["GET", "POST"])
 def add_word():
     if request.method == "POST":
+        print(request.json)
         add_words(request.json, session["active_languages"])
         return "", 204
     else:

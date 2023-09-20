@@ -1,6 +1,7 @@
 let word_list = JSON.parse(
   document.querySelector('meta[name="words"]').getAttribute('data-words')
 )
+console.log(word_list)
 let parts = JSON.parse(
   document.querySelector('meta[name="parts"]').getAttribute('data-parts')
 )
@@ -11,7 +12,7 @@ input.addEventListener('input', verify_word)
 document.getElementById('add').addEventListener('click', show)
 document.getElementById('submit').addEventListener('click', prep_word)
 function show() {
-  create_translation()
+  create_translation(0)
 }
 
 function verify_word() {
@@ -59,6 +60,11 @@ function tip(word) {
 }
 
 function create_translation(temp) {
+  if (translation_container.lastElementChild) {
+    console.log('sdfsfds')
+    console.log(translation_container.lastElementChild.getElementsByTagName('textarea')[0].value)
+  }
+
   translation_container.innerHTML +=
     `
     <div class="trans">
@@ -70,8 +76,9 @@ function create_translation(temp) {
         <input type="text" name="answer" autocomplete="off" list="autocompleteOff" />
     </div>
     `
-  let parent = translation_container.lastElementChild
-    .getElementsByTagName('select')[0]
+  let parent = translation_container.lastElementChild.getElementsByTagName('select')[0]
+  console.log(translation_container.lastElementChild)
+
   for (let part of parts) {
     let option = document.createElement('option')
     option.value = part
@@ -105,7 +112,7 @@ function prep_word() {
   }
   console.log(prepared_word)
   upload_word(prepared_word)
-  // location.reload()
+  location.reload()
 }
 
 

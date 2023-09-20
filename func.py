@@ -17,7 +17,7 @@ def get_languages():
 
 
 def get_parts():
-    return [part.part for part in Parts.query.all()]
+    return [part.part_desc for part in Parts.query.all()]
 
 
 def load_models(lang):
@@ -40,8 +40,8 @@ def load_models(lang):
 
 def all_words(lang):
     main_model = load_models(lang)["primary_model"]
-    words = db.session.query(main_model.word).all()
-    word_list = [word.word for word in words]
+    words = db.session.query(main_model.word_desc).all()
+    word_list = [word.word_desc for word in words]
     return json.dumps(word_list, ensure_ascii=False)
 
 
@@ -67,6 +67,8 @@ def add_words(new_word, lang):
                 getattr(add_word_part, secondary_model.__tablename__).append(
                     translation
                 )
+                # db.session.flush()
+                # print(getattr(add_word_part, secondary_model.__tablename__))
     else:
         add_word = primary_model.query.filter_by(word=new_word["word"]).first()
         add_word.answer = 0
@@ -148,7 +150,10 @@ def learned(lang, words):
 
 def not_verified(lang):
     main_model = load_models(lang)["primary_model"]
-    words = main_model.query.filter(main_model.verified == False).all()
+    sec_model = load_models(lang)["secondary_model"]
+    words = main_model.query.filter(
+        getattr(main_model, lang["secondary_language"]) == False
+    ).all()
     word_list = [word.word for word in words]
     return word_list
 

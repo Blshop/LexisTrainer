@@ -1,9 +1,9 @@
 CREATE TABLE parts(
 id integer PRIMARY KEY AUTOINCREMENT,
-part varchar(10) UNIQUE NOT NULL
+part_desc varchar(10) UNIQUE NOT NULL
 );
 
-INSERT INTO parts (part)
+INSERT INTO parts (part_desc)
 VALUES 
 ("noun") ,
 ("verb") ,
@@ -27,10 +27,11 @@ VALUES
 
 CREATE TABLE english(
 id integer PRIMARY KEY AUTOINCREMENT,
-word varchar(30) UNIQUE,
+word_desc varchar(30) UNIQUE,
 answer int NOT NULL DEFAULT 0,
-verified boolean NOT NULL DEFAULT False,
-delay integer,
+russian boolean NOT NULL DEFAULT False,
+polish boolean NOT NULL DEFAULT False,
+delay integer DEFAULT 5,
 repeat_date date
 );
 
@@ -47,10 +48,11 @@ UNIQUE(word_id, part_id)
 
 CREATE TABLE russian(
 id integer PRIMARY KEY AUTOINCREMENT,
-word varchar(30) UNIQUE,
-answer int NOT NULL,
-verified boolean NOT NULL,
-delay integer,
+word_desc varchar(30) UNIQUE,
+answer int NOT NULL DEFAULT 0,
+english boolean NOT NULL DEFAULT False,
+polish boolean NOT NULL DEFAULT False,
+delay integer DEFAULT 5,
 repeat_date date
 );
 
@@ -67,10 +69,11 @@ UNIQUE(word_id, part_id)
 
 CREATE TABLE polish(
 id integer PRIMARY KEY AUTOINCREMENT,
-word varchar(30) UNIQUE,
-answer int NOT NULL,
-verified boolean NOT NULL,
-delay integer,
+word_desc varchar(30) UNIQUE,
+answer int NOT NULL DEFAULT 0,
+english boolean NOT NULL DEFAULT False,
+russian boolean NOT NULL DEFAULT False,
+delay integer DEFAULT 5,
 repeat_date date
 );
 
