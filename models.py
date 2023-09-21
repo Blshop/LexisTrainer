@@ -81,8 +81,8 @@ class Polish(db.Model):
     id = db.Column("id", db.Integer, autoincrement=True, primary_key=True)
     word_desc = db.Column("word_desc", db.String(30), unique=True)
     answer = db.Column("answer", db.Integer, nullable=False, default=0)
-    russian = db.Column("english", db.Boolean, nullable=False, default=False)
-    english = db.Column("polish", db.Boolean, nullable=False, default=False)
+    russian = db.Column("russian", db.Boolean, nullable=False, default=False)
+    english = db.Column("english", db.Boolean, nullable=False, default=False)
     delay = db.Column("delay", db.Integer, nullable=False, default=5)
     repeat_date = db.Column("repeat_date", db.String)
     word_parts = db.Relationship("Polish_part", backref="word_part")
@@ -124,11 +124,11 @@ class English_part(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
     part_id = db.Column("part_id", db.Integer, db.ForeignKey("parts.id"))
     word_id = db.Column("word_id", db.Integer, db.ForeignKey("english.id"))
-    russian = db.relationship(
-        "Russian_part", secondary=english_russian, backref="english_russian"
+    english_russian = db.relationship(
+        "Russian_part", secondary=english_russian, backref="russian_english"
     )
-    polish = db.relationship(
-        "Polish_part", secondary=english_polish, backref="english_polish"
+    english_polish = db.relationship(
+        "Polish_part", secondary=english_polish, backref="polish_english"
     )
 
 
@@ -136,8 +136,8 @@ class Russian_part(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
     part_id = db.Column("part_id", db.Integer, db.ForeignKey("parts.id"))
     word_id = db.Column("word_id", db.Integer, db.ForeignKey("russian.id"))
-    polish = db.relationship(
-        "Polish_part", secondary=russian_polish, backref="russian_polish"
+    russian_polish = db.relationship(
+        "Polish_part", secondary=russian_polish, backref="polish_russian"
     )
 
 

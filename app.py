@@ -12,8 +12,8 @@ from config import Config
 from func import (
     get_languages,
     get_parts,
-    all_words,
-    add_words,
+    get_all_words,
+    add_word,
     study_words,
     learned,
     not_verified,
@@ -21,7 +21,6 @@ from func import (
     prep_revew,
     reviewed,
     load_word,
-    load_models,
 )
 from models import db
 
@@ -34,7 +33,6 @@ db.init_app(app)
 @app.route("/set_lang", methods=["POST"])
 def lang_select():
     if request.method == "POST":
-        print(type(request.json))
         session["active_languages"] = request.json
     return "", 204
 
@@ -51,11 +49,11 @@ def index():
 @app.route("/add_word", methods=["GET", "POST"])
 def add_word():
     if request.method == "POST":
-        print(request.json)
-        add_words(request.json, session["active_languages"])
+        add_word(request.json, session["active_languages"])
         return "", 204
     else:
-        words = all_words(session["active_languages"])
+        print(session["active_languages"])
+        words = get_all_words(session["active_languages"])
         unverified = not_verified(session["active_languages"])
         parts = get_parts()
         return render_template(
@@ -96,16 +94,19 @@ def review():
     if request.method == "POST":
         pass
     else:
-        words = prep_revew(session["lang"])
+        words = prep_revew(session["active_languages"])
+        parts = get_parts()
         return render_template(
-            "review.html", words=json.dumps(words, ensure_ascii=False)
+            "review.html",
+            words=json.dumps(words, ensure_ascii=False),
+            parts=json.dumps(parts),
         )
 
 
 @app.route("/review_finish", methods=["GET", "POST"])
 def review_finish():
     data = json.loads(request.form.get("data"))
-    reviewed(session["lang"], data)
+    reviewed(session["active_languages"], data)
     return redirect(url_for("index"))
 
 
