@@ -112,7 +112,8 @@ function prep_word() {
   }
   console.log(prepared_word)
   upload_word(prepared_word)
-  location.reload()
+  console.log('sdfgdsfgdfg')
+  window.location.href = "http://127.0.0.1:5000/add_word";
 }
 
 

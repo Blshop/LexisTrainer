@@ -34,7 +34,7 @@ db.init_app(app)
 def lang_select():
     if request.method == "POST":
         session["active_languages"] = request.json
-    return "", 204
+    return "", 200
 
 
 @app.route("/")
@@ -46,11 +46,11 @@ def index():
     )
 
 
-@app.route("/add_word", methods=["GET", "POST"])
-def add_word():
+@app.route("/add_words", methods=["GET", "POST"])
+def add_words():
     if request.method == "POST":
         add_word(request.json, session["active_languages"])
-        return "", 204
+        return "", 200
     else:
         print(session["active_languages"])
         words = get_all_words(session["active_languages"])
