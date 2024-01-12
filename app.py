@@ -30,20 +30,23 @@ app.config.from_object(Config)
 db.init_app(app)
 
 
-@app.route("/set_lang", methods=["POST"])
-def lang_select():
-    if request.method == "POST":
-        session["active_languages"] = request.json
-    return "", 200
-
-
+# home page of an application
 @app.route("/")
 def index():
+    #  TODO: find a better way to initialize session
     if "all_languages" not in session.keys():
         session["all_languages"] = get_languages()
     return render_template(
-        "index.html", active_languages=json.dumps(session["active_languages"])
+        "index.html", active_languages=json.dumps(session.get("active_languages", ""))
     )
+
+
+# route used to set active languages on home page
+@app.route("/set_lang", methods=["POST"])
+def set_lang():
+    if request.method == "POST":
+        session["active_languages"] = request.json
+    return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
 
 @app.route("/add_words", methods=["GET", "POST"])
@@ -59,7 +62,7 @@ def add_words():
         return render_template(
             "AddWords.html",
             words=words,
-            lang=session["lang"],
+            lang=session["active_languages"],
             unverified=unverified,
             parts=json.dumps(parts),
         )

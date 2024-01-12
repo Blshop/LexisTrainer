@@ -8,13 +8,13 @@ SELECT DISTINCT word, answer, verified, repeat_delay, learned_date FROM russian_
 INSERT INTO english_part (word_id, part_id)
 SELECT e.id, p.id
 FROM english_temp et 
-JOIN english e ON et.word = e.word
+JOIN english e ON et.word = e.word_desc
 JOIN parts p ON p.part_desc = et.part;
 
 INSERT INTO russian_part (word_id, part_id)
 SELECT r.id, p.id
 FROM russian_temp rt 
-JOIN russian r ON rt.word = r.word
+JOIN russian r ON rt.word = r.word_desc
 JOIN parts p ON p.part_desc = rt.part;
 
 
