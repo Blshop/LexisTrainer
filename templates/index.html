@@ -9,12 +9,12 @@
     <p>select language</p>
     <ul id="primary-language">
         {% for language in session['all_languages'] %}
-        <li id='primary-{{language}}' onclick="set_primary_language(event)">{{language}}</li>
+        <li id='primary-{{language}}' onclick="primary(this)">{{language}}</li>
         {% endfor %}
     </ul>
     <ul id="secondary-language">
         {% for language in session['all_languages'] %}
-        <li id='secondary-{{language}}' class="inactive" onclick="set_secondary_language(event)">{{language}}</li>
+        <li id='secondary-{{language}}' class="inactive" onclick="secondary(this)">{{language}}</li>
         {% endfor %}
     </ul>
 </div>

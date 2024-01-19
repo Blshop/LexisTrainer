@@ -20,17 +20,6 @@ if (active_languages == null) {
   primary(primary_element, secondary_element)
 }
 
-function set_primary_language(event) {
-  let new_element = event.target
-  primary(new_element)
-}
-
-function set_secondary_language(event) {
-  let new_element = event.target
-  secondary(new_element)
-  lang_select()
-}
-
 function lang_select() {
   if (primary_element != null && secondary_element != null) {
     fetch('/set_lang', {
@@ -79,5 +68,14 @@ function secondary(new_element = null) {
   if (new_element != null) {
     secondary_element = new_element
     secondary_element.classList.add('active')
+  }
+  lang_select()
+}
+
+function set_default() {
+  var secondaries = document.getElementById('secondary-language').children
+  for (i = 0; i < secondaries.length; i++) {
+    secondaries[i].classList.add('inactive')
+    secondaries[i].classList.remove('active')
   }
 }
