@@ -1,7 +1,7 @@
-INSERT INTO english (word_desc, answer, russian, delay, repeat_date)
+INSERT INTO english (word_desc, russian_answer, russian_verified, russian_delay, russian_repeat_date)
 SELECT DISTINCT word, answer, verified, repeat_delay, learned_date FROM english_temp;
 
-INSERT INTO russian (word_desc, answer, english, delay, repeat_date)
+INSERT INTO russian (word_desc, english_answer, english_verified, english_delay, english_repeat_date)
 SELECT DISTINCT word, answer, verified, repeat_delay, learned_date FROM russian_temp;
 
 

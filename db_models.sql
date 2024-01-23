@@ -19,8 +19,8 @@ id integer PRIMARY KEY AUTOINCREMENT,
 
 INSERT INTO languages('language')
 VALUES
-('russian'),
 ('english'),
+('russian'),
 ('polish');
 
 --===============================================================================================
@@ -28,11 +28,14 @@ VALUES
 CREATE TABLE english(
 id integer PRIMARY KEY AUTOINCREMENT,
 word_desc varchar(30) UNIQUE,
-answer int NOT NULL DEFAULT 0,
-russian boolean NOT NULL DEFAULT False,
-polish boolean NOT NULL DEFAULT False,
-delay integer DEFAULT 5,
-repeat_date date
+russian_answer int NOT NULL DEFAULT 0,
+russian_verified boolean NOT NULL DEFAULT False,
+russian_delay integer DEFAULT 5,
+russian_repeat_date date,
+polish_answer int NOT NULL DEFAULT 0,
+polish_verified boolean NOT NULL DEFAULT False,
+polish_delay integer DEFAULT 5,
+polish_repeat_date date
 );
 
 CREATE TABLE english_part(
@@ -49,11 +52,14 @@ UNIQUE(word_id, part_id)
 CREATE TABLE russian(
 id integer PRIMARY KEY AUTOINCREMENT,
 word_desc varchar(30) UNIQUE,
-answer int NOT NULL DEFAULT 0,
-english boolean NOT NULL DEFAULT False,
-polish boolean NOT NULL DEFAULT False,
-delay integer DEFAULT 5,
-repeat_date date
+english_answer int NOT NULL DEFAULT 0,
+english_verified boolean NOT NULL DEFAULT False,
+english_delay integer DEFAULT 5,
+english_repeat_date date,
+polish_answer int NOT NULL DEFAULT 0,
+polish_verified boolean NOT NULL DEFAULT False,
+polish_delay integer DEFAULT 5,
+polish_repeat_date date
 );
 
 CREATE TABLE russian_part(
@@ -70,11 +76,14 @@ UNIQUE(word_id, part_id)
 CREATE TABLE polish(
 id integer PRIMARY KEY AUTOINCREMENT,
 word_desc varchar(30) UNIQUE,
-answer int NOT NULL DEFAULT 0,
-english boolean NOT NULL DEFAULT False,
-russian boolean NOT NULL DEFAULT False,
-delay integer DEFAULT 5,
-repeat_date date
+russian_answer int NOT NULL DEFAULT 0,
+russian_verified boolean NOT NULL DEFAULT False,
+russian_delay integer DEFAULT 5,
+russian_repeat_date date,
+english_answer int NOT NULL DEFAULT 0,
+english_verified boolean NOT NULL DEFAULT False,
+english_delay integer DEFAULT 5,
+english_repeat_date date
 );
 
 CREATE TABLE polish_part(

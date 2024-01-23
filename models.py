@@ -58,22 +58,36 @@ class Parts(db.Model):
 class English(db.Model):
     id = db.Column("id", db.Integer, autoincrement=True, primary_key=True)
     word_desc = db.Column("word_desc", db.String(30), unique=True)
-    answer = db.Column("answer", db.Integer, nullable=False, default=0)
-    russian = db.Column("russian", db.Boolean, nullable=False, default=False)
-    polish = db.Column("polish", db.Boolean, nullable=False, default=False)
-    delay = db.Column("delay", db.Integer, nullable=False, default=5)
-    repeat_date = db.Column("repeat_date", db.String)
+    russian_answer = db.Column("russian_answer", db.Integer, nullable=False, default=0)
+    russian_verified = db.Column(
+        "russian_verified", db.Boolean, nullable=False, default=False
+    )
+    russian_delay = db.Column("russian_delay", db.Integer, nullable=False, default=5)
+    russian_repeat_date = db.Column("russian_repeat_date", db.String)
+    polish_answer = db.Column("polish_answer", db.Integer, nullable=False, default=0)
+    polish_verified = db.Column(
+        "polish_verified", db.Boolean, nullable=False, default=False
+    )
+    polish_delay = db.Column("polish_delay", db.Integer, nullable=False, default=5)
+    polish_repeat_date = db.Column("polish_repeat_date", db.String)
     word_parts = db.Relationship("English_part", backref="word_part")
 
 
 class Russian(db.Model):
     id = db.Column("id", db.Integer, autoincrement=True, primary_key=True)
     word_desc = db.Column("word_desc", db.String(30), unique=True)
-    answer = db.Column("answer", db.Integer, nullable=False, default=0)
-    english = db.Column("english", db.Boolean, nullable=False, default=False)
-    polish = db.Column("polish", db.Boolean, nullable=False, default=False)
-    delay = db.Column("delay", db.Integer, nullable=False, default=5)
-    repeat_date = db.Column("repeat_date", db.String)
+    english_answer = db.Column("english_answer", db.Integer, nullable=False, default=0)
+    english_verified = db.Column(
+        "english_verified", db.Boolean, nullable=False, default=False
+    )
+    english_delay = db.Column("english_delay", db.Integer, nullable=False, default=5)
+    english_repeat_date = db.Column("english_repeat_date", db.String)
+    polish_answer = db.Column("polish_answer", db.Integer, nullable=False, default=0)
+    polish_verified = db.Column(
+        "polish_verified", db.Boolean, nullable=False, default=False
+    )
+    polish_delay = db.Column("polish_delay", db.Integer, nullable=False, default=5)
+    polish_repeat_date = db.Column("polish_repeat_date", db.String)
     word_parts = db.Relationship("Russian_part", backref="word_part")
 
 

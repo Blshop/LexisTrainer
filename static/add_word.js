@@ -1,20 +1,21 @@
+// load words and parts from DB
 let word_list = JSON.parse(
   document.querySelector('meta[name="words"]').getAttribute('data-words')
 )
-console.log(word_list)
 let parts = JSON.parse(
   document.querySelector('meta[name="parts"]').getAttribute('data-parts')
 )
+
+// create support variables
 let translation_container = document.getElementById('translations')
-
 var input = document.getElementById('word')
-input.addEventListener('input', verify_word)
-document.getElementById('add').addEventListener('click', show)
-document.getElementById('submit').addEventListener('click', prep_word)
-function show() {
-  create_translation(0)
-}
 
+// add events to elements
+input.addEventListener('input', verify_word)
+document.getElementById('add').addEventListener('click', create_translation)
+document.getElementById('submit').addEventListener('click', prep_word)
+
+// verify if word already in DB
 function verify_word() {
   if (word_list.indexOf(input.value.trim()) !== -1) {
     input.style.outline = '3px solid red'
@@ -23,6 +24,7 @@ function verify_word() {
   }
 }
 
+// load existing word from DB
 function load_word() {
   fetch('/get_word', {
     method: 'POST',
@@ -59,16 +61,10 @@ function tip(word) {
   load_word()
 }
 
-function create_translation(temp) {
-  if (translation_container.lastElementChild) {
-    console.log('sdfsfds')
-    console.log(translation_container.lastElementChild.getElementsByTagName('textarea')[0].value)
-  }
-
+function create_translation(word_part = '') {
   translation_container.innerHTML +=
     `
     <div class="trans">
-        <label for="part">part</label>
         <select name="part">
         </select>
         <label for="translation">translation</label>
@@ -77,13 +73,12 @@ function create_translation(temp) {
     </div>
     `
   let parent = translation_container.lastElementChild.getElementsByTagName('select')[0]
-  console.log(translation_container.lastElementChild)
 
   for (let part of parts) {
     let option = document.createElement('option')
     option.value = part
     option.innerHTML = part
-    if (part == temp) { option.setAttribute('selected', 'selected') }
+    if (part == word_part) { option.setAttribute('selected', 'selected') }
     parent.appendChild(option)
   }
 }
@@ -92,7 +87,7 @@ function clear_translations() {
   translation_container.innerHTML = ''
 }
 
-create_translation(1)
+create_translation()
 
 
 function prep_word() {
@@ -112,7 +107,6 @@ function prep_word() {
   }
   console.log(prepared_word)
   upload_word(prepared_word)
-  console.log('sdfgdsfgdfg')
   window.location.href = "http://127.0.0.1:5000/add_word";
 }
 

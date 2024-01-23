@@ -88,7 +88,7 @@ def finish():
 
 @app.route("/statistics")
 def statistics():
-    words = stats(session["lang"])
+    words = stats(session["active_languages"])
     return render_template("stats.html", all_words=words)
 
 

@@ -108,11 +108,15 @@ def study_words(lang):
     secondary_model = models["secondary_model"]
     prep_words = {}
     words = primary_model.query.filter(
-        primary_model.answer < 100,
-        getattr(primary_model, secondary_model.__tablename__) == True,
+        getattr(primary_model, (secondary_model.__tablename__ + "_answer")) < 100,
+        getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == True,
     ).all()
     for word in words:
-        prep_words[word.word_desc] = {"id": word.id, "answer": word.answer, "parts": {}}
+        prep_words[word.word_desc] = {
+            "id": word.id,
+            "answer": getattr(word, (secondary_model.__tablename__ + "_answer")),
+            "parts": {},
+        }
         for part in word.word_parts:
             prep_words[word.word_desc]["parts"][part.part.part_desc] = [
                 word.word_part.word_desc
@@ -127,56 +131,92 @@ def study_words(lang):
 def learned(lang, words):
     models = load_models(lang)
     primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
     for word in words.keys():
         if words[word]["answer"] == 100:
-            delay = primary_model.query.filter_by(word_desc=word).first().delay
-            primary_model.query.filter_by(word_desc=word).update(
-                dict(
-                    answer=words[word]["answer"],
-                    repeat_date=date.today() + timedelta(days=delay),
-                )
+            delay = primary_model.query.filter_by(word_desc=word).first()
+            delay = getattr(delay, (secondary_model.__tablename__ + "_delay"))
+
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_answer"),
+                words[word]["answer"],
+            )
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_answer"),
+                date.today() + timedelta(days=delay),
             )
         else:
-            primary_model.query.filter_by(word_desc=word).update(
-                dict(answer=words[word]["answer"])
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_answer"),
+                words[word]["answer"],
             )
     db.session.commit()
 
 
 def not_verified(lang):
-    main_model = load_models(lang)["primary_model"]
-    words = main_model.query.filter(
-        getattr(main_model, lang["secondary_language"]) == False
+    models = load_models(lang)
+    primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
+    words = primary_model.query.filter(
+        getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == False
     ).all()
     word_list = [word.word_desc for word in words]
     return word_list
 
 
 def stats(lang):
-    model = single_model(lang)
-    all_words = len(model.query.group_by(model.word).all())
+    models = load_models(lang)
+    primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
+    all_words = len(primary_model.query.group_by(primary_model.word_desc).all())
     learned = len(
-        model.query.filter(model.answer == 100, model.verified == True)
-        .group_by(model.word)
+        primary_model.query.filter(
+            getattr(primary_model, (secondary_model.__tablename__ + "_answer")) == 100,
+            getattr(primary_model, (secondary_model.__tablename__ + "_verified"))
+            == True,
+        )
+        .group_by(primary_model.word_desc)
         .all()
     )
     sq = (
-        db.session.query(model.word, model.answer)
-        .filter(model.answer < 100, model.verified == True)
-        .group_by(model.word)
+        db.session.query(
+            primary_model.word_desc,
+            getattr(primary_model, (secondary_model.__tablename__ + "_answer")),
+        )
+        .filter(
+            getattr(primary_model, (secondary_model.__tablename__ + "_answer")) < 100,
+            getattr(primary_model, (secondary_model.__tablename__ + "_verified"))
+            == True,
+        )
+        .group_by(primary_model.word_desc)
         .subquery()
     )
     to_learn = (
-        db.session.query(sq.c.answer, db.func.count(sq.c.answer))
-        .group_by(sq.c.answer)
+        db.session.query(
+            getattr(sq.c, (secondary_model.__tablename__ + "_answer")),
+            db.func.count(getattr(sq.c, (secondary_model.__tablename__ + "_answer"))),
+        )
+        .group_by(getattr(sq.c, (secondary_model.__tablename__ + "_answer")))
         .all()
     )
-    count = db.session.query(sq.c.answer).count()
+    count = db.session.query(
+        getattr(sq.c, (secondary_model.__tablename__ + "_answer"))
+    ).count()
 
     to_review = len(
-        model.query.filter(model.answer == 100, model.verified == True)
-        .filter(model.learned_date < date.today())
-        .group_by(model.word)
+        primary_model.query.filter(
+            getattr(primary_model, (secondary_model.__tablename__ + "_answer")) == 100,
+            getattr(primary_model, (secondary_model.__tablename__ + "_verified"))
+            == True,
+        )
+        .filter(
+            getattr(primary_model, (secondary_model.__tablename__ + "_repeat_date"))
+            < date.today()
+        )
+        .group_by(primary_model.word_desc)
         .all()
     )
     return {
@@ -194,12 +234,17 @@ def prep_revew(lang):
     secondary_model = models["secondary_model"]
     prep_words = {}
     words = primary_model.query.filter(
-        primary_model.answer == 100,
-        getattr(primary_model, secondary_model.__tablename__) == True,
-        primary_model.repeat_date < date.today(),
+        getattr(primary_model, (secondary_model.__tablename__ + "_answer")) == 100,
+        getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == True,
+        getattr(primary_model, (secondary_model.__tablename__ + "_repeat_date"))
+        < date.today(),
     ).all()
     for word in words:
-        prep_words[word.word_desc] = {"id": word.id, "answer": word.answer, "parts": {}}
+        prep_words[word.word_desc] = {
+            "id": word.id,
+            "answer": getattr(word, (secondary_model.__tablename__ + "_answer")),
+            "parts": {},
+        }
         for part in word.word_parts:
             prep_words[word.word_desc]["parts"][part.part.part_desc] = [
                 word.word_part.word_desc
@@ -208,47 +253,58 @@ def prep_revew(lang):
                     (primary_model.__tablename__ + "_" + secondary_model.__tablename__),
                 )
             ]
-    print(prep_words)
     return prep_words
 
 
 def reviewed(lang, words):
-    print(words)
     models = load_models(lang)
     primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
     for word in words.keys():
         if words[word]["answer"] == 100:
-            delay = primary_model.query.filter_by(word_desc=word).first().delay
-            primary_model.query.filter_by(word_desc=word).update(
-                dict(
-                    answer=words[word]["answer"],
-                    repeat_date=date.today() + timedelta(days=delay),
-                    delay=delay * 3,
-                )
+            delay = primary_model.query.filter_by(word_desc=word).first()
+            delay = getattr(delay, (secondary_model.__tablename__ + "_delay"))
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_repeat_date"),
+                date.today() + timedelta(days=delay),
+            )
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_delay"),
+                delay * 3,
             )
         else:
-            primary_model.query.filter_by(word_desc=word).update(
-                dict(answer=0, delay=5)
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_answer"),
+                0,
+            )
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_delay"),
+                5,
             )
     db.session.commit()
 
 
 def load_word(word, lang):
     models = load_models(lang)
-    main_model = models["primary_model"]
-    sec_model = models["secondary_model"]
-    word = main_model.query.filter_by(word_desc=word).first()
+    primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
+    word = primary_model.query.filter_by(word_desc=word).first()
     prep_words = {
         "word": word.word_desc,
         "id": word.id,
-        "answer": word.answer,
+        "answer": getattr(word, (secondary_model.__tablename__ + "_answer")),
         "parts": {},
     }
     for part in word.word_parts:
         prep_words["parts"][part.part.part_desc] = [
             word.word_part.word_desc
             for word in getattr(
-                part, (main_model.__tablename__ + "_" + sec_model.__tablename__)
+                part,
+                (primary_model.__tablename__ + "_" + secondary_model.__tablename__),
             )
         ]
     return prep_words
