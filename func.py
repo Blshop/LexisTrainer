@@ -44,7 +44,7 @@ def add_word(new_word, lang):
 
     if new_word["id"] == "":
         add_word = primary_model(word_desc=new_word["word"])
-        setattr(add_word, lang["secondary_language"], True)
+        setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
         db.session.add(add_word)
         db.session.flush()
         for part in new_word["parts"].keys():
@@ -60,8 +60,15 @@ def add_word(new_word, lang):
                     (primary_model.__tablename__ + "_" + secondary_model.__tablename__),
                 ).append(translation)
     else:
+        print(new_word)
         add_word = primary_model.query.filter_by(word_desc=new_word["word"]).first()
-        add_word.answer = 0
+        print(getattr(add_word, (secondary_model.__tablename__ + "_answer")))
+        setattr(add_word, (secondary_model.__tablename__ + "_answer"), 0)
+        print(getattr(add_word, (secondary_model.__tablename__ + "_verified")))
+        setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
+        db.session.add(add_word)
+        db.session.commit()
+        print(getattr(add_word, (secondary_model.__tablename__ + "_verified")))
         for part in new_word["parts"].keys():
             add_part = Parts.query.filter_by(part_desc=part).first()
             add_word_part = primary_part_model.query.filter(
@@ -80,6 +87,7 @@ def add_word(new_word, lang):
                 getattr(add_word_part, secondary_model.__tablename__).append(
                     translation
                 )
+    print(getattr(add_word, (secondary_model.__tablename__ + "_verified")))
     db.session.commit()
 
 
@@ -261,7 +269,7 @@ def reviewed(lang, words):
     primary_model = models["primary_model"]
     secondary_model = models["secondary_model"]
     for word in words.keys():
-        if words[word]["answer"] == 100:
+        if words[word] == 100:
             delay = primary_model.query.filter_by(word_desc=word).first()
             delay = getattr(delay, (secondary_model.__tablename__ + "_delay"))
             setattr(

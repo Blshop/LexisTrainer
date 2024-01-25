@@ -62,16 +62,17 @@ function tip(word) {
 }
 
 function create_translation(word_part = '') {
-  translation_container.innerHTML +=
-    `
-    <div class="trans">
+  let trans = document.createElement('div')
+  trans.classList.add('trans')
+  trans.innerHTML = `
         <select name="part">
         </select>
         <label for="translation">translation</label>
         <textarea name="translation" placeholder="translation"></textarea>
         <input type="text" name="answer" autocomplete="off" list="autocompleteOff" />
-    </div>
     `
+
+  translation_container.appendChild(trans)
   let parent = translation_container.lastElementChild.getElementsByTagName('select')[0]
 
   for (let part of parts) {
@@ -107,12 +108,12 @@ function prep_word() {
   }
   console.log(prepared_word)
   upload_word(prepared_word)
-  window.location.href = "http://127.0.0.1:5000/add_word";
+  window.location.href = "http://127.0.0.1:5000/add_words";
 }
 
 
 function upload_word(word) {
-  fetch('/add_word', {
+  fetch('/add_words', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
