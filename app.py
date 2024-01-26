@@ -23,7 +23,7 @@ from func import (
     load_word,
 )
 from models import db
-
+import datetime
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -45,6 +45,7 @@ def index():
 @app.route("/set_lang", methods=["POST"])
 def set_lang():
     if request.method == "POST":
+        print(datetime.datetime.now())
         session["active_languages"] = request.json
     return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 

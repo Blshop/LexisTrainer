@@ -56,7 +56,6 @@ function next_word() {
         document.getElementById("word").innerHTML = word
     }
     else {
-        finish()
     }
 }
 

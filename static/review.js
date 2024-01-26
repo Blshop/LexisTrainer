@@ -58,7 +58,6 @@ function next_word() {
         console.log(reviewed_words)
     }
     else {
-        finish()
     }
 }
 

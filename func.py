@@ -144,7 +144,6 @@ def learned(lang, words):
         if words[word]["answer"] == 100:
             delay = primary_model.query.filter_by(word_desc=word).first()
             delay = getattr(delay, (secondary_model.__tablename__ + "_delay"))
-
             setattr(
                 primary_model.query.filter_by(word_desc=word).first(),
                 (secondary_model.__tablename__ + "_answer"),
@@ -152,7 +151,7 @@ def learned(lang, words):
             )
             setattr(
                 primary_model.query.filter_by(word_desc=word).first(),
-                (secondary_model.__tablename__ + "_answer"),
+                (secondary_model.__tablename__ + "_repeat_date"),
                 date.today() + timedelta(days=delay),
             )
         else:
@@ -241,12 +240,14 @@ def prep_revew(lang):
     primary_model = models["primary_model"]
     secondary_model = models["secondary_model"]
     prep_words = {}
+    print("starting")
     words = primary_model.query.filter(
         getattr(primary_model, (secondary_model.__tablename__ + "_answer")) == 100,
         getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == True,
         getattr(primary_model, (secondary_model.__tablename__ + "_repeat_date"))
         < date.today(),
     ).all()
+    print(words)
     for word in words:
         prep_words[word.word_desc] = {
             "id": word.id,
