@@ -71,25 +71,32 @@ def add_word(new_word, lang):
                 primary_part_model.word_id == add_word.id,
             ).first()
             if not add_word_part:
-                print('adding new part')
+                print("adding new part")
                 add_word_part = primary_part_model(
                     word_id=add_word.id, part_id=add_part.id
                 )
                 db.session.add(add_word_part)
-            if new_word["parts"][part] == ['']:
-                getattr(add_word_part,primary_model.__tablename__ + "_" + secondary_model.__tablename__)[:] = []
+            if new_word["parts"][part] == [""]:
+                getattr(
+                    add_word_part,
+                    primary_model.__tablename__ + "_" + secondary_model.__tablename__,
+                )[:] = []
                 db.session.delete(add_word_part)
                 db.session.commit()
                 continue
-            
-            getattr(add_word_part,primary_model.__tablename__ + "_" + secondary_model.__tablename__)[:] = []
+
+            getattr(
+                add_word_part,
+                primary_model.__tablename__ + "_" + secondary_model.__tablename__,
+            )[:] = []
             for transl in new_word["parts"][part]:
                 translation = add_translation(
                     secondary_model, secondary_part_model, add_part.id, transl
                 )
-                getattr(add_word_part, primary_model.__tablename__ + "_" + secondary_model.__tablename__).append(
-                    translation
-                )
+                getattr(
+                    add_word_part,
+                    primary_model.__tablename__ + "_" + secondary_model.__tablename__,
+                ).append(translation)
     db.session.commit()
 
 
@@ -242,14 +249,12 @@ def prep_revew(lang):
     primary_model = models["primary_model"]
     secondary_model = models["secondary_model"]
     prep_words = {}
-    print("starting")
     words = primary_model.query.filter(
         getattr(primary_model, (secondary_model.__tablename__ + "_answer")) == 100,
         getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == True,
         getattr(primary_model, (secondary_model.__tablename__ + "_repeat_date"))
         < date.today(),
     ).all()
-    print(words)
     for word in words:
         prep_words[word.word_desc] = {
             "id": word.id,

@@ -45,7 +45,6 @@ def index():
 @app.route("/set_lang", methods=["POST"])
 def set_lang():
     if request.method == "POST":
-        print(datetime.datetime.now())
         session["active_languages"] = request.json
     return json.dumps({"success": True}), 200, {"ContentType": "application/json"}
 
@@ -56,7 +55,6 @@ def add_words():
         add_word(request.json, session["active_languages"])
         return "", 200
     else:
-        print(session["active_languages"])
         words = get_all_words(session["active_languages"])
         unverified = not_verified(session["active_languages"])
         parts = get_parts()
