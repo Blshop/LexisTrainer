@@ -65,6 +65,8 @@ def add_word(new_word, lang):
         db.session.add(add_word)
         db.session.commit()
         for part in new_word["parts"].keys():
+            print(new_word["parts"].keys())
+            print(new_word["parts"][part])
             add_part = Parts.query.filter_by(part_desc=part).first()
             add_word_part = primary_part_model.query.filter(
                 primary_part_model.part_id == add_part.id,
@@ -77,12 +79,16 @@ def add_word(new_word, lang):
                 )
                 db.session.add(add_word_part)
             if new_word["parts"][part] == [""]:
-                getattr(
+                print("start deleting")
+                setattr(
                     add_word_part,
                     primary_model.__tablename__ + "_" + secondary_model.__tablename__,
-                )[:] = []
+                    [],
+                )
                 db.session.delete(add_word_part)
-                db.session.commit()
+                print("delete progress")
+                db.session.flush()
+                print("deleting")
                 continue
 
             getattr(
@@ -97,6 +103,7 @@ def add_word(new_word, lang):
                     add_word_part,
                     primary_model.__tablename__ + "_" + secondary_model.__tablename__,
                 ).append(translation)
+            print("loop completed")
     db.session.commit()
 
 
@@ -324,3 +331,76 @@ def load_word(word, lang):
             )
         ]
     return prep_words
+
+
+def add_word_new(new_word, lang):
+    models = load_models(lang)
+    primary_model = models["primary_model"]
+    secondary_model = models["secondary_model"]
+    primary_part_model = models["primary_part_model"]
+    secondary_part_model = models["secondary_part_model"]
+    add_word = primary_model.query.filter_by(word_desc=new_word["word"])
+    if add_word == None:
+        add_word = primary_model(word_desc=new_word["word"])
+        db.session.add(add_word)
+        db.session.flush()
+    setattr(add_word, (secondary_model.__tablename__ + "_answer"), 0)
+    setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
+
+    if new_word["id"] == "":
+        add_word = primary_model(word_desc=new_word["word"])
+        setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
+        db.session.add(add_word)
+        db.session.flush()
+        for part in new_word["parts"].keys():
+            add_part = Parts.query.filter_by(part_desc=part).first()
+            add_word_part = primary_part_model(word_id=add_word.id, part_id=add_part.id)
+            db.session.add(add_word_part)
+            for transl in new_word["parts"][part]:
+                translation = add_translation(
+                    secondary_model, secondary_part_model, add_part.id, transl
+                )
+                getattr(
+                    add_word_part,
+                    (primary_model.__tablename__ + "_" + secondary_model.__tablename__),
+                ).append(translation)
+    else:
+        add_word = primary_model.query.filter_by(word_desc=new_word["word"]).first()
+        setattr(add_word, (secondary_model.__tablename__ + "_answer"), 0)
+        setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
+        db.session.add(add_word)
+        db.session.commit()
+        for part in new_word["parts"].keys():
+            add_part = Parts.query.filter_by(part_desc=part).first()
+            add_word_part = primary_part_model.query.filter(
+                primary_part_model.part_id == add_part.id,
+                primary_part_model.word_id == add_word.id,
+            ).first()
+            if not add_word_part:
+                print("adding new part")
+                add_word_part = primary_part_model(
+                    word_id=add_word.id, part_id=add_part.id
+                )
+                db.session.add(add_word_part)
+            if new_word["parts"][part] == [""]:
+                getattr(
+                    add_word_part,
+                    primary_model.__tablename__ + "_" + secondary_model.__tablename__,
+                )[:] = []
+                db.session.delete(add_word_part)
+                db.session.commit()
+                continue
+
+            getattr(
+                add_word_part,
+                primary_model.__tablename__ + "_" + secondary_model.__tablename__,
+            )[:] = []
+            for transl in new_word["parts"][part]:
+                translation = add_translation(
+                    secondary_model, secondary_part_model, add_part.id, transl
+                )
+                getattr(
+                    add_word_part,
+                    primary_model.__tablename__ + "_" + secondary_model.__tablename__,
+                ).append(translation)
+    db.session.commit()
