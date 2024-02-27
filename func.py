@@ -76,6 +76,7 @@ def add_word(new_word, lang):
         setattr(add_word, (secondary_model.__tablename__ + "_answer"), 0)
         setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
         db.session.flush()
+        existing_word = load_word(new_word["word"], lang)
         for part in new_word["parts"].keys():
             add_part = Parts.query.filter_by(part_desc=part).first()
             add_word_part = primary_part_model.query.filter(
@@ -88,10 +89,25 @@ def add_word(new_word, lang):
                 )
                 db.session.add(add_word_part)
                 db.session.flush()
-            existing_word = load_word(new_word["word"], lang)
-            print(existing_word)
+            if part in existing_word["parts"].keys():
+                for transl in set(existing_word["parts"][part]).difference(
+                    new_word["parts"][part]
+                ):
+                    translation = add_translation(
+                        secondary_model,
+                        primary_model,
+                        secondary_part_model,
+                        add_part.id,
+                        transl,
+                    )
+                    getattr(
+                        add_word_part,
+                        primary_model.__tablename__
+                        + "_"
+                        + secondary_model.__tablename__,
+                    ).remove(translation)
+                    db.session.flush()
             for transl in new_word["parts"][part]:
-                print(existing_word["parts"].keys())
                 if part in existing_word["parts"].keys():
                     if transl in existing_word["parts"][part]:
                         continue
@@ -137,6 +153,11 @@ def add_translation(secondary_model, primary_model, part_model, part_id, word):
         db.session.add(translation_part)
         db.session.flush()
     return translation_part
+
+
+def process_translations(primary_model, secondary_model, id, part, translations, lang):
+
+    return
 
 
 def study_words(lang):
