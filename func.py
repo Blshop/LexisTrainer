@@ -170,6 +170,7 @@ def study_words(lang):
         getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == True,
     ).all()
     for word in words:
+        print(word.word_desc)
         prep_words[word.word_desc] = {
             "id": word.id,
             "answer": getattr(word, (secondary_model.__tablename__ + "_answer")),
