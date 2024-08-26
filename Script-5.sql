@@ -52,7 +52,10 @@ JOIN english_part ep ON ep.word_id = e.id
 JOIN english_russian er ON er.main_part_id = ep.id 
 JOIN russian_part rp ON rp.id = er.sec_part_id 
 JOIN russian r ON r.id = rp.word_id 
-WHERE r.word_desc = 'цыпленок'
+WHERE r.word_desc = 'возлюбленный'
+
+SELECT * FROM english_russian er 
+WHERE main_part_id = 1674
 
 
 SELECT r.word_desc ,group_concat(e.word_desc)
@@ -76,15 +79,15 @@ GROUP BY e.word_desc
 
 SELECT * 
 FROM russian r 
-WHERE r.word_desc = 'лавка'
+WHERE r.word_desc = 'Ã�Â»Ã�Â°Ã�Â²Ã�ÂºÃ�Â°'
 
 
 
 SELECT *
 FROM english e 
-FULL JOIN english_part ep ON ep.word_id = e.id
-FULL JOIN english_russian er ON er.main_part_id = ep.id
-WHERE ep.id = 250
+left JOIN english_part ep ON ep.word_id = e.id
+left JOIN english_russian er ON er.main_part_id = ep.id
+WHERE ep.id = 461
 
 
 
@@ -93,7 +96,7 @@ FULL JOIN russian_part rp ON rp.word_id  = r.id
 FULL JOIN english_russian er ON er.sec_part_id = rp.id
 FULL JOIN english_part ep ON ep.id = er.main_part_id
 FULL JOIN english e ON e.id = ep.word_id 
-WHERE r.word_desc = 'доктор'
+WHERE r.word_desc = 'возлюбленный'
 
 DELETE FROM english 
 WHERE word_desc = 'be fond (of)'
