@@ -126,3 +126,21 @@ JOIN russian_part rp ON rp.id = er.sec_part_id
 JOIN russian r ON r.id = rp.word_id 
 WHERE r.english_verified = TRUE 
 GROUP BY r.word_desc
+
+
+
+
+SELECT *
+FROM english e 
+JOIN english_part ep ON ep.word_id = e.id 
+WHERE e.word_desc  = "anew"
+
+DELETE FROM english_part 
+WHERE id = 663
+
+SELECT *
+FROM english e 
+WHERE e.word_desc  = "nighttime"
+
+DELETE FROM english 
+WHERE id = 626
