@@ -121,8 +121,8 @@ GROUP BY e.word_desc
 SELECT r.word_desc ,group_concat(e.word_desc)
 FROM english e 
 JOIN english_part ep ON ep.word_id = e.id 
-JOIN english_russian er ON er.main_part_id = ep.id 
-JOIN russian_part rp ON rp.id = er.sec_part_id 
+JOIN english_russian er ON er.sec_part_id = ep.id 
+JOIN russian_part rp ON rp.id = er.main_part_id 
 JOIN russian r ON r.id = rp.word_id 
 WHERE r.english_verified = TRUE 
 GROUP BY r.word_desc
@@ -133,14 +133,57 @@ GROUP BY r.word_desc
 SELECT *
 FROM english e 
 JOIN english_part ep ON ep.word_id = e.id 
-WHERE e.word_desc  = "anew"
+WHERE e.word_desc  = "thoroughly"
 
 DELETE FROM english_part 
-WHERE id = 663
+WHERE id = 715
 
 SELECT *
 FROM english e 
-WHERE e.word_desc  = "nighttime"
+WHERE e.word_desc  = "perch"
 
 DELETE FROM english 
-WHERE id = 626
+WHERE id = 664
+
+
+
+SELECT *
+FROM russian r 
+JOIN russian_part rp ON rp.word_id = r.id 
+WHERE r.word_desc  = "скотина"
+
+DELETE FROM russian_part 
+WHERE id = 818
+
+SELECT *
+FROM russian r 
+WHERE r.word_desc  = "шоколадный"
+
+DELETE FROM russian 
+WHERE id = 811
+
+DELETE FROM english 
+WHERE id in(
+SELECT * 
+FROM english e 
+WHERE e.id NOT in(
+SELECT e.id 
+FROM english e 
+JOIN english_part ep ON ep.word_id = e.id 
+JOIN english_russian er ON er.main_part_id = ep.id 
+JOIN russian_part rp ON rp.id = er.sec_part_id 
+JOIN russian r ON r.id = rp.word_id ))
+
+
+DELETE FROM russian
+WHERE id in(
+SELECT r.id 
+FROM russian r 
+WHERE r.id NOT in(
+SELECT r.id 
+FROM russian r 
+JOIN russian_part rp ON rp.word_id = r.id 
+JOIN english_russian er ON er.sec_part_id = rp.id 
+JOIN english_part ep ON ep.id = er.main_part_id 
+JOIN english e ON e.id = ep.word_id ))
+

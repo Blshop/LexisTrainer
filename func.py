@@ -193,6 +193,11 @@ def learned(lang, words):
     secondary_model = models["secondary_model"]
     for word in words.keys():
         if words[word]["answer"] == 100:
+            setattr(
+                primary_model.query.filter_by(word_desc=word).first(),
+                (secondary_model.__tablename__ + "_delay"),
+                5,
+            )
             delay = primary_model.query.filter_by(word_desc=word).first()
             delay = getattr(delay, (secondary_model.__tablename__ + "_delay"))
             setattr(
