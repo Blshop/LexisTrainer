@@ -121,8 +121,8 @@ GROUP BY e.word_desc
 SELECT r.word_desc ,group_concat(e.word_desc)
 FROM english e 
 JOIN english_part ep ON ep.word_id = e.id 
-JOIN english_russian er ON er.sec_part_id = ep.id 
-JOIN russian_part rp ON rp.id = er.main_part_id 
+JOIN english_russian er ON er.main_part_id = ep.id 
+JOIN russian_part rp ON rp.id = er.sec_part_id
 JOIN russian r ON r.id = rp.word_id 
 WHERE r.english_verified = TRUE 
 GROUP BY r.word_desc
