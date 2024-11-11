@@ -52,7 +52,7 @@ JOIN english_part ep ON ep.word_id = e.id
 JOIN english_russian er ON er.main_part_id = ep.id 
 JOIN russian_part rp ON rp.id = er.sec_part_id 
 JOIN russian r ON r.id = rp.word_id 
-WHERE r.word_desc = 'возлюбленный'
+WHERE r.word_desc = 'Ð²Ð¾Ð·Ð»ÑŽÐ±Ð»ÐµÐ½Ð½Ñ‹Ð¹'
 
 SELECT * FROM english_russian er 
 WHERE main_part_id = 1674
@@ -79,7 +79,7 @@ GROUP BY e.word_desc
 
 SELECT * 
 FROM russian r 
-WHERE r.word_desc = 'Ã�Â»Ã�Â°Ã�Â²Ã�ÂºÃ�Â°'
+WHERE r.word_desc = 'Ãƒï¿½Ã‚Â»Ãƒï¿½Ã‚Â°Ãƒï¿½Ã‚Â²Ãƒï¿½Ã‚ÂºÃƒï¿½Ã‚Â°'
 
 
 
@@ -96,7 +96,7 @@ FULL JOIN russian_part rp ON rp.word_id  = r.id
 FULL JOIN english_russian er ON er.sec_part_id = rp.id
 FULL JOIN english_part ep ON ep.id = er.main_part_id
 FULL JOIN english e ON e.id = ep.word_id 
-WHERE r.word_desc = 'возлюбленный'
+WHERE r.word_desc = 'Ð²Ð¾Ð·Ð»ÑŽÐ±Ð»ÐµÐ½Ð½Ñ‹Ð¹'
 
 DELETE FROM english 
 WHERE word_desc = 'be fond (of)'
@@ -133,31 +133,31 @@ GROUP BY r.word_desc
 SELECT *
 FROM english e 
 JOIN english_part ep ON ep.word_id = e.id 
-WHERE e.word_desc  = "thoroughly"
+WHERE e.word_desc  = "grandparent"
 
 DELETE FROM english_part 
 WHERE id = 715
 
 SELECT *
 FROM english e 
-WHERE e.word_desc  = "perch"
+WHERE e.word_desc  = "grandparent"
 
 DELETE FROM english 
-WHERE id = 664
+WHERE id = 1749
 
 
 
 SELECT *
 FROM russian r 
 JOIN russian_part rp ON rp.word_id = r.id 
-WHERE r.word_desc  = "скотина"
+WHERE r.word_desc  = "Ñ�ÐºÐ¾Ñ‚Ð¸Ð½Ð°"
 
 DELETE FROM russian_part 
 WHERE id = 818
 
 SELECT *
 FROM russian r 
-WHERE r.word_desc  = "шоколадный"
+WHERE r.word_desc  = "ÑˆÐ¾ÐºÐ¾Ð»Ð°Ð´Ð½Ñ‹Ð¹"
 
 DELETE FROM russian 
 WHERE id = 811
