@@ -23,7 +23,6 @@ from func import (
     load_word,
 )
 from models import db
-import datetime
 
 app = Flask(__name__)
 app.config.from_object(Config)

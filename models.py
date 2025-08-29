@@ -3,44 +3,6 @@ from datetime import date
 
 db = SQLAlchemy()
 
-# translation = db.Table(
-#     "translation",
-#     db.Column("english_id", db.Integer, db.ForeignKey("english_temp.id")),
-#     db.Column("russian_id", db.Integer, db.ForeignKey("russian_temp.id")),
-# )
-
-
-# class English_temp(db.Model):
-#     id = db.Column("id", db.Integer, primary_key=True)
-#     word = db.Column("word", db.String(100))
-#     part = db.Column("part", db.String(20))
-#     answer = db.Column("answer", db.Integer, default=0)
-#     learned_date = db.Column("learned_date", db.Date, default=date.today())
-#     repeat_delay = db.Column("repeat_delay", db.Integer, default=5)
-#     verified = db.Column("verified", db.Boolean, default=False, nullable=False)
-#     translation = db.relationship(
-#         "Russian_temp",
-#         secondary=translation,
-#         backref="translations",
-#         overlaps="translation,translations",
-#     )
-
-
-# class Russian_temp(db.Model):
-#     id = db.Column("id", db.Integer, primary_key=True)
-#     word = db.Column("word", db.String(100))
-#     part = db.Column("part", db.String(20))
-#     answer = db.Column("answer", db.Integer, default=0)
-#     learned_date = db.Column("learned_date", db.Date, default=date.today())
-#     repeat_delay = db.Column("repeat_delay", db.Integer, default=5)
-#     verified = db.Column("verified", db.Boolean, default=False, nullable=False)
-#     translation = db.relationship(
-#         "English_temp",
-#         secondary=translation,
-#         backref="translations",
-#         overlaps="translation,translations",
-#     )
-
 
 class Languages(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
