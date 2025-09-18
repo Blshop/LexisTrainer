@@ -287,4 +287,8 @@ span {
 
 .exist {
   outline: 1px solid red;
+}
+
+.nonexist {
+  color: hsl(0, 100%, 50%);
 }/*# sourceMappingURL=main.css.map */

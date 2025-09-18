@@ -2,6 +2,8 @@
 let words_data = JSON.parse(
     document.querySelector('meta[name="words"]').getAttribute('data-words')
 )
+console.log(words_data)
+let studies_words = {}
 
 // create support variables
 let translation_container = document.getElementById('translations')
@@ -29,20 +31,33 @@ function show() {
 
 // upload results to DB
 function finish() {
-    $(document).ready(function () {
-        var data = {
-            data: JSON.stringify(words_data)
-        }
-        $.ajax({
-            url: "/finish",
-            type: 'POST',
-            data: data,
-            success: function () {
-                alert('Completed')
+    console.log(studies_words);
+
+    const data = {
+        data: JSON.stringify(studies_words)
+    };
+
+    fetch('/finish', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
+            return response.text(); // or response.json() if server returns JSON
         })
-    });
+        .then(() => {
+            alert('Completed');
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 }
+
 
 function next_word() {
     if (max_word_number > current_word_number) {
@@ -62,14 +77,29 @@ function next_word() {
 // decrease words answer value
 function minusvalue() {
     if (words_data[word]['answer'] > 0) {
-        words_data[word]['answer'] -= 10
+        if (!studies_words[word]) {
+            studies_words[word] = {}
+        }
+        studies_words[word]['answer'] = words_data[word]['answer'] - 10
+    }
+    else {
+        if (!studies_words[word]) {
+            studies_words[word] = {}
+        }
+        studies_words[word]['answer'] = words_data[word]['answer']
     }
     next_word()
 }
 
+
 // increase words answer value
 function addvalue() {
-    words_data[word]['answer'] += 10
+    if (words_data[word]) {
+        if (!studies_words[word]) {
+            studies_words[word] = {}
+        }
+        studies_words[word]['answer'] = words_data[word]['answer'] + 10
+    }
     next_word()
 }
 

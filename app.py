@@ -79,8 +79,10 @@ def learn():
 
 @app.route("/finish", methods=["GET", "POST"])
 def finish():
-    data = json.loads(request.form.get("data"))
-    learned(session["active_languages"], data)
+    data = request.get_json()  # This reads the JSON body directly
+    learned(session["active_languages"], data["data"])  # Access the nested "data" key
+    return jsonify({"status": "success"})  # Optional: return JSON instead of redirect
+
     return redirect(url_for("index"))
 
 
@@ -114,6 +116,7 @@ def review_finish():
 @app.route("/get_word", methods=["GET", "POST"])
 def get_word():
     word = request.json
+    print(word)
     return jsonify(load_word(word, session["active_languages"]))
 
 

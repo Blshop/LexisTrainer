@@ -5,6 +5,7 @@ from models import (
 )
 from flask import json
 from datetime import date, timedelta
+from sqlalchemy import func
 
 
 def get_languages():
@@ -140,11 +141,13 @@ def add_word(new_word, lang):
     primary_part_model = models["primary_part_model"]
     secondary_part_model = models["secondary_part_model"]
 
+    repeat_attr = f"{secondary_model.__tablename__}_repeat_date"
     relation_attr = f"{primary_model.__tablename__}_{secondary_model.__tablename__}"
 
     if new_word["id"] == "":
         word_obj = primary_model(word_desc=new_word["word"])
         setattr(word_obj, f"{secondary_model.__tablename__}_verified", True)
+        setattr(word_obj, repeat_attr, date.today())
         db.session.add(word_obj)
         db.session.flush()
 
@@ -168,6 +171,7 @@ def add_word(new_word, lang):
         word_obj = primary_model.query.filter_by(word_desc=new_word["word"]).first()
         setattr(word_obj, f"{secondary_model.__tablename__}_answer", 0)
         setattr(word_obj, f"{secondary_model.__tablename__}_verified", True)
+        setattr(word_obj, repeat_attr, date.today())
         db.session.flush()
 
         existing_word = load_word(new_word["word"], lang)
@@ -299,6 +303,8 @@ def study_words(lang):
     primary_table = primary_model.__tablename__
     secondary_table = secondary_model.__tablename__
 
+    repeat_attr = f"{secondary_model.__tablename__}_repeat_date"
+    delay_attr = f"{secondary_model.__tablename__}_delay"
     answer_attr = f"{secondary_table}_answer"
     verified_attr = f"{secondary_table}_verified"
     relation_attr = f"{primary_table}_{secondary_table}"
@@ -308,6 +314,7 @@ def study_words(lang):
     words = primary_model.query.filter(
         getattr(primary_model, answer_attr) < 100,
         getattr(primary_model, verified_attr) == True,
+        func.date(getattr(primary_model, repeat_attr)) < func.date('now')
     ).all()
 
     for word in words:
@@ -358,10 +365,9 @@ def study_words(lang):
 #             )
 #     db.session.commit()
 
-from datetime import date, timedelta
-
 
 def learned(lang, words):
+    words = json.loads(words)
     models = load_models(lang)
     primary_model = models["primary_model"]
     secondary_model = models["secondary_model"]
@@ -376,11 +382,10 @@ def learned(lang, words):
             continue  # skip if word not found
 
         setattr(word_obj, answer_attr, data["answer"])
+        setattr(word_obj, repeat_attr, date.today())
 
         if data["answer"] == 100:
             setattr(word_obj, delay_attr, 5)
-            delay = getattr(word_obj, delay_attr)
-            setattr(word_obj, repeat_attr, date.today() + timedelta(days=delay))
 
     db.session.commit()
 
@@ -480,6 +485,7 @@ def stats(lang):
     primary_model = models["primary_model"]
     secondary_model = models["secondary_model"]
 
+    delay_attr = f"{secondary_model.__tablename__}_delay"
     answer_attr = f"{secondary_model.__tablename__}_answer"
     verified_attr = f"{secondary_model.__tablename__}_verified"
     repeat_attr = f"{secondary_model.__tablename__}_repeat_date"
@@ -520,16 +526,17 @@ def stats(lang):
     count = db.session.query(learning_subq.c.answer).count()
 
     # Words due for review
+
     to_review = (
-        db.session.query(primary_model.word_desc)
-        .filter(
-            getattr(primary_model, answer_attr) == 100,
-            getattr(primary_model, verified_attr) == True,
-            getattr(primary_model, repeat_attr) < date.today(),
-        )
-        .distinct()
-        .count()
+    db.session.query(primary_model.word_desc)
+    .filter(
+        getattr(primary_model, answer_attr) == 100,
+        getattr(primary_model, verified_attr) == True,
+        func.date(getattr(primary_model, repeat_attr), '+' + func.cast(getattr(primary_model, delay_attr), db.String) + ' days') < func.date('now')
     )
+    .distinct()
+    .count()
+)
 
     return {
         "all_words": all_words,
@@ -575,6 +582,7 @@ def prep_revew(lang):
     primary_model = models["primary_model"]
     secondary_model = models["secondary_model"]
 
+    delay_attr = f"{secondary_model.__tablename__}_delay"
     answer_attr = f"{secondary_model.__tablename__}_answer"
     verified_attr = f"{secondary_model.__tablename__}_verified"
     repeat_attr = f"{secondary_model.__tablename__}_repeat_date"
@@ -585,7 +593,7 @@ def prep_revew(lang):
     words = primary_model.query.filter(
         getattr(primary_model, answer_attr) == 100,
         getattr(primary_model, verified_attr) == True,
-        getattr(primary_model, repeat_attr) < date.today(),
+        func.date(getattr(primary_model, repeat_attr), '+' + func.cast(getattr(primary_model, delay_attr), db.String) + ' days') < func.date('now')
     ).all()
 
     for word in words:
@@ -655,9 +663,10 @@ def reviewed(lang, words):
 
         if score == 100:
             delay = getattr(word_obj, delay_attr)
-            setattr(word_obj, repeat_attr, date.today() + timedelta(days=delay))
+            setattr(word_obj, repeat_attr, date.today())
             setattr(word_obj, delay_attr, delay * 3)
         else:
+            setattr(word_obj, repeat_attr, date.today())
             setattr(word_obj, answer_attr, 0)
             setattr(word_obj, delay_attr, 5)
 
@@ -687,6 +696,7 @@ def reviewed(lang, words):
 
 
 def load_word(word_desc, lang):
+    print(word_desc)
     models = load_models(lang)
     primary_model = models["primary_model"]
     secondary_model = models["secondary_model"]
