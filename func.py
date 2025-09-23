@@ -36,104 +36,6 @@ def get_all_words(lang):
     return json.dumps(word_list, ensure_ascii=False)
 
 
-# def add_word(new_word, lang):
-
-#     # loading language models
-#     models = load_models(lang)
-#     primary_model = models["primary_model"]
-#     secondary_model = models["secondary_model"]
-#     primary_part_model = models["primary_part_model"]
-#     secondary_part_model = models["secondary_part_model"]
-
-#     # if word is new
-#     if new_word["id"] == "":
-#         add_word = primary_model(word_desc=new_word["word"])
-#         setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
-#         db.session.add(add_word)
-#         db.session.flush()
-
-#         # add all word parts
-#         for part in new_word["parts"].keys():
-#             add_part = Parts.query.filter_by(part_desc=part).first()
-#             add_word_part = primary_part_model(word_id=add_word.id, part_id=add_part.id)
-#             db.session.add(add_word_part)
-#             db.session.flush()
-#             for transl in new_word["parts"][part]:
-#                 translation = add_translation(
-#                     secondary_model,
-#                     primary_model,
-#                     secondary_part_model,
-#                     add_part.id,
-#                     transl,
-#                 )
-#                 getattr(
-#                     add_word_part,
-#                     (primary_model.__tablename__ + "_" + secondary_model.__tablename__),
-#                 ).append(translation)
-
-#     # if word is already in database
-#     else:
-#         add_word = primary_model.query.filter_by(word_desc=new_word["word"]).first()
-#         setattr(add_word, (secondary_model.__tablename__ + "_answer"), 0)
-#         setattr(add_word, (secondary_model.__tablename__ + "_verified"), True)
-#         db.session.flush()
-#         existing_word = load_word(new_word["word"], lang)
-#         for part in new_word["parts"].keys():
-#             add_part = Parts.query.filter_by(part_desc=part).first()
-#             add_word_part = primary_part_model.query.filter(
-#                 primary_part_model.part_id == add_part.id,
-#                 primary_part_model.word_id == add_word.id,
-#             ).first()
-#             if not add_word_part:
-#                 add_word_part = primary_part_model(
-#                     word_id=add_word.id, part_id=add_part.id
-#                 )
-#                 db.session.add(add_word_part)
-#                 db.session.flush()
-#             if part in existing_word["parts"].keys():
-#                 for transl in set(existing_word["parts"][part]).difference(
-#                     new_word["parts"][part]
-#                 ):
-#                     translation = add_translation(
-#                         secondary_model,
-#                         primary_model,
-#                         secondary_part_model,
-#                         add_part.id,
-#                         transl,
-#                     )
-#                     getattr(
-#                         add_word_part,
-#                         primary_model.__tablename__
-#                         + "_"
-#                         + secondary_model.__tablename__,
-#                     ).remove(translation)
-#                     db.session.flush()
-#             for transl in new_word["parts"][part]:
-#                 if part in existing_word["parts"].keys():
-#                     if transl in existing_word["parts"][part]:
-#                         continue
-#                 translation = add_translation(
-#                     secondary_model,
-#                     primary_model,
-#                     secondary_part_model,
-#                     add_part.id,
-#                     transl,
-#                 )
-#                 getattr(
-#                     add_word_part,
-#                     primary_model.__tablename__ + "_" + secondary_model.__tablename__,
-#                 ).append(translation)
-#                 db.session.flush()
-#             if new_word["parts"][part] == [""]:
-#                 setattr(
-#                     add_word_part,
-#                     primary_model.__tablename__ + "_" + secondary_model.__tablename__,
-#                     [],
-#                 )
-#                 add_word.word_parts.remove(add_word_part)
-#     db.session.commit()
-
-
 def add_word(new_word, lang):
     models = load_models(lang)
     primary_model = models["primary_model"]
@@ -220,28 +122,6 @@ def add_word(new_word, lang):
     db.session.commit()
 
 
-# def add_translation(secondary_model, primary_model, part_model, part_id, word):
-#     translation = secondary_model.query.filter_by(word_desc=word).first()
-#     if translation:
-#         setattr(translation, (primary_model.__tablename__ + "_answer"), 0)
-#         setattr(translation, (primary_model.__tablename__ + "_delay"), 5)
-#         translation_part = part_model.query.filter(
-#             part_model.part_id == part_id, part_model.word_id == translation.id
-#         ).first()
-#         if not translation_part:
-#             translation_part = part_model(word_id=translation.id, part_id=part_id)
-#         db.session.add(translation_part)
-#         db.session.flush()
-#     else:
-#         translation = secondary_model(word_desc=word)
-#         db.session.add(translation)
-#         db.session.flush()
-#         translation_part = part_model(word_id=translation.id, part_id=part_id)
-#         db.session.add(translation_part)
-#         db.session.flush()
-#     return translation_part
-
-
 def add_translation(secondary_model, primary_model, part_model, part_id, word):
     relation_prefix = primary_model.__tablename__
 
@@ -270,32 +150,6 @@ def add_translation(secondary_model, primary_model, part_model, part_id, word):
     return translation_part
 
 
-# def study_words(lang):
-#     models = load_models(lang)
-#     primary_model = models["primary_model"]
-#     secondary_model = models["secondary_model"]
-#     prep_words = {}
-#     words = primary_model.query.filter(
-#         getattr(primary_model, (secondary_model.__tablename__ + "_answer")) < 100,
-#         getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == True,
-#     ).all()
-#     for word in words:
-#         prep_words[word.word_desc] = {
-#             "id": word.id,
-#             "answer": getattr(word, (secondary_model.__tablename__ + "_answer")),
-#             "parts": {},
-#         }
-#         for part in word.word_parts:
-#             prep_words[word.word_desc]["parts"][part.part.part_desc] = [
-#                 word.word_part.word_desc
-#                 for word in getattr(
-#                     part,
-#                     (primary_model.__tablename__ + "_" + secondary_model.__tablename__),
-#                 )
-#             ]
-#     return prep_words
-
-
 def study_words(lang):
     models = load_models(lang)
     primary_model = models["primary_model"]
@@ -314,7 +168,7 @@ def study_words(lang):
     words = primary_model.query.filter(
         getattr(primary_model, answer_attr) < 100,
         getattr(primary_model, verified_attr) == True,
-        func.date(getattr(primary_model, repeat_attr)) < func.date('now')
+        func.date(getattr(primary_model, repeat_attr)) < func.date("now"),
     ).all()
 
     for word in words:
@@ -332,38 +186,6 @@ def study_words(lang):
             prep_words[word.word_desc]["parts"][part_name] = translations
 
     return prep_words
-
-
-# def learned(lang, words):
-#     models = load_models(lang)
-#     primary_model = models["primary_model"]
-#     secondary_model = models["secondary_model"]
-#     for word in words.keys():
-#         if words[word]["answer"] == 100:
-#             setattr(
-#                 primary_model.query.filter_by(word_desc=word).first(),
-#                 (secondary_model.__tablename__ + "_delay"),
-#                 5,
-#             )
-#             delay = primary_model.query.filter_by(word_desc=word).first()
-#             delay = getattr(delay, (secondary_model.__tablename__ + "_delay"))
-#             setattr(
-#                 primary_model.query.filter_by(word_desc=word).first(),
-#                 (secondary_model.__tablename__ + "_answer"),
-#                 words[word]["answer"],
-#             )
-#             setattr(
-#                 primary_model.query.filter_by(word_desc=word).first(),
-#                 (secondary_model.__tablename__ + "_repeat_date"),
-#                 date.today() + timedelta(days=delay),
-#             )
-#         else:
-#             setattr(
-#                 primary_model.query.filter_by(word_desc=word).first(),
-#                 (secondary_model.__tablename__ + "_answer"),
-#                 words[word]["answer"],
-#             )
-#     db.session.commit()
 
 
 def learned(lang, words):
@@ -388,17 +210,6 @@ def learned(lang, words):
             setattr(word_obj, delay_attr, 5)
 
     db.session.commit()
-
-
-# def not_verified(lang):
-#     models = load_models(lang)
-#     primary_model = models["primary_model"]
-#     secondary_model = models["secondary_model"]
-#     words = primary_model.query.filter(
-#         getattr(primary_model, (secondary_model.__tablename__ + "_verified")) == False
-#     ).all()
-#     word_list = [word.word_desc for word in words]
-#     return word_list
 
 
 def not_verified(lang):
@@ -528,15 +339,21 @@ def stats(lang):
     # Words due for review
 
     to_review = (
-    db.session.query(primary_model.word_desc)
-    .filter(
-        getattr(primary_model, answer_attr) == 100,
-        getattr(primary_model, verified_attr) == True,
-        func.date(getattr(primary_model, repeat_attr), '+' + func.cast(getattr(primary_model, delay_attr), db.String) + ' days') < func.date('now')
+        db.session.query(primary_model.word_desc)
+        .filter(
+            getattr(primary_model, answer_attr) == 100,
+            getattr(primary_model, verified_attr) == True,
+            func.date(
+                getattr(primary_model, repeat_attr),
+                "+"
+                + func.cast(getattr(primary_model, delay_attr), db.String)
+                + " days",
+            )
+            < func.date("now"),
+        )
+        .distinct()
+        .count()
     )
-    .distinct()
-    .count()
-)
 
     return {
         "all_words": all_words,
@@ -593,7 +410,11 @@ def prep_revew(lang):
     words = primary_model.query.filter(
         getattr(primary_model, answer_attr) == 100,
         getattr(primary_model, verified_attr) == True,
-        func.date(getattr(primary_model, repeat_attr), '+' + func.cast(getattr(primary_model, delay_attr), db.String) + ' days') < func.date('now')
+        func.date(
+            getattr(primary_model, repeat_attr),
+            "+" + func.cast(getattr(primary_model, delay_attr), db.String) + " days",
+        )
+        < func.date("now"),
     ).all()
 
     for word in words:
