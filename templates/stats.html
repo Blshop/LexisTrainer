@@ -13,6 +13,7 @@
     <div class="container">
         {% include "back.html" %}
         <p>all_words: {{all_words['all_words']}}</p>
+        <p>remaining: {{all_words['remaining']}}</p>
         <p>Learned: {{all_words['learned']}}</p>
         {%for item in all_words['count']%}
         <p>{{item[0]}}: {{item[1]}}</p>
