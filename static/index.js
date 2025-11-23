@@ -90,3 +90,4 @@ function activate() {
     .getElementById('secondary-' + primary_element.innerHTML)
     .classList.add('inactive')
 }
+
